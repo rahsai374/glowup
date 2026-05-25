@@ -1,6 +1,6 @@
 import { MicroTip, SkinConcern } from './types';
 
-interface SelectDailyTipArgs {
+export interface SelectDailyTipArgs {
   tips: MicroTip[];
   userConcern: SkinConcern | null;
   dayOfYear: number; // 1–366, caller provides — no date logic here
@@ -11,6 +11,8 @@ interface SelectDailyTipArgs {
  * Falls back to 'general' tips when concern is null or yields no results.
  */
 export function selectDailyTip({ tips, userConcern, dayOfYear }: SelectDailyTipArgs): MicroTip {
+  if (tips.length === 0) throw new Error('selectDailyTip: tips array must not be empty');
+
   let filtered = userConcern ? tips.filter((t) => t.concerns.includes(userConcern)) : [];
 
   if (filtered.length === 0) {
