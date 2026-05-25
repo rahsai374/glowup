@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "GlowUp",
+    "slug": "glowup",
+    "version": "1.0.0",
+    "scheme": "glowup",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#E07856"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.rahul.glowup"
+    },
+    "android": {
+      "package": "com.rahul.glowup",
+      "adaptiveIcon": {
+        "backgroundColor": "#E07856",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "GlowUp needs camera access to scan your skin."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "GlowUp needs photo library access to upload a photo for skin analysis."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

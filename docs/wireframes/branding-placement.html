@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlowUp — Branding Placement Wireframes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+
+  :root {
+    --cream: #FFF5EE;
+    --terra: #E07856;
+    --brown: #2D1810;
+    --muted: rgba(45,24,16,0.45);
+    --card: #fff;
+    --border: rgba(224,120,86,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #f0e6df;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--brown);
+    padding: 32px 24px 64px;
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+
+  /* ── Approach label ── */
+  .approach-block { margin-bottom: 56px; }
+  .approach-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brown);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 6px;
+  }
+  .approach-label.recommended { background: var(--terra); }
+  .approach-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+
+  /* ── Phone grid ── */
+  .phones {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Phone shell ── */
+  .phone {
+    width: 180px;
+    border-radius: 28px;
+    background: var(--cream);
+    border: 2px solid rgba(45,24,16,0.08);
+    overflow: hidden;
+    box-shadow: 0 8px 32px -8px rgba(45,24,16,0.14);
+    flex-shrink: 0;
+  }
+  .phone-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: -2px;
+  }
+
+  /* status bar */
+  .status-bar {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+
+  /* screen body */
+  .screen {
+    padding: 10px 14px 14px;
+    min-height: 280px;
+  }
+
+  /* ── Header variants ── */
+
+  /* A: no wordmark — just greeting / screen title */
+  .header-plain .greeting {
+    font-size: 9px; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--terra); margin-bottom: 2px;
+  }
+  .header-plain .title {
+    font-family: 'Fraunces', serif; font-size: 18px; color: var(--brown); line-height: 1.15;
+  }
+  .header-plain .sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 11px; color: var(--muted);
+  }
+
+  /* B: persistent small wordmark row above screen title */
+  .wordmark-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .wordmark {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--terra);
+    letter-spacing: .01em;
+  }
+  .wordmark .spark { font-size: 11px; margin-right: 3px; }
+
+  /* C: branded contextual title */
+  .branded-title .line1 {
+    font-size: 9px; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--terra); margin-bottom: 2px;
+  }
+  .branded-title .title {
+    font-family: 'Fraunces', serif; font-size: 17px; color: var(--brown); line-height: 1.2;
+  }
+  .branded-title .title span { color: var(--terra); }
+  .branded-title .sub {
+    font-family: 'Fraunces', serif; font-style: italic; font-size: 11px; color: var(--muted);
+  }
+
+  /* ── Shared filler elements ── */
+  .avatar-btn {
+    width: 32px; height: 32px; border-radius: 16px;
+    background: #fff; border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .scan-cta {
+    background: var(--terra);
+    border-radius: 20px;
+    padding: 14px 12px;
+    color: #fff;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .scan-cta .icon { font-size: 20px; margin-bottom: 4px; }
+  .scan-cta .cta-title { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; }
+  .scan-cta .cta-sub { font-size: 9px; opacity: .8; margin-top: 2px; }
+
+  .filler-cards {
+    display: flex; gap: 8px; margin-top: 10px;
+  }
+  .mini-card {
+    flex: 1; background: #fff; border-radius: 14px;
+    padding: 10px 8px; border: 1px solid var(--border);
+    font-size: 9px; color: var(--muted); text-align: center;
+  }
+  .mini-card .mc-icon { font-size: 16px; margin-bottom: 4px; }
+
+  .list-item {
+    background: #fff; border-radius: 14px; padding: 10px 10px;
+    margin-top: 8px; border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .list-icon { font-size: 18px; }
+  .list-text .lt-title { font-size: 10px; font-weight: 600; color: var(--brown); }
+  .list-text .lt-sub  { font-size: 9px; color: var(--muted); }
+
+  /* tab bar */
+  .tab-bar {
+    display: flex; background: #fff; border-radius: 18px;
+    margin: 10px 14px 14px; padding: 6px;
+    box-shadow: 0 2px 10px -2px rgba(45,24,16,0.08);
+  }
+  .tab { flex: 1; text-align: center; font-size: 8px; color: var(--muted); padding: 5px 0; border-radius: 10px; }
+  .tab.active { background: var(--terra); color: #fff; font-weight: 700; }
+  .tab .tab-icon { font-size: 12px; display: block; margin-bottom: 1px; }
+
+  /* blob hint */
+  .blob-hint {
+    position: absolute; border-radius: 50%; filter: blur(18px); pointer-events: none; opacity: .5;
+  }
+  .screen { position: relative; overflow: hidden; }
+
+  /* divider */
+  .divider { height: 1px; background: rgba(45,24,16,0.06); margin: 0 14px 4px; }
+
+  /* annotation */
+  .annotation {
+    font-size: 10px;
+    color: var(--terra);
+    font-weight: 600;
+    padding: 3px 8px;
+    background: rgba(224,120,86,0.08);
+    border-radius: 6px;
+    display: inline-block;
+    margin-top: 4px;
+  }
+  .check { color: #4ADE80; margin-right: 3px; }
+  .cross { color: #F87171; margin-right: 3px; }
+
+  .pros-cons {
+    display: flex; gap: 24px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .pro-con-col { flex: 1; min-width: 200px; }
+  .pro-con-col h4 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .pro-con-col li { font-size: 12px; list-style: none; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>GlowUp — Branding Placement</h1>
+<p class="subtitle">3 approaches for how the app name appears (or doesn't) across authenticated screens.</p>
+
+<!-- ════════════════════════════════════════
+     APPROACH A — Implicit (design-led)
+═════════════════════════════════════════ -->
+<div class="approach-block">
+  <div class="approach-label recommended">★ Recommended — Option A</div>
+  <p class="approach-desc">
+    <strong>Implicit branding.</strong> "GlowUp" appears on Splash only.
+    Every authenticated screen uses the <em>design language</em> (terracotta, Fraunces, blobs) as brand recall.
+    The tab bar + consistent palette = brand presence without repeating the wordmark.
+    Premium, confident — how top consumer apps (Airbnb, Calm, Headspace) behave post-login.
+  </p>
+
+  <div class="phones">
+
+    <!-- Home -->
+    <div>
+      <p class="phone-label">Home</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:100px;height:100px;background:#E07856;border-radius:50%;top:-30px;right:-30px;filter:blur(24px);opacity:.12;"></div>
+          <div class="header-plain" style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="greeting">Good Morning</div>
+              <div class="title">Priya ✨</div>
+              <div class="sub">Your skin, your glow</div>
+            </div>
+            <div class="avatar-btn">👩🏽</div>
+          </div>
+          <div class="scan-cta">
+            <div class="icon">🔬</div>
+            <div class="cta-title">Scan Your Skin</div>
+            <div class="cta-sub">Takes seconds</div>
+          </div>
+          <div class="filler-cards">
+            <div class="mini-card"><div class="mc-icon">🧴</div>Products</div>
+            <div class="mini-card"><div class="mc-icon">📋</div>Routine</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab active"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="check">✓</span>Clean, user-first</div>
+    </div>
+
+    <!-- Progress -->
+    <div>
+      <p class="phone-label">Progress</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="header-plain">
+            <div class="title">Your Progress</div>
+            <div class="sub">Skin score trend</div>
+          </div>
+          <div class="list-item" style="margin-top:14px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#FFF5EE;border:2px solid #E07856;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#E07856;">82</div>
+            <div class="list-text">
+              <div class="lt-title">May 20, 2025</div>
+              <div class="lt-sub">Acne improving ↑</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div style="width:36px;height:36px;border-radius:50%;background:#FFF5EE;border:2px solid #FACC15;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#FACC15;">68</div>
+            <div class="list-text">
+              <div class="lt-title">May 12, 2025</div>
+              <div class="lt-sub">Dryness flagged</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab active"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="check">✓</span>Screen-first clarity</div>
+    </div>
+
+    <!-- Tips -->
+    <div>
+      <p class="phone-label">Tips</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="header-plain">
+            <div class="title">Tips & Advice</div>
+            <div class="sub">Personalised for Priya</div>
+          </div>
+          <div class="list-item" style="margin-top:14px;">
+            <div class="list-icon">☀️</div>
+            <div class="list-text">
+              <div class="lt-title">Apply SPF 30+ daily</div>
+              <div class="lt-sub">Sun Protection</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-icon">💧</div>
+            <div class="list-text">
+              <div class="lt-title">Double cleanse at night</div>
+              <div class="lt-sub">Hydration</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab active"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="check">✓</span>Content leads</div>
+    </div>
+
+    <!-- Profile -->
+    <div>
+      <p class="phone-label">Profile</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div class="header-plain">
+            <div class="title">Profile</div>
+            <div class="sub">Your details</div>
+          </div>
+          <div class="list-item" style="margin-top:14px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(224,120,86,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">👩🏽</div>
+            <div class="list-text">
+              <div class="lt-title">Priya Sharma</div>
+              <div class="lt-sub">Age 26 · Normal skin</div>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="list-icon">🌐</div>
+            <div class="list-text">
+              <div class="lt-title">Language</div>
+              <div class="lt-sub">English / हिंदी</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab active"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="check">✓</span>No clutter</div>
+    </div>
+
+  </div><!-- /phones -->
+
+  <div class="pros-cons">
+    <div class="pro-con-col">
+      <h4>Pros</h4>
+      <li><span class="check">✓</span> Premium feel — brand expressed through consistent design language</li>
+      <li><span class="check">✓</span> Every screen has a clear, functional title</li>
+      <li><span class="check">✓</span> No visual clutter; user focus stays on content</li>
+    </div>
+    <div class="pro-con-col">
+      <h4>Cons / Mitigations</h4>
+      <li><span class="cross">✗</span> Brand name less visible after splash — mitigated by tab bar + icon identity</li>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     APPROACH B — Persistent wordmark
+═════════════════════════════════════════ -->
+<div class="approach-block">
+  <div class="approach-label">Option B</div>
+  <p class="approach-desc">
+    <strong>Persistent top-left wordmark.</strong> A small "✦ GlowUp" in Fraunces terracotta sits
+    above every tab screen's content title. Adds brand recall on every open but occupies vertical space
+    and risks feeling repetitive.
+  </p>
+
+  <div class="phones">
+
+    <!-- Home -->
+    <div>
+      <p class="phone-label">Home</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:100px;height:100px;background:#E07856;border-radius:50%;top:-30px;right:-30px;filter:blur(24px);opacity:.12;"></div>
+          <div class="wordmark-row">
+            <div class="wordmark"><span class="spark">✦</span>GlowUp</div>
+            <div class="avatar-btn">👩🏽</div>
+          </div>
+          <div class="header-plain">
+            <div class="greeting">Good Morning</div>
+            <div class="title">Priya ✨</div>
+            <div class="sub">Your skin, your glow</div>
+          </div>
+          <div class="scan-cta" style="margin-top:10px;">
+            <div class="icon">🔬</div>
+            <div class="cta-title">Scan Your Skin</div>
+            <div class="cta-sub">Takes seconds</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab active"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">Wordmark + greeting = two competing rows</div>
+    </div>
+
+    <!-- Progress -->
+    <div>
+      <p class="phone-label">Progress</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="wordmark-row">
+            <div class="wordmark"><span class="spark">✦</span>GlowUp</div>
+          </div>
+          <div class="header-plain">
+            <div class="title">Your Progress</div>
+            <div class="sub">Skin score trend</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#FFF5EE;border:2px solid #E07856;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#E07856;">82</div>
+            <div class="list-text">
+              <div class="lt-title">May 20, 2025</div>
+              <div class="lt-sub">Acne improving ↑</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab active"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">Wordmark above title adds header height</div>
+    </div>
+
+    <!-- Tips -->
+    <div>
+      <p class="phone-label">Tips</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="wordmark-row">
+            <div class="wordmark"><span class="spark">✦</span>GlowUp</div>
+          </div>
+          <div class="header-plain">
+            <div class="title">Tips & Advice</div>
+            <div class="sub">Personalised for Priya</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div class="list-icon">☀️</div>
+            <div class="list-text">
+              <div class="lt-title">Apply SPF 30+</div>
+              <div class="lt-sub">Sun Protection</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab active"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="cross">✗</span>Redundant after first open</div>
+    </div>
+
+    <!-- Profile -->
+    <div>
+      <p class="phone-label">Profile</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div class="wordmark-row">
+            <div class="wordmark"><span class="spark">✦</span>GlowUp</div>
+          </div>
+          <div class="header-plain">
+            <div class="title">Profile</div>
+            <div class="sub">Your details</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(224,120,86,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">👩🏽</div>
+            <div class="list-text">
+              <div class="lt-title">Priya Sharma</div>
+              <div class="lt-sub">Age 26 · Normal skin</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab active"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation"><span class="cross">✗</span>Awkward on utility screens</div>
+    </div>
+
+  </div><!-- /phones -->
+
+  <div class="pros-cons">
+    <div class="pro-con-col">
+      <h4>Pros</h4>
+      <li><span class="check">✓</span> Explicit brand name visible on every screen open</li>
+      <li><span class="check">✓</span> Familiar pattern (Uber Eats, Zomato style)</li>
+    </div>
+    <div class="pro-con-col">
+      <h4>Cons</h4>
+      <li><span class="cross">✗</span> Eats vertical space — pushes content down on short screens</li>
+      <li><span class="cross">✗</span> Feels repetitive and slightly insecure — "a confident brand doesn't need to keep announcing itself"</li>
+      <li><span class="cross">✗</span> Clashes with Home's personalized greeting, creating two competing headers</li>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     APPROACH C — Contextual brand titles
+═════════════════════════════════════════ -->
+<div class="approach-block">
+  <div class="approach-label">Option C</div>
+  <p class="approach-desc">
+    <strong>Brand woven into contextual copy.</strong> "GlowUp" is embedded as part of the screen title
+    or sub-line — e.g. "Your GlowUp Progress", "GlowUp Tips". Feels conversational and reinforces the
+    brand as a verb/journey, not just a product name.
+  </p>
+
+  <div class="phones">
+
+    <!-- Home -->
+    <div>
+      <p class="phone-label">Home</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:100px;height:100px;background:#E07856;border-radius:50%;top:-30px;right:-30px;filter:blur(24px);opacity:.12;"></div>
+          <div class="branded-title" style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div class="line1">Good Morning</div>
+              <div class="title">Priya ✨</div>
+              <div class="sub">Your skin, your <span style="color:#E07856;font-style:normal;font-weight:700;">GlowUp</span></div>
+            </div>
+            <div class="avatar-btn">👩🏽</div>
+          </div>
+          <div class="scan-cta" style="margin-top:10px;">
+            <div class="icon">🔬</div>
+            <div class="cta-title">Scan Your Skin</div>
+            <div class="cta-sub">Takes seconds</div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab active"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">"Your GlowUp" subline</div>
+    </div>
+
+    <!-- Progress -->
+    <div>
+      <p class="phone-label">Progress</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="branded-title">
+            <div class="line1">Track your journey</div>
+            <div class="title">Your <span style="color:#E07856;">GlowUp</span><br>Progress</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:#FFF5EE;border:2px solid #E07856;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#E07856;">82</div>
+            <div class="list-text">
+              <div class="lt-title">May 20, 2025</div>
+              <div class="lt-sub">Acne improving ↑</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab active"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">Brand as possessive</div>
+    </div>
+
+    <!-- Tips -->
+    <div>
+      <p class="phone-label">Tips</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div style="position:absolute;width:80px;height:80px;background:#E07856;border-radius:50%;top:-20px;right:-20px;filter:blur(20px);opacity:.12;"></div>
+          <div class="branded-title">
+            <div class="line1">For your skin type</div>
+            <div class="title"><span style="color:#E07856;">GlowUp</span> Tips</div>
+            <div class="sub">Personalised for Priya</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div class="list-icon">☀️</div>
+            <div class="list-text">
+              <div class="lt-title">Apply SPF 30+</div>
+              <div class="lt-sub">Sun Protection</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab active"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">"GlowUp Tips" — natural</div>
+    </div>
+
+    <!-- Profile -->
+    <div>
+      <p class="phone-label">Profile</p>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen">
+          <div class="branded-title">
+            <div class="line1">Your account</div>
+            <div class="title">Profile</div>
+            <div class="sub">Your <span style="color:#E07856;font-style:normal;font-weight:700;">GlowUp</span> journey</div>
+          </div>
+          <div class="list-item" style="margin-top:10px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:rgba(224,120,86,0.1);display:flex;align-items:center;justify-content:center;font-size:18px;">👩🏽</div>
+            <div class="list-text">
+              <div class="lt-title">Priya Sharma</div>
+              <div class="lt-sub">Age 26 · Normal skin</div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="tab-bar">
+          <div class="tab"><span class="tab-icon">🏠</span>Home</div>
+          <div class="tab"><span class="tab-icon">📈</span>Progress</div>
+          <div class="tab"><span class="tab-icon">💡</span>Tips</div>
+          <div class="tab active"><span class="tab-icon">👤</span>Profile</div>
+        </div>
+      </div>
+      <div class="annotation">Subline carries brand</div>
+    </div>
+
+  </div><!-- /phones -->
+
+  <div class="pros-cons">
+    <div class="pro-con-col">
+      <h4>Pros</h4>
+      <li><span class="check">✓</span> Brand name present but not shoved in; feels like product copy</li>
+      <li><span class="check">✓</span> "GlowUp" used as a verb/journey strengthens brand positioning</li>
+    </div>
+    <div class="pro-con-col">
+      <h4>Cons</h4>
+      <li><span class="cross">✗</span> Harder to maintain consistently across i18n (Hindi translations)</li>
+      <li><span class="cross">✗</span> Some screens feel forced ("Your GlowUp Profile" is a stretch)</li>
+    </div>
+  </div>
+</div>
+
+<!-- Summary -->
+<div style="background:#2D1810;color:#FFF5EE;border-radius:20px;padding:24px 28px;max-width:700px;">
+  <h2 style="font-family:'Fraunces',serif;font-size:18px;margin-bottom:10px;">Recommendation: Option A</h2>
+  <p style="font-size:13px;line-height:1.7;opacity:.85;">
+    The GlowUp brand is already expressed on every screen through its design language — the terracotta, Fraunces headings, and ambient blobs are unmistakably GlowUp.
+    Adding the wordmark to authenticated screens doesn't increase brand recognition; it adds noise.
+    The Splash screen plants the name. The Share Card reinforces it (with a "GlowUp" badge).
+    That's the right cadence — brand-forward at entry, content-forward throughout.
+    <br><br>
+    <strong>One small enhancement worth considering:</strong> add a subtle <span style="color:#E07856;">✦ GlowUp</span> badge to the Share Card (already planned in Screen 14) and possibly to the Home greeting subline only — "Your skin, your GlowUp" — without touching any other screens.
+  </p>
+</div>
+
+</body>
+</html>
