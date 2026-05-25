@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.rahul.glowup"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.rahul.glowup",
       "adaptiveIcon": {
         "backgroundColor": "#E07856",
