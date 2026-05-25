@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "731207438930",
+    "project_id": "glowup-9ad56",
+    "storage_bucket": "glowup-9ad56.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731207438930:android:c54e2588c18f90f1c4c58b",
+        "android_client_info": {
+          "package_name": "com.rahul.glowup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXiNXtgc7usH2DzSHcRyNHaRfR4Gfxx-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
