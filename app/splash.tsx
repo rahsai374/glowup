@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
   withDelay,
 } from 'react-native-reanimated';
+import { auth } from '@/lib/firebase';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -15,7 +16,9 @@ export default function SplashScreen() {
 
   useEffect(() => {
     iconScale.value = withDelay(200, withSpring(1, { damping: 12, stiffness: 100 }));
-    const t = setTimeout(() => router.replace('/language'), 2500);
+    const t = setTimeout(() => {
+      router.replace(auth.currentUser ? '/(tabs)' : '/language');
+    }, 2500);
     return () => clearTimeout(t);
   }, []);
 

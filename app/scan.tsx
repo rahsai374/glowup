@@ -40,10 +40,18 @@ export default function ScanScreen() {
   const scanY = useSharedValue(0);
   const scanStyle = useAnimatedStyle(() => ({ transform: [{ translateY: scanY.value }] }));
 
+  const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
   function startScanning() {
     scanY.value = withRepeat(withTiming(height * 0.6, { duration: 2500 }), -1, true);
-    const interval = setInterval(() => setFactIdx((i) => (i + 1) % FACTS.length), 3000);
-    return () => clearInterval(interval);
+    factIntervalRef.current = setInterval(() => setFactIdx((i) => (i + 1) % FACTS.length), 3000);
+  }
+
+  function stopScanning() {
+    if (factIntervalRef.current) {
+      clearInterval(factIntervalRef.current);
+      factIntervalRef.current = null;
+    }
   }
 
   async function openCamera() {
@@ -87,11 +95,13 @@ export default function ScanScreen() {
         user?.mainConcern ?? 'general',
         user?.skinType ?? 'normal'
       );
-      const scan = { ...result, id: `scan_${Date.now()}`, createdAt: new Date(), imageUrl: uri };
+      const scan = { ...result, id: `scan_${Date.now()}`, createdAt: new Date().toISOString(), imageUrl: uri };
       setCurrentScan(scan);
       addToHistory(scan);
+      stopScanning();
       router.replace('/results');
     } catch (e: any) {
+      stopScanning();
       console.error('[SCAN ERROR]', e?.message ?? e);
       Alert.alert('Scan failed', e?.message ?? String(e));
       setState('choice');

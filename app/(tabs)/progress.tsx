@@ -108,7 +108,7 @@ export default function ProgressScreen() {
                 <ScoreCircle score={scan.overall_score} size={64} />
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 12, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular', marginBottom: 4 }}>
-                    {scan.createdAt.toLocaleDateString()}
+                    {new Date(scan.createdAt).toLocaleDateString()}
                   </Text>
                   <View style={{ backgroundColor: '#FEE2E2', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start', marginBottom: 4 }}>
                     <Text style={{ fontSize: 11, color: '#F87171', fontFamily: 'PlusJakartaSans_500Medium' }}>

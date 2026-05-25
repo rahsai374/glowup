@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -27,10 +27,11 @@ export default function ResultsScreen() {
   const { t } = useTranslation();
   const scan = useScanStore((s) => s.currentScan);
 
-  if (!scan) {
-    router.replace('/(tabs)');
-    return null;
-  }
+  useEffect(() => {
+    if (!scan) router.replace('/(tabs)');
+  }, [scan]);
+
+  if (!scan) return null;
 
   const metrics = Object.entries(scan.metrics);
 

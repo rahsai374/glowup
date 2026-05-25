@@ -1,5 +1,7 @@
 // stores/useRoutineStore.ts
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type DateKey = string; // YYYY-MM-DD local
 
@@ -84,10 +86,18 @@ export function weeklyConsistency(
   return Math.round((totalDone / totalExpected) * 100);
 }
 
-export const useRoutineStore = create<RoutineStore>((set, get) => ({
-  completions: {},
-  toggleStep: (date, period, stepId) =>
-    set({ completions: computeToggleStep(get().completions, date, period, stepId) }),
-  markTipDone: (date, tipId) =>
-    set({ completions: computeMarkTipDone(get().completions, date, tipId) }),
-}));
+export const useRoutineStore = create<RoutineStore>()(
+  persist(
+    (set, get) => ({
+      completions: {},
+      toggleStep: (date, period, stepId) =>
+        set({ completions: computeToggleStep(get().completions, date, period, stepId) }),
+      markTipDone: (date, tipId) =>
+        set({ completions: computeMarkTipDone(get().completions, date, tipId) }),
+    }),
+    {
+      name: 'glowup-routine',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);

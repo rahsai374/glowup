@@ -5,21 +5,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import allTips from '@/data/tips.json';
 
 const CONCERNS = [
   { label: 'Acne', icon: '🔴', color: '#FEE2E2' },
   { label: 'Dark Spots', icon: '🟤', color: '#FEF3C7' },
   { label: 'Dryness', icon: '💧', color: '#DBEAFE' },
   { label: 'Anti-aging', icon: '⏳', color: '#F3E8FF' },
-];
-
-const TIPS = [
-  { emoji: '☀️', category: 'Sun Protection', title: 'Apply SPF 30+ every morning', body: 'Even on cloudy days, UV rays penetrate and cause premature aging and dark spots.' },
-  { emoji: '💧', category: 'Hydration', title: 'Double cleanse at night', body: 'Oil cleanser followed by water cleanser removes sunscreen, makeup, and impurities thoroughly.' },
-  { emoji: '🌙', category: 'Night Routine', title: 'Retinol — the gold standard', body: 'Start with 0.025% retinol 2x per week to boost cell turnover and fade hyperpigmentation.' },
-  { emoji: '🥗', category: 'Diet', title: 'Eat antioxidant-rich foods', body: 'Vitamin C from citrus and turmeric from Indian spices help brighten and protect skin from within.' },
-  { emoji: '😴', category: 'Lifestyle', title: '7–9 hours of sleep', body: 'Skin repairs itself overnight. Poor sleep raises cortisol, causing breakouts and dullness.' },
-  { emoji: '🧖🏽‍♀️', category: 'Weekly Care', title: 'Exfoliate once a week', body: 'A gentle AHA/BHA exfoliant removes dead cells and allows your serums to absorb better.' },
 ];
 
 export default function TipsScreen() {
@@ -74,9 +66,9 @@ export default function TipsScreen() {
         <Text style={{ fontSize: 16, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 12 }}>
           Daily Tips
         </Text>
-        {TIPS.map((tip, i) => (
+        {allTips.map((tip, i) => (
           <Animated.View
-            key={tip.title}
+            key={tip.id}
             entering={FadeInDown.delay(i * 80).springify()}
             style={{
               backgroundColor: 'white',

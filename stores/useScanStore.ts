@@ -1,9 +1,11 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScanResult } from '@/lib/gemini';
 
 export interface ScanRecord extends ScanResult {
   id: string;
-  createdAt: Date;
+  createdAt: string;
   imageUrl?: string;
 }
 
@@ -15,14 +17,22 @@ interface ScanStore {
   setHistory: (scans: ScanRecord[]) => void;
 }
 
-export const useScanStore = create<ScanStore>((set) => ({
-  currentScan: null,
-  scanHistory: [],
-  setCurrentScan: (scan) => set({ currentScan: scan }),
-  addToHistory: (scan) =>
-    set((state) => ({ scanHistory: [scan, ...state.scanHistory] })),
-  setHistory: (scans) => set({ scanHistory: scans }),
-}));
+export const useScanStore = create<ScanStore>()(
+  persist(
+    (set) => ({
+      currentScan: null,
+      scanHistory: [],
+      setCurrentScan: (scan) => set({ currentScan: scan }),
+      addToHistory: (scan) =>
+        set((state) => ({ scanHistory: [scan, ...state.scanHistory] })),
+      setHistory: (scans) => set({ scanHistory: scans }),
+    }),
+    {
+      name: 'glowup-scans',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
 
 /** Returns fractional days since the most recent scan, or null if no scans. */
 export function daysSinceLastScan(history: ScanRecord[]): number | null {

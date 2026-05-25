@@ -59,10 +59,16 @@ Return ONLY valid JSON with no markdown, no explanation:
   "advice": "<2 sentences max>"
 }`;
 
-  const result = await model.generateContent([
+  const timeout = new Promise<never>((_, reject) =>
+    setTimeout(() => reject(new Error('Scan timed out — please try again')), 30_000)
+  );
+
+  const call = model.generateContent([
     { inlineData: { data: base64Image, mimeType } },
     prompt,
   ]);
+
+  const result = await Promise.race([call, timeout]);
 
   const text = result.response.text().trim();
   const jsonMatch = text.match(/\{[\s\S]*\}/);

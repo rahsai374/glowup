@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface UserProfile {
   uid: string;
@@ -50,19 +52,27 @@ function localDateString(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
-export const useUserStore = create<UserStore>((set, get) => ({
-  user: null,
-  streak: { current: 0, lastOpenedAt: '' },
-  isAuthenticated: false,
-  setUser: (user) => set({ user, isAuthenticated: true }),
-  updateUser: (partial) =>
-    set((state) => ({ user: state.user ? { ...state.user, ...partial } : null })),
-  setLanguage: (lang) =>
-    set((state) => ({ user: state.user ? { ...state.user, language: lang } : null })),
-  tickStreak: () => {
-    const today = localDateString();
-    const next = computeNextStreak(get().streak, today);
-    set({ streak: next });
-  },
-  logout: () => set({ user: null, isAuthenticated: false, streak: { current: 0, lastOpenedAt: '' } }),
-}));
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set, get) => ({
+      user: null,
+      streak: { current: 0, lastOpenedAt: '' },
+      isAuthenticated: false,
+      setUser: (user) => set({ user, isAuthenticated: true }),
+      updateUser: (partial) =>
+        set((state) => ({ user: state.user ? { ...state.user, ...partial } : null })),
+      setLanguage: (lang) =>
+        set((state) => ({ user: state.user ? { ...state.user, language: lang } : null })),
+      tickStreak: () => {
+        const today = localDateString();
+        const next = computeNextStreak(get().streak, today);
+        set({ streak: next });
+      },
+      logout: () => set({ user: null, isAuthenticated: false, streak: { current: 0, lastOpenedAt: '' } }),
+    }),
+    {
+      name: 'glowup-user',
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
