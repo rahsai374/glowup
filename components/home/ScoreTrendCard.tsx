@@ -9,9 +9,10 @@ interface ScoreTrendCardProps {
   previousScore: number | null;
   history: number[]; // oldest first, up to 7 values
   onPress: () => void;
+  onScanPress: () => void;
 }
 
-export default function ScoreTrendCard({ currentScore, previousScore, history, onPress }: ScoreTrendCardProps) {
+export default function ScoreTrendCard({ currentScore, previousScore, history, onPress, onScanPress }: ScoreTrendCardProps) {
   const { t } = useTranslation();
   const delta = previousScore !== null ? currentScore - previousScore : null;
 
@@ -75,6 +76,22 @@ export default function ScoreTrendCard({ currentScore, previousScore, history, o
                 </Text>
               </View>
             )}
+          </View>
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <TouchableOpacity
+              onPress={onScanPress}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              style={{
+                backgroundColor: '#E07856',
+                borderRadius: 14,
+                paddingHorizontal: 14,
+                paddingVertical: 6,
+              }}
+            >
+              <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
+                Scan again
+              </Text>
+            </TouchableOpacity>
           </View>
           {/* Sparkline */}
           <Sparkline data={history} width={80} height={28} color="#E07856" />

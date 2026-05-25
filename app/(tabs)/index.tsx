@@ -140,6 +140,7 @@ export default function HomeScreen() {
             previousScore={previousScore}
             history={scoreHistory}
             onPress={() => router.push('/(tabs)/progress')}
+            onScanPress={() => router.push('/scan')}
           />
         )}
 
