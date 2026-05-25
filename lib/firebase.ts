@@ -1,6 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
@@ -12,9 +11,9 @@ export const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const isNew = getApps().length === 0;
+const app = isNew ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const db = getFirestore(app);
-export const auth = getAuth(app);
 export const storage = getStorage(app);
 export default app;

@@ -3,20 +3,17 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { signInWithPhoneNumber, PhoneAuthProvider, signInWithCredential, ConfirmationResult } from 'firebase/auth';
-import { FirebaseRecaptcha, RecaptchaRef } from '@/components/FirebaseRecaptcha';
+import rnAuth from '@react-native-firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
-import { auth, firebaseConfig } from '@/lib/firebase';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
-  const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
+  const [confirmation, setConfirmation] = useState<Awaited<ReturnType<typeof rnAuth['prototype']['signInWithPhoneNumber']>> | null>(null);
   const otpRefs = useRef<(TextInput | null)[]>([]);
-  const recaptchaVerifier = useRef<RecaptchaRef>(null);
   const router = useRouter();
   const { t } = useTranslation();
   const setUser = useUserStore((s) => s.setUser);
@@ -25,7 +22,7 @@ export default function AuthScreen() {
     if (phone.length < 10 || loading) return;
     setLoading(true);
     try {
-      const result = await signInWithPhoneNumber(auth, '+91' + phone, recaptchaVerifier.current!.getVerifier());
+      const result = await rnAuth().signInWithPhoneNumber('+91' + phone);
       setConfirmation(result);
       setStep('otp');
     } catch (e: any) {
@@ -75,10 +72,9 @@ export default function AuthScreen() {
     if (code.length < 6 || !confirmation || loading) return;
     setLoading(true);
     try {
-      const credential = PhoneAuthProvider.credential(confirmation.verificationId, code);
-      const result = await signInWithCredential(auth, credential);
+      const result = await confirmation.confirm(code);
       setUser({
-        uid: result.user.uid,
+        uid: result!.user.uid,
         name: '',
         phone,
         language: 'en',
@@ -101,10 +97,6 @@ export default function AuthScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{ flex: 1, backgroundColor: '#FFF5EE' }}
     >
-      <FirebaseRecaptcha
-        ref={recaptchaVerifier}
-        firebaseApiKey={firebaseConfig.apiKey!}
-      />
       <AmbientBlobs />
       <View style={{ flex: 1, paddingHorizontal: 32, paddingTop: 96, zIndex: 10 }}>
 
