@@ -34,14 +34,15 @@ describe('weeklyConsistency', () => {
   });
 
   it('returns 100 for all steps done every day this week', () => {
+    const referenceDate = new Date('2026-05-25T12:00:00Z');
     const completions: Completions = {};
     for (let i = 0; i < 7; i++) {
-      const d = new Date();
+      const d = new Date(referenceDate);
       d.setDate(d.getDate() - i);
       const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
       completions[key] = { am: [...AM_STEPS], pm: [...PM_STEPS], tips: ['some-tip'] };
     }
-    expect(weeklyConsistency(completions, AM_STEPS, PM_STEPS)).toBe(100);
+    expect(weeklyConsistency(completions, AM_STEPS, PM_STEPS, referenceDate)).toBe(100);
   });
 });
 

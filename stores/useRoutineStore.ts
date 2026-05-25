@@ -59,14 +59,15 @@ export function todayProgress(
 export function weeklyConsistency(
   completions: Completions,
   amStepIds: string[],
-  pmStepIds: string[]
+  pmStepIds: string[],
+  today: Date = new Date()
 ): number {
   const stepsPerDay = amStepIds.length + pmStepIds.length + 1; // +1 tip bonus slot
   let totalDone = 0;
   let totalExpected = 0;
 
   for (let i = 0; i < 7; i++) {
-    const d = new Date();
+    const d = new Date(today);
     d.setDate(d.getDate() - i);
     const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const day = completions[key];
