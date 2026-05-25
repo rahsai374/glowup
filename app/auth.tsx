@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import rnAuth from '@react-native-firebase/auth';
+import { PhoneAuthProvider, signInWithCredential } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
 
@@ -12,7 +13,7 @@ export default function AuthScreen() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
-  const [confirmation, setConfirmation] = useState<Awaited<ReturnType<typeof rnAuth['prototype']['signInWithPhoneNumber']>> | null>(null);
+  const [sessionInfo, setSessionInfo] = useState<string | null>(null);
   const otpRefs = useRef<(TextInput | null)[]>([]);
   const router = useRouter();
   const { t } = useTranslation();
@@ -22,8 +23,17 @@ export default function AuthScreen() {
     if (phone.length < 10 || loading) return;
     setLoading(true);
     try {
-      const result = await rnAuth().signInWithPhoneNumber('+91' + phone);
-      setConfirmation(result);
+      const res = await fetch(
+        `https://identitytoolkit.googleapis.com/v1/accounts:sendVerificationCode?key=${process.env.EXPO_PUBLIC_FIREBASE_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: '+91' + phone }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error?.message ?? 'Failed to send OTP');
+      setSessionInfo(data.sessionInfo);
       setStep('otp');
     } catch (e: any) {
       Alert.alert('Failed to send OTP', e?.message ?? 'Please check your number and try again.');
@@ -69,12 +79,13 @@ export default function AuthScreen() {
 
   async function verifyOtp() {
     const code = otp.join('');
-    if (code.length < 6 || !confirmation || loading) return;
+    if (code.length < 6 || !sessionInfo || loading) return;
     setLoading(true);
     try {
-      const result = await confirmation.confirm(code);
+      const credential = PhoneAuthProvider.credential(sessionInfo, code);
+      const result = await signInWithCredential(auth, credential);
       setUser({
-        uid: result!.user.uid,
+        uid: result.user.uid,
         name: '',
         phone,
         language: 'en',
