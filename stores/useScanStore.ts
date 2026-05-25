@@ -23,3 +23,28 @@ export const useScanStore = create<ScanStore>((set) => ({
     set((state) => ({ scanHistory: [scan, ...state.scanHistory] })),
   setHistory: (scans) => set({ scanHistory: scans }),
 }));
+
+/** Returns fractional days since the most recent scan, or null if no scans. */
+export function daysSinceLastScan(history: ScanRecord[]): number | null {
+  if (history.length === 0) return null;
+  const latest = history[0]; // history is desc by createdAt
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return (Date.now() - new Date(latest.createdAt).getTime()) / msPerDay;
+}
+
+/** Returns the count of scans whose createdAt is within the last n days. */
+export function scansInLastNDays(history: ScanRecord[], n: number): number {
+  const cutoff = Date.now() - n * 24 * 60 * 60 * 1000;
+  return history.filter((s) => new Date(s.createdAt).getTime() >= cutoff).length;
+}
+
+/**
+ * Returns up to the last n overall_score values, oldest first.
+ * history is assumed sorted desc (newest first).
+ */
+export function scoreHistoryLastN(history: ScanRecord[], n: number): number[] {
+  return history
+    .slice(0, n)
+    .map((s) => s.overall_score)
+    .reverse();
+}
