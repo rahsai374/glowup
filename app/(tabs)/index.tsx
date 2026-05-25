@@ -1,37 +1,124 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
-import { useUserStore } from '@/stores/useUserStore';
-import { useScanStore } from '@/stores/useScanStore';
-import ScoreCircle from '@/components/ScoreCircle';
-import AmbientBlobs from '@/components/AmbientBlobs';
 
-const INSIGHTS = [
-  { icon: '💧', label: 'Hydration tip', bg: '#FFF0E8' },
-  { icon: '☀️', label: 'SPF reminder', bg: '#FFFBF0' },
-  { icon: '🌙', label: 'Night routine', bg: '#F0F4FF' },
-  { icon: '🥤', label: 'Drink water', bg: '#F0FFF4' },
-];
+import { useUserStore } from '@/stores/useUserStore';
+import { useScanStore, daysSinceLastScan, scansInLastNDays, scoreHistoryLastN } from '@/stores/useScanStore';
+import { useRoutineStore, todayProgress, weeklyConsistency } from '@/stores/useRoutineStore';
+
+import { getGreeting } from '@/lib/home/getGreeting';
+import { selectHeroState } from '@/lib/home/selectHeroState';
+import { selectDailyTip } from '@/lib/home/selectDailyTip';
+import { getRoutine } from '@/lib/routineEngine';
+
+import tips from '@/data/tips.json';
+import { MicroTip, SkinConcern } from '@/lib/home/types';
+
+import AmbientBlobs from '@/components/AmbientBlobs';
+import HomeHeader from '@/components/home/HomeHeader';
+import ScoreTrendCard from '@/components/home/ScoreTrendCard';
+import StreakStrip from '@/components/home/StreakStrip';
+import DynamicActionCard from '@/components/home/DynamicActionCard';
+import QuickActionTile from '@/components/home/QuickActionTile';
+import ContextualTipCard from '@/components/home/ContextualTipCard';
+
+function getDayOfYear(): number {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function localDateKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+const CONCERN_MAP: Record<string, SkinConcern> = {
+  'acne': 'acne', 'breakout': 'acne', 'blemish': 'acne',
+  'dark spot': 'darkSpots', 'dark spots': 'darkSpots', 'hyperpigmentation': 'darkSpots',
+  'dryness': 'dryness', 'dry': 'dryness',
+  'aging': 'aging', 'anti-aging': 'aging', 'wrinkle': 'aging', 'firmness': 'aging',
+  'dullness': 'dullness', 'dull': 'dullness', 'radiance': 'dullness',
+};
 
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+
   const user = useUserStore((s) => s.user);
-  const lastScan = useScanStore((s) => s.scanHistory[0] ?? null);
-  const scanScale = useSharedValue(1);
+  const streak = useUserStore((s) => s.streak);
+  const tickStreak = useUserStore((s) => s.tickStreak);
 
-  const scanStyle = useAnimatedStyle(() => ({ transform: [{ scale: scanScale.value }] }));
+  const scanHistory = useScanStore((s) => s.scanHistory);
+  const completions = useRoutineStore((s) => s.completions);
+  const markTipDone = useRoutineStore((s) => s.markTipDone);
 
-  function onScanPress() {
-    scanScale.value = withSpring(0.97, { damping: 15 });
-    setTimeout(() => { scanScale.value = withSpring(1); router.push('/scan'); }, 100);
+  useEffect(() => { tickStreak(); }, []);
+
+  const now = new Date();
+  const nowHour = now.getHours();
+  const todayKey = localDateKey();
+
+  const greetingPeriod = getGreeting(nowHour);
+  const greetingText = t(`home_greeting_${greetingPeriod}`);
+
+  const scanCount = scanHistory.length;
+  const daysSince = useMemo(() => daysSinceLastScan(scanHistory), [scanHistory]);
+  const scansThisWeek = useMemo(() => scansInLastNDays(scanHistory, 7), [scanHistory]);
+  const scoreHistory = useMemo(() => scoreHistoryLastN(scanHistory, 7), [scanHistory]);
+  const currentScore = scanHistory[0]?.overall_score ?? null;
+  const previousScore = scanHistory[1]?.overall_score ?? null;
+  const lastConcern = scanHistory[0]?.top_concern ?? null;
+
+  const userRoutine = useMemo(
+    () => getRoutine(user?.skinType ?? 'all', user?.mainConcern ?? 'all'),
+    [user?.skinType, user?.mainConcern]
+  );
+  const amStepIds = useMemo(() => userRoutine.morning.map((s) => s.id), [userRoutine]);
+  const pmStepIds = useMemo(() => userRoutine.night.map((s) => s.id), [userRoutine]);
+
+  const routineToday = useMemo(
+    () => todayProgress(completions, todayKey, amStepIds, pmStepIds),
+    [completions, todayKey, amStepIds, pmStepIds]
+  );
+
+  const consistencyPct = useMemo(
+    () => weeklyConsistency(completions, amStepIds, pmStepIds),
+    [completions, amStepIds, pmStepIds]
+  );
+
+  const hasAnyCompletions = Object.keys(completions).length > 0;
+
+  const heroState = selectHeroState({
+    scanCount,
+    daysSinceLastScan: daysSince,
+    lastScanTopConcern: lastConcern,
+    nowHour,
+    routineToday,
+  });
+
+  const userConcern: SkinConcern | null = lastConcern
+    ? (CONCERN_MAP[lastConcern.toLowerCase()] ?? null)
+    : null;
+
+  const dailyTip = selectDailyTip({
+    tips: tips as MicroTip[],
+    userConcern,
+    dayOfYear: getDayOfYear(),
+  });
+
+  const isTipDone = completions[todayKey]?.tips?.includes(dailyTip.id) ?? false;
+
+  function onHeroPress() {
+    if (heroState.kind === 'routine-in-progress' || heroState.kind === 'fresh-scan') {
+      router.push('/routine');
+    } else {
+      router.push('/scan');
+    }
   }
-
-  const name = user?.name || 'Friend';
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
@@ -41,196 +128,54 @@ export default function HomeScreen() {
         contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 120, paddingHorizontal: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28 }}>
-          <View>
-            <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase' }}>
-              {t('home_greeting')}
-            </Text>
-            <Text style={{ fontSize: 28, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>{name} ✨</Text>
-            <Text style={{ fontSize: 14, fontFamily: 'Fraunces_700Bold_Italic', color: 'rgba(45,24,16,0.5)' }}>
-              {t('home_subtitle')}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/profile')}
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 24,
-              backgroundColor: 'white',
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: '#2D1810',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.08,
-              shadowRadius: 12,
-              elevation: 4,
-            }}
-          >
-            <Text style={{ fontSize: 22 }}>👩🏽</Text>
-          </TouchableOpacity>
-        </View>
+        <HomeHeader
+          name={user?.name || 'Friend'}
+          greeting={greetingText}
+          onAvatarPress={() => router.push('/(tabs)/profile')}
+        />
 
-        {/* Scan CTA */}
-        <Animated.View style={scanStyle}>
-          <TouchableOpacity
-            onPress={onScanPress}
-            style={{
-              backgroundColor: '#E07856',
-              borderRadius: 32,
-              padding: 32,
-              marginBottom: 20,
-              overflow: 'hidden',
-            }}
-            activeOpacity={0.9}
-          >
-            <View
-              style={{
-                position: 'absolute',
-                top: -40,
-                right: -40,
-                width: 160,
-                height: 160,
-                borderRadius: 80,
-                backgroundColor: 'rgba(255,255,255,0.1)',
-              }}
-            />
-            <Text style={{ fontSize: 44, marginBottom: 12 }}>🔍</Text>
-            <Text style={{ fontSize: 26, fontFamily: 'Fraunces_700Bold', color: 'white', marginBottom: 4 }}>
-              {t('scan_skin')}
-            </Text>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-              <View style={{ backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 }}>
-                <Text style={{ fontSize: 12, color: 'white', fontFamily: 'PlusJakartaSans_500Medium' }}>
-                  {t('scan_subtitle')}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </Animated.View>
-
-        {/* Quick Actions */}
-        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 20 }}>
-          <TouchableOpacity
-            onPress={() => router.push('/product-check')}
-            style={{
-              flex: 1,
-              borderRadius: 20,
-              padding: 20,
-              backgroundColor: '#FFEFE3',
-              borderWidth: 1,
-              borderColor: 'rgba(224,120,86,0.1)',
-            }}
-          >
-            <Text style={{ fontSize: 28, marginBottom: 8 }}>🧴</Text>
-            <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}>
-              {t('check_product')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push('/routine')}
-            style={{
-              flex: 1,
-              borderRadius: 20,
-              padding: 20,
-              backgroundColor: '#FBF2E0',
-              borderWidth: 1,
-              borderColor: 'rgba(212,165,116,0.2)',
-            }}
-          >
-            <Text style={{ fontSize: 28, marginBottom: 8 }}>🌿</Text>
-            <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}>
-              {t('my_routine')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Last Scan Card */}
-        {lastScan && (
-          <Animated.View entering={FadeInDown.delay(200).springify()}>
-            <View
-              style={{
-                backgroundColor: 'white',
-                borderRadius: 24,
-                padding: 20,
-                marginBottom: 20,
-                borderWidth: 1,
-                borderColor: 'rgba(224,120,86,0.08)',
-                shadowColor: '#2D1810',
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.05,
-                shadowRadius: 20,
-                elevation: 3,
-              }}
-            >
-              <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 12 }}>
-                {t('last_scan')}
-              </Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-                <ScoreCircle score={lastScan.overall_score} size={80} />
-                <View style={{ flex: 1 }}>
-                  <View style={{ backgroundColor: '#FEE2E2', borderRadius: 8, padding: 6, marginBottom: 6 }}>
-                    <Text style={{ fontSize: 12, color: '#F87171', fontFamily: 'PlusJakartaSans_500Medium' }}>
-                      ⚠️ {lastScan.top_concern}
-                    </Text>
-                  </View>
-                  <View style={{ backgroundColor: '#DCFCE7', borderRadius: 8, padding: 6 }}>
-                    <Text style={{ fontSize: 12, color: '#4ADE80', fontFamily: 'PlusJakartaSans_500Medium' }}>
-                      ✓ {lastScan.top_win}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Animated.View>
+        {currentScore !== null && (
+          <ScoreTrendCard
+            currentScore={currentScore}
+            previousScore={previousScore}
+            history={scoreHistory}
+            onPress={() => router.push('/(tabs)/progress')}
+          />
         )}
 
-        {/* Insights Grid */}
-        <Text style={{ fontSize: 18, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 12 }}>
-          Daily Insights
-        </Text>
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 20 }}>
-          {INSIGHTS.map((item, i) => (
-            <Animated.View
-              key={item.label}
-              entering={FadeInDown.delay(i * 80).springify()}
-              style={{
-                width: '47%',
-                backgroundColor: item.bg,
-                borderRadius: 16,
-                padding: 16,
-              }}
-            >
-              <Text style={{ fontSize: 24, marginBottom: 6 }}>{item.icon}</Text>
-              <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-                {item.label}
-              </Text>
-            </Animated.View>
-          ))}
+        <StreakStrip
+          streakDays={streak.current}
+          scansThisWeek={scansThisWeek}
+          routineConsistencyPct={consistencyPct}
+          hasAnyCompletions={hasAnyCompletions}
+        />
+
+        <DynamicActionCard state={heroState} onPrimaryPress={onHeroPress} />
+
+        <View style={{ flexDirection: 'row', gap: 12, marginBottom: 16 }}>
+          <QuickActionTile
+            icon="🧴"
+            label={t('check_product')}
+            bg="#FFEFE3"
+            borderColor="rgba(224,120,86,0.1)"
+            onPress={() => router.push('/product-check')}
+          />
+          <QuickActionTile
+            icon="🌿"
+            label={t('my_routine')}
+            bg="#FBF2E0"
+            borderColor="rgba(212,165,116,0.2)"
+            onPress={() => router.push('/routine')}
+          />
         </View>
 
-        {/* Daily Tip */}
-        <View
-          style={{
-            borderRadius: 20,
-            padding: 20,
-            backgroundColor: '#FBF2E0',
-            borderWidth: 1,
-            borderColor: 'rgba(212,165,116,0.2)',
-          }}
-        >
-          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#D4A574', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
-            {t('daily_tip')}
-          </Text>
-          <Text style={{ fontSize: 24, marginBottom: 8 }}>💦</Text>
-          <Text style={{ fontSize: 16, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 4 }}>
-            Hydrate from within
-          </Text>
-          <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(45,24,16,0.65)', lineHeight: 20 }}>
-            Drinking 8 glasses of water daily can improve skin elasticity and reduce fine lines by up to 30%.
-          </Text>
-        </View>
+        <ContextualTipCard
+          tip={dailyTip}
+          concernLabel={userConcern ? lastConcern?.toLowerCase() ?? null : null}
+          isDone={isTipDone}
+          onMarkDone={() => markTipDone(todayKey, dailyTip.id)}
+          enterDelay={160}
+        />
       </ScrollView>
     </View>
   );
