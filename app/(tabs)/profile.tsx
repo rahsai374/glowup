@@ -34,7 +34,7 @@ export default function ProfileScreen() {
       <AmbientBlobs />
       <ScrollView
         style={{ flex: 1, zIndex: 10 }}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 120, paddingHorizontal: 24 }}
+        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 24, paddingHorizontal: 24 }}
         showsVerticalScrollIndicator={false}
       >
         <Text style={{ fontSize: 30, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 4 }}>
