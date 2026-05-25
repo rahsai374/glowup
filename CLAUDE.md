@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-Pre-scaffolding. `PLAN.md` and `DESIGN.md` are the source of truth. The Expo app has not been initialized yet — `glow up design magic patterns/` is the web prototype (React + Tailwind) used as a design reference only.
+App scaffolded and in active development. All 14 screens exist. Auth, Zustand stores, i18n, Gemini integration, and OTA updates (EAS Update) are implemented. `PLAN.md` and `DESIGN.md` remain the source of truth for design and roadmap decisions. `glow up design magic patterns/` is the web prototype (React + Tailwind) used as design reference only.
 
-## Commands (once scaffolded)
+## Commands
 
 ```bash
 npx expo start            # Start dev server
@@ -15,6 +15,7 @@ npx expo start --android  # Android emulator
 npx tsc --noEmit          # Type check
 npx eslint .              # Lint
 eas build --platform all  # Production build
+eas update                # OTA update (preview channel)
 eas submit                # Submit to stores
 ```
 
@@ -22,15 +23,19 @@ eas submit                # Submit to stores
 
 **Stack:** Expo SDK 52 + TypeScript + Expo Router v3 (file-based nav) + NativeWind v4 + Zustand + Firebase + Gemini 2.0 Flash
 
-**Routing:** Expo Router file-based. Expected structure:
+**Routing:** Expo Router file-based. Actual structure:
 ```
 app/
-  (auth)/          # Splash, Language, Onboarding, OTP
-  (app)/           # Authenticated: Home, Scan, Results, Routine, Progress, Tips, Profile
-  _layout.tsx
+  _layout.tsx      # Root layout — Firebase auth guard
+  index.tsx        # Entry redirect
+  splash.tsx / language.tsx / onboarding.tsx / auth.tsx / questions.tsx
+  scan.tsx / results.tsx / routine.tsx / share.tsx / product-check.tsx
+  (tabs)/          # Authenticated tab bar: Home, Progress, Tips, Profile
 ```
 
-**State:** Zustand stores — user profile, current scan result, language preference. Firebase Auth state drives the auth/app route split.
+**Auth:** Firebase Phone OTP via REST API (`identitytoolkit.googleapis.com`) — no native Firebase SDK, no reCAPTCHA. OTP verified in `lib/firebase.ts`.
+
+**State:** Zustand stores — user profile, current scan result, language preference. Firebase Auth state drives the auth/tab route split.
 
 **AI scan flow:** Camera/gallery → compress to <300KB → base64 encode → Gemini 2.0 Flash multimodal call with Q1+Q2 skin context → parse structured JSON → save to Firestore `users/{uid}/scans/{scanId}`.
 
