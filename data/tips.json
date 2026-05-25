@@ -1,0 +1,242 @@
+[
+  {
+    "id": "spf-morning",
+    "emoji": "☀️",
+    "category": "Sun Protection",
+    "title": "Apply SPF 30+ every morning",
+    "body": "Even on cloudy days, UV rays penetrate and cause premature aging and dark spots.",
+    "concerns": ["darkSpots", "aging", "general"]
+  },
+  {
+    "id": "vitc-serum",
+    "emoji": "🍊",
+    "category": "Brightening",
+    "title": "Vitamin C before sunscreen",
+    "body": "Applying vitamin C serum under SPF doubles UV protection and fades spots over 4–6 weeks.",
+    "concerns": ["darkSpots", "dullness"]
+  },
+  {
+    "id": "niacinamide-acne",
+    "emoji": "🧪",
+    "category": "Acne Care",
+    "title": "Niacinamide controls oil",
+    "body": "5% niacinamide serum reduces sebum production and minimizes pores without irritation.",
+    "concerns": ["acne"]
+  },
+  {
+    "id": "salicylic-wash",
+    "emoji": "🫧",
+    "category": "Acne Care",
+    "title": "Salicylic acid face wash",
+    "body": "Use a 2% salicylic acid cleanser in the morning to unclog pores and reduce breakouts.",
+    "concerns": ["acne"]
+  },
+  {
+    "id": "no-touch-face",
+    "emoji": "🙅",
+    "category": "Acne Care",
+    "title": "Hands off your face",
+    "body": "Touching your face transfers bacteria and oils, worsening breakouts. Clean pillowcases weekly too.",
+    "concerns": ["acne"]
+  },
+  {
+    "id": "benzoyl-spot",
+    "emoji": "🎯",
+    "category": "Acne Care",
+    "title": "Spot-treat with benzoyl peroxide",
+    "body": "Apply 2.5% benzoyl peroxide directly on active pimples at night — kills bacteria within 48 hours.",
+    "concerns": ["acne"]
+  },
+  {
+    "id": "kojic-spots",
+    "emoji": "🟤",
+    "category": "Brightening",
+    "title": "Kojic acid for dark spots",
+    "body": "Apply kojic acid serum to hyperpigmented areas twice daily. Results visible in 4–8 weeks.",
+    "concerns": ["darkSpots"]
+  },
+  {
+    "id": "sunscreen-reapply",
+    "emoji": "🔆",
+    "category": "Sun Protection",
+    "title": "Reapply SPF every 2 hours",
+    "body": "Sunscreen wears off. Reapplying every 2 hours outdoors prevents new dark spots from forming.",
+    "concerns": ["darkSpots", "aging"]
+  },
+  {
+    "id": "azelaic-pigment",
+    "emoji": "✨",
+    "category": "Brightening",
+    "title": "Azelaic acid fades pigmentation",
+    "body": "10% azelaic acid reduces melanin production and is safe for sensitive skin during the day.",
+    "concerns": ["darkSpots", "dullness"]
+  },
+  {
+    "id": "humidifier-dryness",
+    "emoji": "💨",
+    "category": "Hydration",
+    "title": "Use a humidifier at night",
+    "body": "A bedroom humidifier at 40–60% humidity prevents transepidermal water loss while you sleep.",
+    "concerns": ["dryness"]
+  },
+  {
+    "id": "ceramide-moisturiser",
+    "emoji": "🏺",
+    "category": "Hydration",
+    "title": "Ceramide moisturiser locks in water",
+    "body": "Apply a ceramide-rich moisturiser within 60 seconds of washing your face to seal in moisture.",
+    "concerns": ["dryness"]
+  },
+  {
+    "id": "gentle-cleanser-dry",
+    "emoji": "🚿",
+    "category": "Cleansing",
+    "title": "Switch to a cream cleanser",
+    "body": "Foaming cleansers strip natural oils. A cream or oil cleanser keeps the skin barrier intact.",
+    "concerns": ["dryness"]
+  },
+  {
+    "id": "hyaluronic-damp",
+    "emoji": "💧",
+    "category": "Hydration",
+    "title": "Apply hyaluronic acid on damp skin",
+    "body": "HA pulls moisture from the air into your skin. Apply immediately after washing for maximum hydration.",
+    "concerns": ["dryness", "general"]
+  },
+  {
+    "id": "retinol-aging",
+    "emoji": "🌙",
+    "category": "Anti-Aging",
+    "title": "Start retinol — the gold standard",
+    "body": "0.025% retinol 2× per week boosts cell turnover, fades lines, and firms skin over 12 weeks.",
+    "concerns": ["aging"]
+  },
+  {
+    "id": "peptide-serum",
+    "emoji": "🔬",
+    "category": "Anti-Aging",
+    "title": "Peptide serum in the morning",
+    "body": "Peptides signal skin to produce more collagen. Layer under moisturiser for firmer, plumper skin.",
+    "concerns": ["aging"]
+  },
+  {
+    "id": "eye-cream-tapping",
+    "emoji": "👁️",
+    "category": "Anti-Aging",
+    "title": "Tap eye cream — don't rub",
+    "body": "The skin around the eye is 4× thinner. Tap with your ring finger to avoid tugging and wrinkling.",
+    "concerns": ["aging"]
+  },
+  {
+    "id": "sleep-position",
+    "emoji": "😴",
+    "category": "Lifestyle",
+    "title": "Sleep on your back",
+    "body": "Side-sleeping creases the same facial areas every night, accelerating wrinkle formation over time.",
+    "concerns": ["aging"]
+  },
+  {
+    "id": "gua-sha-radiance",
+    "emoji": "💎",
+    "category": "Radiance",
+    "title": "Gua sha boosts circulation",
+    "body": "2 minutes of gua sha daily increases blood flow, reduces puffiness, and gives skin a natural glow.",
+    "concerns": ["dullness"]
+  },
+  {
+    "id": "aha-exfoliant",
+    "emoji": "🧖🏽",
+    "category": "Exfoliation",
+    "title": "Exfoliate with AHA once a week",
+    "body": "Glycolic or lactic acid removes dead cells that make skin look dull. Use at night, SPF next morning.",
+    "concerns": ["dullness", "darkSpots"]
+  },
+  {
+    "id": "jade-roller-dullness",
+    "emoji": "🪨",
+    "category": "Radiance",
+    "title": "Cold jade roller to depuff",
+    "body": "Refrigerate your jade roller and use it in the morning to reduce puffiness and wake up skin tone.",
+    "concerns": ["dullness"]
+  },
+  {
+    "id": "diet-antioxidants",
+    "emoji": "🥗",
+    "category": "Diet",
+    "title": "Eat antioxidant-rich foods",
+    "body": "Vitamin C from citrus and turmeric from Indian spices protect skin from oxidative stress and dullness.",
+    "concerns": ["dullness", "general"]
+  },
+  {
+    "id": "water-intake",
+    "emoji": "💦",
+    "category": "Hydration",
+    "title": "Drink 8 glasses of water",
+    "body": "Adequate hydration improves skin elasticity and reduces fine lines. Set hourly reminders if you forget.",
+    "concerns": ["general"]
+  },
+  {
+    "id": "sleep-repair",
+    "emoji": "🛌",
+    "category": "Lifestyle",
+    "title": "7–9 hours of sleep",
+    "body": "Skin repairs itself overnight. Poor sleep raises cortisol, causing breakouts and a dull complexion.",
+    "concerns": ["general"]
+  },
+  {
+    "id": "double-cleanse",
+    "emoji": "✌️",
+    "category": "Cleansing",
+    "title": "Double cleanse at night",
+    "body": "Oil cleanser first, then water-based cleanser. Removes sunscreen and pollution without over-stripping.",
+    "concerns": ["general"]
+  },
+  {
+    "id": "pillowcase-silk",
+    "emoji": "🛏️",
+    "category": "Lifestyle",
+    "title": "Switch to a silk pillowcase",
+    "body": "Silk reduces friction and moisture absorption compared to cotton, keeping skin hydrated overnight.",
+    "concerns": ["general", "aging"]
+  },
+  {
+    "id": "patch-test",
+    "emoji": "🩹",
+    "category": "Skincare Basics",
+    "title": "Patch test new products",
+    "body": "Apply a new product behind your ear for 24 hours before full-face use to avoid allergic reactions.",
+    "concerns": ["general"]
+  },
+  {
+    "id": "sunscreen-indoors",
+    "emoji": "🪟",
+    "category": "Sun Protection",
+    "title": "Wear SPF indoors too",
+    "body": "UVA rays penetrate glass windows and cause aging. Apply SPF every morning even if you stay home.",
+    "concerns": ["general", "aging", "darkSpots"]
+  },
+  {
+    "id": "stress-skin",
+    "emoji": "🧘",
+    "category": "Lifestyle",
+    "title": "Manage stress for clearer skin",
+    "body": "Cortisol from stress triggers oil production and inflammation. 10 minutes of daily breathing helps.",
+    "concerns": ["acne", "general"]
+  },
+  {
+    "id": "clean-brushes",
+    "emoji": "🖌️",
+    "category": "Hygiene",
+    "title": "Clean makeup brushes weekly",
+    "body": "Dirty brushes harbour bacteria that cause breakouts. Wash with mild shampoo and air-dry.",
+    "concerns": ["acne"]
+  },
+  {
+    "id": "toner-balance",
+    "emoji": "⚖️",
+    "category": "Skincare Basics",
+    "title": "Use an alcohol-free toner",
+    "body": "A pH-balancing toner after cleansing prepares skin to absorb serums and moisturisers better.",
+    "concerns": ["general", "dryness"]
+  }
+]
