@@ -17,8 +17,8 @@ export default function ScoreTrendCard({ currentScore, previousScore, history, o
 
   const deltaLabel = () => {
     if (delta === null) return null;
-    if (delta > 0) return `▲ +${delta}`;
-    if (delta < 0) return `▼ ${Math.abs(delta)}`;
+    if (delta > 0) return `▲ +${Math.round(delta)}`;
+    if (delta < 0) return `▼ ${Math.round(Math.abs(delta))}`;
     return '— same';
   };
 

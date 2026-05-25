@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from 'react-native-reanimated';
 import { HeroState } from '@/lib/home/types';
 
 interface DynamicActionCardProps {
@@ -13,8 +13,13 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
   function onPress() {
-    scale.value = withSpring(0.97, { damping: 15 });
-    setTimeout(() => { scale.value = withSpring(1); onPrimaryPress(); }, 100);
+    scale.value = withSpring(0.97, { damping: 15 }, (finished) => {
+      'worklet';
+      if (finished) {
+        scale.value = withSpring(1);
+        runOnJS(onPrimaryPress)();
+      }
+    });
   }
 
   const config = (() => {
