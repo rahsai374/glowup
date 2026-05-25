@@ -3,9 +3,9 @@ import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { signInWithPhoneNumber, PhoneAuthProvider, signInWithCredential, ConfirmationResult } from 'firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import { FirebaseRecaptcha, RecaptchaRef } from '@/components/FirebaseRecaptcha';
 import { useUserStore } from '@/stores/useUserStore';
 import { auth, firebaseConfig } from '@/lib/firebase';
 
@@ -16,16 +16,17 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState<ConfirmationResult | null>(null);
   const otpRefs = useRef<(TextInput | null)[]>([]);
-  const recaptchaVerifier = useRef<FirebaseRecaptchaVerifierModal>(null);
+  const recaptchaRef = useRef<RecaptchaRef>(null);
   const router = useRouter();
   const { t } = useTranslation();
   const setUser = useUserStore((s) => s.setUser);
 
   async function sendOtp() {
-    if (phone.length < 10 || loading) return;
+    if (phone.length < 10 || loading || !recaptchaRef.current) return;
     setLoading(true);
     try {
-      const result = await signInWithPhoneNumber(auth, '+91' + phone, recaptchaVerifier.current!);
+      const verifier = recaptchaRef.current.getVerifier();
+      const result = await signInWithPhoneNumber(auth, '+91' + phone, verifier);
       setConfirmation(result);
       setStep('otp');
     } catch (e: any) {
@@ -101,12 +102,8 @@ export default function AuthScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={{ flex: 1, backgroundColor: '#FFF5EE' }}
     >
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfig}
-        attemptInvisibleVerification
-      />
       <AmbientBlobs />
+      <FirebaseRecaptcha ref={recaptchaRef} firebaseApiKey={firebaseConfig.apiKey ?? ''} />
       <View style={{ flex: 1, paddingHorizontal: 32, paddingTop: 96, zIndex: 10 }}>
 
         {step === 'phone' && (
