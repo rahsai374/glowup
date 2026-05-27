@@ -54,6 +54,16 @@ All visual decisions live in `DESIGN.md`. Key points:
 - Motion: `react-native-reanimated` — `FadeInDown` page enters, spring scale on CTA press, stagger delay `idx * 80ms` on lists
 - Per-screen design briefs are in `DESIGN.md §8` — use these when prompting for new screens
 
+## Git Workflow
+
+Every new feature or fix must follow this flow:
+1. Create a new branch from latest `main` (`feat/...` or `fix/...`)
+2. Implement and commit all changes on that branch
+3. Raise a PR to `main`
+4. Once merged, checkout `main` and pull latest (`git checkout main && git pull`)
+
+Never commit feature work directly to `main`.
+
 ## Design Reference
 
 `glow up design magic patterns/` is a working Vite + React + Tailwind prototype of all 14 screens. Run it with `bun install && bun dev` inside that directory to preview designs. Do not modify it — it is read-only reference.
