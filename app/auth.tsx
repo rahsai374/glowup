@@ -7,6 +7,7 @@ import rnAuth from '@react-native-firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
 import { db, doc, getDoc } from '@/lib/firebase';
+import { hydrateFromFirestore } from '@/lib/firestore';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -90,6 +91,7 @@ export default function AuthScreen() {
       try {
         const snap = await getDoc(doc(db, 'users', uid));
         if (snap.exists()) {
+          await hydrateFromFirestore(uid);
           router.replace('/(tabs)');
           return;
         }

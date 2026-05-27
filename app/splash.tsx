@@ -9,6 +9,7 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import rnAuth from '@react-native-firebase/auth';
+import { hydrateFromFirestore } from '@/lib/firestore';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -16,10 +17,20 @@ export default function SplashScreen() {
 
   useEffect(() => {
     iconScale.value = withDelay(200, withSpring(1, { damping: 12, stiffness: 100 }));
-    const t = setTimeout(() => {
-      router.replace(rnAuth().currentUser ? '/(tabs)' : '/language');
-    }, 2500);
-    return () => clearTimeout(t);
+
+    const currentUser = rnAuth().currentUser;
+    if (!currentUser) {
+      const t = setTimeout(() => router.replace('/language'), 2500);
+      return () => clearTimeout(t);
+    }
+
+    const minSplash = new Promise((r) => setTimeout(r, 2500));
+    const hydrate = hydrateFromFirestore(currentUser.uid).catch(() => {});
+    const hardTimeout = new Promise((r) => setTimeout(r, 5000));
+
+    Promise.all([minSplash, Promise.race([hydrate, hardTimeout])]).then(() => {
+      router.replace('/(tabs)');
+    });
   }, []);
 
   const iconStyle = useAnimatedStyle(() => ({ transform: [{ scale: iconScale.value }] }));
