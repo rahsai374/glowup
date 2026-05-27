@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
+import { db, doc, setDoc, serverTimestamp } from '@/lib/firebase';
 import AmbientBlobs from '@/components/AmbientBlobs';
 
 const QUESTIONS = [
@@ -63,36 +64,59 @@ const QUESTIONS = [
   },
 ];
 
+const TOTAL_STEPS = QUESTIONS.length + 1; // Q1–Q5 + name
+
 export default function QuestionsScreen() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [nameInput, setNameInput] = useState('');
   const router = useRouter();
   const { t } = useTranslation();
   const updateUser = useUserStore((s) => s.updateUser);
-  const q = QUESTIONS[step];
+  const user = useUserStore((s) => s.user);
+
+  const isNameStep = step === QUESTIONS.length;
+  const q = !isNameStep ? QUESTIONS[step] : null;
 
   function selectOption(val: string) {
-    setAnswers((prev) => ({ ...prev, [q.key]: val }));
+    if (q) setAnswers((prev) => ({ ...prev, [q.key]: val }));
+  }
+
+  async function finish() {
+    const trimmed = nameInput.trim();
+    if (!trimmed) return;
+
+    const profile = {
+      name: trimmed,
+      mainConcern: answers.q1 ?? '',
+      skinType: answers.q2 ?? '',
+      waterIntake: answers.q3 ?? '',
+      sunscreenHabit: answers.q4 ?? '',
+      ageRange: answers.q5 ?? '',
+    };
+    updateUser(profile);
+
+    if (user?.uid) {
+      setDoc(doc(db, 'users', user.uid), {
+        ...profile,
+        phone: user.phone,
+        language: user.language,
+        createdAt: serverTimestamp(),
+      }).catch(() => {});
+    }
+
+    router.replace('/(tabs)');
   }
 
   function next() {
-    if (!answers[q.key] && q.required) return;
-    if (step < QUESTIONS.length - 1) {
+    if (q && !answers[q.key] && q.required) return;
+    if (step < QUESTIONS.length) {
       setStep(step + 1);
-    } else {
-      updateUser({
-        mainConcern: answers.q1 ?? '',
-        skinType: answers.q2 ?? '',
-        waterIntake: answers.q3 ?? '',
-        sunscreenHabit: answers.q4 ?? '',
-        ageRange: answers.q5 ?? '',
-      });
-      router.replace('/(tabs)');
     }
   }
 
-  const selected = answers[q.key];
-  const canNext = selected || !q.required;
+  const selected = q ? answers[q.key] : undefined;
+  const canNext = q ? (selected || !q.required) : !!nameInput.trim();
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
@@ -100,7 +124,7 @@ export default function QuestionsScreen() {
 
       <View style={{ paddingHorizontal: 24, paddingTop: 56, zIndex: 10 }}>
         <View style={{ flexDirection: 'row', gap: 6, marginBottom: 32 }}>
-          {QUESTIONS.map((_, i) => (
+          {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
             <View
               key={i}
               style={{
@@ -114,15 +138,15 @@ export default function QuestionsScreen() {
         </View>
 
         <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 8 }}>
-          Question {step + 1} of {QUESTIONS.length}
+          Question {step + 1} of {TOTAL_STEPS}
         </Text>
 
         <Animated.Text
-          key={q.key}
+          key={isNameStep ? 'q6' : q!.key}
           entering={FadeInRight.springify()}
           style={{ fontSize: 24, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 28, lineHeight: 32 }}
         >
-          {t(q.titleKey)}
+          {isNameStep ? t('q6_title') : t(q!.titleKey)}
         </Animated.Text>
       </View>
 
@@ -131,35 +155,57 @@ export default function QuestionsScreen() {
         contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        {q.options.map((opt, i) => (
-          <Animated.View key={opt.key} entering={FadeInRight.delay(i * 60).springify()}>
-            <TouchableOpacity
-              onPress={() => selectOption(opt.key)}
+        {isNameStep ? (
+          <Animated.View entering={FadeInRight.springify()}>
+            <TextInput
+              value={nameInput}
+              onChangeText={setNameInput}
+              placeholder={t('q6_placeholder')}
+              autoFocus
               style={{
-                backgroundColor: selected === opt.key ? '#FFF5EE' : 'white',
+                backgroundColor: 'white',
                 borderRadius: 16,
-                padding: 18,
-                marginBottom: 12,
+                paddingHorizontal: 18,
+                paddingVertical: 18,
+                fontSize: 16,
+                color: '#2D1810',
+                fontFamily: 'PlusJakartaSans_400Regular',
                 borderWidth: 2,
-                borderColor: selected === opt.key ? '#E07856' : 'rgba(224,120,86,0.12)',
+                borderColor: nameInput.trim() ? '#E07856' : 'rgba(224,120,86,0.12)',
               }}
-            >
-              <Text
+            />
+          </Animated.View>
+        ) : (
+          q!.options.map((opt, i) => (
+            <Animated.View key={opt.key} entering={FadeInRight.delay(i * 60).springify()}>
+              <TouchableOpacity
+                onPress={() => selectOption(opt.key)}
                 style={{
-                  fontSize: 16,
-                  fontFamily: 'PlusJakartaSans_500Medium',
-                  color: selected === opt.key ? '#E07856' : '#2D1810',
+                  backgroundColor: selected === opt.key ? '#FFF5EE' : 'white',
+                  borderRadius: 16,
+                  padding: 18,
+                  marginBottom: 12,
+                  borderWidth: 2,
+                  borderColor: selected === opt.key ? '#E07856' : 'rgba(224,120,86,0.12)',
                 }}
               >
-                {t(opt.labelKey)}
-              </Text>
-            </TouchableOpacity>
-          </Animated.View>
-        ))}
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'PlusJakartaSans_500Medium',
+                    color: selected === opt.key ? '#E07856' : '#2D1810',
+                  }}
+                >
+                  {t(opt.labelKey)}
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
+          ))
+        )}
       </ScrollView>
 
       <View style={{ paddingHorizontal: 24, paddingBottom: 40, zIndex: 10, gap: 12 }}>
-        {!q.required && (
+        {q && !q.required && (
           <TouchableOpacity onPress={next}>
             <Text style={{ textAlign: 'center', fontSize: 14, color: '#2D1810', opacity: 0.5, fontFamily: 'PlusJakartaSans_400Regular' }}>
               {t('skip')}
@@ -167,7 +213,7 @@ export default function QuestionsScreen() {
           </TouchableOpacity>
         )}
         <TouchableOpacity
-          onPress={next}
+          onPress={isNameStep ? finish : next}
           style={{
             backgroundColor: canNext ? '#E07856' : 'rgba(224,120,86,0.4)',
             borderRadius: 20,
@@ -176,7 +222,7 @@ export default function QuestionsScreen() {
           }}
         >
           <Text style={{ color: 'white', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
-            {step === QUESTIONS.length - 1 ? t('done') : t('next')}
+            {isNameStep ? t('done') : t('next')}
           </Text>
         </TouchableOpacity>
       </View>

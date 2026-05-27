@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import rnAuth from '@react-native-firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
+import { db, doc, getDoc } from '@/lib/firebase';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -73,8 +74,9 @@ export default function AuthScreen() {
     setLoading(true);
     try {
       const result = await confirmation.confirm(code);
+      const uid = result!.user.uid;
       setUser({
-        uid: result!.user.uid,
+        uid,
         name: '',
         phone,
         language: 'en',
@@ -84,6 +86,14 @@ export default function AuthScreen() {
         sunscreenHabit: '',
         ageRange: '',
       });
+
+      try {
+        const snap = await getDoc(doc(db, 'users', uid));
+        if (snap.exists()) {
+          router.replace('/(tabs)');
+          return;
+        }
+      } catch {}
       router.replace('/questions');
     } catch (e: any) {
       Alert.alert('Invalid OTP', e?.message ?? 'Please check the code and try again.');
