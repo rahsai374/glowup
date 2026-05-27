@@ -26,7 +26,6 @@ export default function LanguageScreen() {
             fontSize: 28,
             fontFamily: 'Fraunces_700Bold',
             color: '#2D1810',
-            textAlign: 'center',
             marginBottom: 4,
           }}
         >
@@ -37,12 +36,22 @@ export default function LanguageScreen() {
             fontSize: 24,
             fontFamily: 'Hind_500Medium',
             color: '#2D1810',
-            textAlign: 'center',
-            marginBottom: 48,
+            marginBottom: 8,
             opacity: 0.7,
           }}
         >
           भाषा चुनें
+        </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: 'PlusJakartaSans_400Regular',
+            color: '#2D1810',
+            opacity: 0.6,
+            marginBottom: 48,
+          }}
+        >
+          You can change this later in settings.
         </Text>
 
         <Animated.View entering={FadeInRight.delay(100).springify()}>
@@ -63,9 +72,13 @@ export default function LanguageScreen() {
               elevation: 3,
             }}
           >
-            <Text style={{ fontSize: 32, marginBottom: 8 }}>🇬🇧</Text>
             <Text
-              style={{ fontSize: 20, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}
+              style={{ fontSize: 28, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810', marginBottom: 4 }}
+            >
+              English
+            </Text>
+            <Text
+              style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', color: '#2D1810', opacity: 0.6 }}
             >
               English
             </Text>
@@ -89,11 +102,15 @@ export default function LanguageScreen() {
               elevation: 3,
             }}
           >
-            <Text style={{ fontSize: 32, marginBottom: 8 }}>🇮🇳</Text>
             <Text
-              style={{ fontSize: 20, fontFamily: 'Hind_600SemiBold', color: '#2D1810' }}
+              style={{ fontSize: 28, fontFamily: 'Hind_600SemiBold', color: '#2D1810', marginBottom: 4 }}
             >
               हिन्दी
+            </Text>
+            <Text
+              style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', color: '#2D1810', opacity: 0.6 }}
+            >
+              Hindi
             </Text>
           </TouchableOpacity>
         </Animated.View>

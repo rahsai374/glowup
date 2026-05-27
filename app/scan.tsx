@@ -1,11 +1,16 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground } from 'react-native';
-import { CameraView, useCameraPermissions } from 'expo-camera';
+import React, { useState, useRef, useCallback, useMemo } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform } from 'react-native';
+import { useCameraPermissions } from 'expo-camera';
+import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
+import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-native-vision-camera';
+import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useRouter } from 'expo-router';
 import Animated, {
   FadeInDown,
+  FadeInUp,
+  FadeOutDown,
   useSharedValue,
   useAnimatedStyle,
   withRepeat,
@@ -15,8 +20,15 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { analyzeSkin } from '@/lib/gemini';
+import { useFaceGuide } from '@/lib/useFaceGuide';
+import type { Face } from 'react-native-vision-camera-face-detector';
 
 const { width, height } = Dimensions.get('window');
+const OVAL_W = 240;
+const OVAL_H = 320;
+const OVAL_CENTER_X = width / 2;
+const OVAL_CENTER_Y = height * 0.4;
+
 const FACTS = [
   'Your skin has 3 layers and renews itself every 28 days.',
   'Melanin production can be regulated with consistent SPF use.',
@@ -31,11 +43,65 @@ export default function ScanScreen() {
   const [capturedUri, setCapturedUri] = useState<string | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [factIdx, setFactIdx] = useState(0);
-  const cameraRef = useRef<CameraView>(null);
+  const [nudgeKey, setNudgeKey] = useState<string | null>(null);
+  const [isReady, setIsReady] = useState(false);
+  const hapticFired = useRef(false);
+  const readySince = useRef<number | null>(null);
+  const pendingNudge = useRef<string | null>(null);
+  const pendingNudgeSince = useRef<number>(0);
   const router = useRouter();
   const { t } = useTranslation();
   const user = useUserStore((s) => s.user);
-  const { setCurrentScan, addToHistory } = useScanStore();
+  const { setCurrentScan, addToHistory, scanHistory } = useScanStore();
+  const device = useCameraDevice('front');
+
+  const ovalBounds = useMemo(
+    () => ({ width: OVAL_W, height: OVAL_H, centerX: OVAL_CENTER_X, centerY: OVAL_CENTER_Y }),
+    []
+  );
+  const evaluateFace = useFaceGuide(ovalBounds);
+
+  const handleFacesDetected = useCallback(
+    (faces: Face[]) => {
+      const result = evaluateFace(faces);
+      if (!result) return;
+
+      const now = Date.now();
+      if (result.nudgeKey !== pendingNudge.current) {
+        pendingNudge.current = result.nudgeKey;
+        pendingNudgeSince.current = now;
+      }
+      const elapsed = now - pendingNudgeSince.current;
+      if (result.nudgeKey !== nudgeKey && elapsed < 1000) return;
+
+      setNudgeKey(result.nudgeKey);
+      setIsReady(result.isReady);
+
+      if (result.isReady) {
+        if (!readySince.current) readySince.current = Date.now();
+        if (!hapticFired.current && Date.now() - readySince.current > 1000) {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          hapticFired.current = true;
+        }
+      } else {
+        readySince.current = null;
+        hapticFired.current = false;
+      }
+    },
+    [evaluateFace]
+  );
+
+  const photoOutput = usePhotoOutput();
+  const faceDetectorOptions = useMemo(() => ({
+    onFacesDetected: handleFacesDetected,
+    onError: (e: Error) => console.warn('[FACE_DETECT]', e),
+    cameraFacing: 'front' as const,
+    autoMode: true,
+    windowWidth: width,
+    windowHeight: height,
+    performanceMode: 'fast' as const,
+  }), [handleFacesDetected]);
+  const faceOutput = useFaceDetectorOutput(faceDetectorOptions);
 
   const scanY = useSharedValue(0);
   const scanStyle = useAnimatedStyle(() => ({ transform: [{ translateY: scanY.value }] }));
@@ -73,12 +139,13 @@ export default function ScanScreen() {
   }
 
   async function takePhoto() {
-    if (!cameraRef.current) return;
-    const photo = await cameraRef.current.takePictureAsync({ quality: 0.8 });
-    if (photo) await processImage(photo.uri);
+    if (!photoOutput) return;
+    const photo = await photoOutput.capturePhotoToFile({}, {});
+    const uri = Platform.OS === 'android' ? `file://${photo.filePath}` : photo.filePath;
+    await processImage(uri, isReady);
   }
 
-  async function processImage(uri: string) {
+  async function processImage(uri: string, wasReady = false) {
     setCapturedUri(uri);
     setState('analyzing');
     startScanning();
@@ -93,9 +160,17 @@ export default function ScanScreen() {
         compressed.base64,
         'image/jpeg',
         user?.mainConcern ?? 'general',
-        user?.skinType ?? 'normal'
+        user?.skinType ?? 'normal',
+        user?.ageRange ?? '',
+        scanHistory[0] ?? null
       );
-      const scan = { ...result, id: `scan_${Date.now()}`, createdAt: new Date().toISOString(), imageUrl: uri };
+      const scan = {
+        ...result,
+        id: `scan_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        imageUrl: uri,
+        wasReady,
+      };
       setCurrentScan(scan);
       addToHistory(scan);
       stopScanning();
@@ -111,25 +186,63 @@ export default function ScanScreen() {
   if (state === 'camera') {
     return (
       <View style={{ flex: 1, backgroundColor: 'black' }}>
-        <CameraView ref={cameraRef} style={{ flex: 1 }} facing="front">
+        {device ? (
+          <VisionCamera
+            style={{ flex: 1 }}
+            device={device}
+            isActive={state === 'camera'}
+            outputs={[photoOutput, faceOutput].filter(Boolean)}
+          />
+        ) : (
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={{ color: 'rgba(255,255,255,0.8)', fontFamily: 'PlusJakartaSans_500Medium', fontSize: 14, marginBottom: 20 }}>
-              {t('position_face')}
+            <Text style={{ color: 'white', fontFamily: 'PlusJakartaSans_400Regular' }}>
+              Camera not available
             </Text>
-            <View
-              style={{
-                width: 240,
-                height: 320,
-                borderRadius: 120,
-                borderWidth: 2,
-                borderColor: 'rgba(255,255,255,0.5)',
-                borderStyle: 'dashed',
-              }}
-            />
           </View>
-          <View style={{ paddingBottom: 60, alignItems: 'center' }}>
-            <TouchableOpacity
-              onPress={takePhoto}
+        )}
+
+        {/* Oval guide overlay */}
+        <View
+          pointerEvents="none"
+          style={{
+            position: 'absolute',
+            top: OVAL_CENTER_Y - OVAL_H / 2,
+            left: OVAL_CENTER_X - OVAL_W / 2,
+            width: OVAL_W,
+            height: OVAL_H,
+            borderRadius: OVAL_W / 2,
+            borderWidth: isReady ? 3 : 2,
+            borderColor: isReady ? '#4ADE80' : 'rgba(255,255,255,0.5)',
+            borderStyle: isReady ? 'solid' : 'dashed',
+          }}
+        />
+
+        {/* Nudge label */}
+        {nudgeKey && (
+          <Animated.Text
+            key={nudgeKey}
+            entering={FadeInUp.duration(200)}
+            exiting={FadeOutDown.duration(200)}
+            style={{
+              position: 'absolute',
+              top: OVAL_CENTER_Y + OVAL_H / 2 + 20,
+              left: 32,
+              right: 32,
+              textAlign: 'center',
+              color: isReady ? '#4ADE80' : 'rgba(255,255,255,0.85)',
+              fontSize: 14,
+              fontFamily: 'PlusJakartaSans_500Medium',
+              lineHeight: 20,
+            }}
+          >
+            {t(nudgeKey)}
+          </Animated.Text>
+        )}
+
+        {/* Shutter button with quality dot */}
+        <View style={{ position: 'absolute', bottom: 60, left: 0, right: 0, alignItems: 'center' }}>
+          <TouchableOpacity onPress={takePhoto}>
+            <View
               style={{
                 width: 72,
                 height: 72,
@@ -137,10 +250,25 @@ export default function ScanScreen() {
                 backgroundColor: 'white',
                 borderWidth: 4,
                 borderColor: 'rgba(255,255,255,0.5)',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             />
-          </View>
-        </CameraView>
+          </TouchableOpacity>
+          <View
+            style={{
+              position: 'absolute',
+              bottom: -8,
+              right: width / 2 - 52,
+              width: 10,
+              height: 10,
+              borderRadius: 5,
+              backgroundColor: isReady ? '#4ADE80' : '#F59E0B',
+            }}
+          />
+        </View>
+
+        {/* Close button */}
         <TouchableOpacity
           onPress={() => setState('choice')}
           style={{ position: 'absolute', top: 56, left: 20, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 20, padding: 10 }}

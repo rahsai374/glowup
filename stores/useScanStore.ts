@@ -7,6 +7,7 @@ export interface ScanRecord extends ScanResult {
   id: string;
   createdAt: string;
   imageUrl?: string;
+  wasReady?: boolean;
 }
 
 interface ScanStore {

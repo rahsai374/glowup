@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.rahul.glowup"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.rahul.glowup",
       "adaptiveIcon": {
         "backgroundColor": "#E07856",
@@ -35,7 +36,9 @@
       "bundler": "metro"
     },
     "plugins": [
-"expo-router",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "expo-router",
       "expo-font",
       [
         "expo-camera",

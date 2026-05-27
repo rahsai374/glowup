@@ -125,7 +125,7 @@ export default function HomeScreen() {
       <AmbientBlobs />
       <ScrollView
         style={{ flex: 1, zIndex: 10 }}
-        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 120, paddingHorizontal: 24 }}
+        contentContainerStyle={{ paddingTop: insets.top + 16, paddingBottom: 24, paddingHorizontal: 24 }}
         showsVerticalScrollIndicator={false}
       >
         <HomeHeader
@@ -140,6 +140,7 @@ export default function HomeScreen() {
             previousScore={previousScore}
             history={scoreHistory}
             onPress={() => router.push('/(tabs)/progress')}
+            onScanPress={() => router.push('/scan')}
           />
         )}
 
