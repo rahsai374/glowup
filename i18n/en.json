@@ -130,5 +130,11 @@
   "tip_header_concern": "For your {{concern}}",
   "tip_header_general": "Daily glow tip",
   "tip_mark_done": "Mark as done ✓",
-  "tip_done": "Done ✓"
+  "tip_done": "Done ✓",
+  "nudge_closer": "Come closer — every pore tells a story",
+  "nudge_back": "A little back — I want to see your full glow",
+  "nudge_center": "Center up — don't let me miss a single detail",
+  "nudge_steady": "Hold steady — sharp shot, sharper skin insights",
+  "nudge_ready": "Perfect glow angle — let's see what's glowing ✨",
+  "nudge_no_face": "Where'd you go? Step into the glow zone"
 }
