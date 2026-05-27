@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { updateStreak as syncStreak } from '@/lib/firestore';
 
 export interface UserProfile {
   uid: string;
@@ -65,8 +66,12 @@ export const useUserStore = create<UserStore>()(
         set((state) => ({ user: state.user ? { ...state.user, language: lang } : null })),
       tickStreak: () => {
         const today = localDateString();
-        const next = computeNextStreak(get().streak, today);
+        const prev = get().streak;
+        const next = computeNextStreak(prev, today);
+        if (next === prev) return;
         set({ streak: next });
+        const uid = get().user?.uid;
+        if (uid) syncStreak(uid, next).catch(() => {});
       },
       logout: () => set({ user: null, isAuthenticated: false, streak: { current: 0, lastOpenedAt: '' } }),
     }),

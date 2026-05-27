@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { analyzeSkin } from '@/lib/gemini';
+import { saveScan } from '@/lib/firestore';
 import { useFaceGuide } from '@/lib/useFaceGuide';
 import type { Face } from 'react-native-vision-camera-face-detector';
 
@@ -173,6 +174,7 @@ export default function ScanScreen() {
       };
       setCurrentScan(scan);
       addToHistory(scan);
+      if (user?.uid) saveScan(user.uid, scan).catch(() => {});
       stopScanning();
       router.replace('/results');
     } catch (e: any) {

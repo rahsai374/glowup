@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
-import { db, doc, updateDoc } from '@/lib/firebase';
+import { updateProfileField } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import i18n from '@/i18n';
 
@@ -23,7 +23,7 @@ export default function ProfileScreen() {
     const trimmed = name.trim();
     updateUser({ name: trimmed });
     if (user?.uid) {
-      updateDoc(doc(db, 'users', user.uid), { name: trimmed }).catch(() => {});
+      updateProfileField(user.uid, { name: trimmed }).catch(() => {});
     }
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);

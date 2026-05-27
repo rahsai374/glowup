@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
-import { db, doc, setDoc, serverTimestamp } from '@/lib/firebase';
+import { saveProfile } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 
 const QUESTIONS = [
@@ -97,11 +97,10 @@ export default function QuestionsScreen() {
     updateUser(profile);
 
     if (user?.uid) {
-      setDoc(doc(db, 'users', user.uid), {
+      saveProfile(user.uid, {
         ...profile,
         phone: user.phone,
         language: user.language,
-        createdAt: serverTimestamp(),
       }).catch(() => {});
     }
 
