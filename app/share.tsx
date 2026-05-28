@@ -19,12 +19,13 @@ export default function ShareScreen() {
   const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: cardScale.value }] }));
 
   React.useEffect(() => {
-    if (!scan) {
-      router.back();
-      return;
-    }
+    if (!scan) return;
     logEvent(EVENTS.SHARE_OPENED, { overall_score: scan.overall_score });
     cardScale.value = withSpring(1, { damping: 14, stiffness: 100 });
+  }, []);
+
+  React.useEffect(() => {
+    if (!scan) router.back();
   }, [scan]);
 
   if (!scan) return null;

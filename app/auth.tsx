@@ -23,7 +23,7 @@ export default function AuthScreen() {
   const setUser = useUserStore((s) => s.setUser);
 
   async function sendOtp() {
-    if (phone.length < 5 || loading) return;
+    if (phone.length < 5 || countryCode.length < 2 || loading) return;
     setLoading(true);
     try {
       const result = await rnAuth().signInWithPhoneNumber(countryCode + phone);
@@ -101,12 +101,8 @@ export default function AuthScreen() {
           return;
         }
       } catch (err) {
-        console.warn('[auth] Failed to check existing profile:', err);
-        Alert.alert(
-          'Connection issue',
-          'Could not load your profile. Please check your connection and try again.',
-        );
-        return;
+        // Firestore unreachable — treat as new user and proceed to questions
+        console.warn('[auth] Firestore check failed, treating as new user:', err);
       }
       logSignUp('phone');
       router.replace('/questions');
@@ -159,8 +155,8 @@ export default function AuthScreen() {
 
             <TouchableOpacity
               onPress={sendOtp}
-              disabled={phone.length < 5 || loading}
-              style={{ backgroundColor: phone.length >= 5 ? '#E07856' : 'rgba(224,120,86,0.4)', borderRadius: 20, paddingVertical: 16, alignItems: 'center' }}
+              disabled={phone.length < 5 || countryCode.length < 2 || loading}
+              style={{ backgroundColor: phone.length >= 5 && countryCode.length >= 2 ? '#E07856' : 'rgba(224,120,86,0.4)', borderRadius: 20, paddingVertical: 16, alignItems: 'center' }}
             >
               {loading
                 ? <ActivityIndicator color="white" />

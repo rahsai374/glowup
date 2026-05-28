@@ -105,9 +105,9 @@ export default function QuestionsScreen() {
       age_range: profile.ageRange,
     });
     setUserProperties({
-      skin_type: profile.skinType,
-      main_concern: profile.mainConcern,
-      age_range: profile.ageRange,
+      skin_type: profile.skinType || null,
+      main_concern: profile.mainConcern || null,
+      age_range: profile.ageRange || null,
     });
 
     if (user?.uid) {

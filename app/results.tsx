@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -27,16 +27,20 @@ export default function ResultsScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const scan = useScanStore((s) => s.currentScan);
+  const loggedRef = useRef(false);
 
   useEffect(() => {
     if (!scan) {
       router.replace('/(tabs)');
       return;
     }
-    logEvent(EVENTS.RESULTS_VIEWED, {
-      overall_score: scan.overall_score,
-      skin_type: scan.skin_type,
-    });
+    if (!loggedRef.current) {
+      loggedRef.current = true;
+      logEvent(EVENTS.RESULTS_VIEWED, {
+        overall_score: scan.overall_score,
+        skin_type: scan.skin_type,
+      });
+    }
   }, [scan]);
 
   if (!scan) return null;

@@ -151,12 +151,12 @@ export default function ScanScreen() {
   }
 
   async function openGallery() {
-    logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.8,
     });
     if (!result.canceled) {
+      logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
       await processImage(result.assets[0].uri);
     }
   }
