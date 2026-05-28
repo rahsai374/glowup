@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import MetricBar from '@/components/MetricBar';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -28,7 +29,14 @@ export default function ResultsScreen() {
   const scan = useScanStore((s) => s.currentScan);
 
   useEffect(() => {
-    if (!scan) router.replace('/(tabs)');
+    if (!scan) {
+      router.replace('/(tabs)');
+      return;
+    }
+    logEvent(EVENTS.RESULTS_VIEWED, {
+      overall_score: scan.overall_score,
+      skin_type: scan.skin_type,
+    });
   }, [scan]);
 
   if (!scan) return null;

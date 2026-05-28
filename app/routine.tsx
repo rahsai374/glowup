@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -8,6 +8,7 @@ import { useScanStore } from '@/stores/useScanStore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { getRoutine } from '@/lib/routineEngine';
 import { RoutineStep } from '@/lib/routineData';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 const TABS = ['morning', 'night', 'weekly'] as const;
 type Tab = typeof TABS[number];
@@ -230,9 +231,10 @@ function StepCard({ step, index, expanded, onPress }: StepCardProps) {
 
               {/* Amazon button — dummy for now */}
               <TouchableOpacity
-                onPress={() =>
-                  console.log('[TODO] Open Amazon link for:', step.product.name)
-                }
+                onPress={() => {
+                  logEvent(EVENTS.PRODUCT_LINK_TAPPED, { product_name: step.product.name });
+                  console.log('[TODO] Open Amazon link for:', step.product.name);
+                }}
                 activeOpacity={0.85}
                 style={{
                   backgroundColor: '#FF9900',
@@ -275,6 +277,10 @@ export default function RoutineScreen() {
   }, [currentScan]);
 
   const tabSteps = routine ? routine[tab] : [];
+
+  useEffect(() => {
+    logEvent(EVENTS.ROUTINE_VIEWED, { has_scan: !!currentScan });
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>

@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import rnAuth from '@react-native-firebase/auth';
 import { hydrateFromFirestore } from '@/lib/firestore';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -19,6 +20,8 @@ export default function SplashScreen() {
     iconScale.value = withDelay(200, withSpring(1, { damping: 12, stiffness: 100 }));
 
     const currentUser = rnAuth().currentUser;
+    logEvent(EVENTS.APP_OPENED, { is_authenticated: !!currentUser });
+
     if (!currentUser) {
       const t = setTimeout(() => router.replace('/language'), 2500);
       return () => clearTimeout(t);

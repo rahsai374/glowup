@@ -5,6 +5,7 @@ import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useUserStore } from '@/stores/useUserStore';
 import i18n from '@/i18n';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
 
 export default function LanguageScreen() {
   const router = useRouter();
@@ -13,6 +14,8 @@ export default function LanguageScreen() {
   function pick(lang: 'en' | 'hi') {
     setLanguage(lang);
     i18n.changeLanguage(lang);
+    logEvent(EVENTS.LANGUAGE_SELECTED, { language: lang });
+    setUserProperty('language', lang);
     router.push('/onboarding');
   }
 

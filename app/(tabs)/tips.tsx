@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import allTips from '@/data/tips.json';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 const CONCERNS = [
   { label: 'Acne', icon: '🔴', color: '#FEE2E2' },
@@ -18,6 +19,10 @@ export default function TipsScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const user = useUserStore((s) => s.user);
+
+  useEffect(() => {
+    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'tips' });
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>

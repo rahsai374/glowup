@@ -23,6 +23,7 @@ import StreakStrip from '@/components/home/StreakStrip';
 import DynamicActionCard from '@/components/home/DynamicActionCard';
 import QuickActionTile from '@/components/home/QuickActionTile';
 import ContextualTipCard from '@/components/home/ContextualTipCard';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 function getDayOfYear(): number {
   const now = new Date();
@@ -56,7 +57,10 @@ export default function HomeScreen() {
   const completions = useRoutineStore((s) => s.completions);
   const markTipDone = useRoutineStore((s) => s.markTipDone);
 
-  useEffect(() => { tickStreak(); }, []);
+  useEffect(() => {
+    tickStreak();
+    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'home' });
+  }, []);
 
   const now = new Date();
   const nowHour = now.getHours();

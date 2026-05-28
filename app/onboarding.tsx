@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInRight, FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 const { width } = Dimensions.get('window');
 
@@ -19,9 +20,17 @@ export default function OnboardingScreen() {
   const { t } = useTranslation();
   const slide = slides[idx];
 
+  React.useEffect(() => {
+    logEvent(EVENTS.ONBOARDING_SLIDE_VIEWED, { slide_index: idx });
+  }, [idx]);
+
   function next() {
-    if (idx < slides.length - 1) setIdx(idx + 1);
-    else router.push('/auth');
+    if (idx < slides.length - 1) {
+      setIdx(idx + 1);
+    } else {
+      logEvent(EVENTS.ONBOARDING_COMPLETED);
+      router.push('/auth');
+    }
   }
 
   return (
@@ -29,7 +38,10 @@ export default function OnboardingScreen() {
       <AmbientBlobs />
 
       <TouchableOpacity
-        onPress={() => router.push('/auth')}
+        onPress={() => {
+          logEvent(EVENTS.ONBOARDING_SKIPPED, { skipped_at_slide: idx });
+          router.push('/auth');
+        }}
         style={{ position: 'absolute', top: 56, right: 24, zIndex: 20 }}
       >
         <Text style={{ fontSize: 14, color: '#2D1810', opacity: 0.5, fontFamily: 'PlusJakartaSans_500Medium' }}>

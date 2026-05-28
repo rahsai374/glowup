@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
-import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
 import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-native-vision-camera';
@@ -22,6 +22,7 @@ import { useScanStore } from '@/stores/useScanStore';
 import { analyzeSkin } from '@/lib/gemini';
 import { saveScan } from '@/lib/firestore';
 import { useFaceGuide } from '@/lib/useFaceGuide';
+import { logEvent, EVENTS } from '@/lib/analytics';
 import type { Face } from 'react-native-vision-camera-face-detector';
 
 const { width, height } = Dimensions.get('window');
@@ -55,6 +56,16 @@ export default function ScanScreen() {
   const user = useUserStore((s) => s.user);
   const { setCurrentScan, addToHistory, scanHistory } = useScanStore();
   const device = useCameraDevice('front');
+  const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  React.useEffect(() => {
+    return () => {
+      if (factIntervalRef.current) {
+        clearInterval(factIntervalRef.current);
+        factIntervalRef.current = null;
+      }
+    };
+  }, []);
 
   const ovalBounds = useMemo(
     () => ({ width: OVAL_W, height: OVAL_H, centerX: OVAL_CENTER_X, centerY: OVAL_CENTER_Y }),
@@ -107,8 +118,6 @@ export default function ScanScreen() {
   const scanY = useSharedValue(0);
   const scanStyle = useAnimatedStyle(() => ({ transform: [{ translateY: scanY.value }] }));
 
-  const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
   function startScanning() {
     scanY.value = withRepeat(withTiming(height * 0.6, { duration: 2500 }), -1, true);
     factIntervalRef.current = setInterval(() => setFactIdx((i) => (i + 1) % FACTS.length), 3000);
@@ -123,13 +132,26 @@ export default function ScanScreen() {
 
   async function openCamera() {
     if (!permission?.granted) {
+      if (permission?.canAskAgain === false) {
+        Alert.alert(
+          'Camera Access Required',
+          'GlowUp needs camera access to scan your skin. Please enable it in Settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+          ]
+        );
+        return;
+      }
       const { granted } = await requestPermission();
       if (!granted) return;
     }
+    logEvent(EVENTS.SCAN_STARTED, { source: 'camera' });
     setState('camera');
   }
 
   async function openGallery() {
+    logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.8,
@@ -149,6 +171,7 @@ export default function ScanScreen() {
   async function processImage(uri: string, wasReady = false) {
     setCapturedUri(uri);
     setState('analyzing');
+    logEvent(EVENTS.SCAN_PHOTO_CAPTURED);
     startScanning();
     try {
       const compressed = await ImageManipulator.manipulateAsync(
@@ -175,10 +198,17 @@ export default function ScanScreen() {
       setCurrentScan(scan);
       addToHistory(scan);
       if (user?.uid) saveScan(user.uid, scan).catch(() => {});
+      logEvent(EVENTS.SCAN_COMPLETED, {
+        overall_score: scan.overall_score,
+        skin_type: scan.skin_type,
+        top_concern: scan.top_concern,
+      });
       stopScanning();
+      // TODO: Insert paywall gate here before navigating to results
       router.replace('/results');
     } catch (e: any) {
       stopScanning();
+      logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });
       console.error('[SCAN ERROR]', e?.message ?? e);
       Alert.alert('Scan failed', e?.message ?? String(e));
       setState('choice');

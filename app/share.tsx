@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import { useUserStore } from '@/stores/useUserStore';
 import ScoreCircle from '@/components/ScoreCircle';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 export default function ShareScreen() {
   const router = useRouter();
@@ -18,18 +19,21 @@ export default function ShareScreen() {
   const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: cardScale.value }] }));
 
   React.useEffect(() => {
+    if (!scan) {
+      router.back();
+      return;
+    }
+    logEvent(EVENTS.SHARE_OPENED, { overall_score: scan.overall_score });
     cardScale.value = withSpring(1, { damping: 14, stiffness: 100 });
-  }, []);
+  }, [scan]);
 
-  if (!scan) {
-    router.back();
-    return null;
-  }
+  if (!scan) return null;
 
   async function shareWhatsApp() {
     await Share.share({
       message: `I just got my skin score on GlowUp! 🌟 My overall score is ${scan!.overall_score}/100. Skin type: ${scan!.skin_type}. Download GlowUp for your personalized skin analysis!`,
     });
+    logEvent(EVENTS.SHARE_COMPLETED);
   }
 
   return (
