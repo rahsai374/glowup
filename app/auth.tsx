@@ -8,9 +8,11 @@ import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
 import { db, doc, getDoc } from '@/lib/firebase';
 import { hydrateFromFirestore } from '@/lib/firestore';
+import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [countryCode, setCountryCode] = useState('+91');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
@@ -21,11 +23,12 @@ export default function AuthScreen() {
   const setUser = useUserStore((s) => s.setUser);
 
   async function sendOtp() {
-    if (phone.length < 10 || loading) return;
+    if (phone.length < 5 || countryCode.length < 2 || loading) return;
     setLoading(true);
     try {
-      const result = await rnAuth().signInWithPhoneNumber('+91' + phone);
+      const result = await rnAuth().signInWithPhoneNumber(countryCode + phone);
       setConfirmation(result);
+      logEvent(EVENTS.OTP_REQUESTED);
       setStep('otp');
     } catch (e: any) {
       Alert.alert('Failed to send OTP', e?.message ?? 'Please check your number and try again.');
@@ -76,6 +79,7 @@ export default function AuthScreen() {
     try {
       const result = await confirmation.confirm(code);
       const uid = result!.user.uid;
+      setUserId(uid);
       setUser({
         uid,
         name: '',
@@ -91,11 +95,16 @@ export default function AuthScreen() {
       try {
         const snap = await getDoc(doc(db, 'users', uid));
         if (snap.exists()) {
+          logLogin('phone');
           await hydrateFromFirestore(uid);
           router.replace('/(tabs)');
           return;
         }
-      } catch {}
+      } catch (err) {
+        // Firestore unreachable — treat as new user and proceed to questions
+        console.warn('[auth] Firestore check failed, treating as new user:', err);
+      }
+      logSignUp('phone');
       router.replace('/questions');
     } catch (e: any) {
       Alert.alert('Invalid OTP', e?.message ?? 'Please check the code and try again.');
@@ -122,15 +131,19 @@ export default function AuthScreen() {
             </Text>
 
             <View style={{ flexDirection: 'row', backgroundColor: 'white', borderRadius: 16, borderWidth: 1.5, borderColor: 'rgba(224,120,86,0.15)', overflow: 'hidden', marginBottom: 24 }}>
-              <View style={{ backgroundColor: '#FFF5EE', paddingHorizontal: 16, justifyContent: 'center', borderRightWidth: 1, borderRightColor: 'rgba(224,120,86,0.15)' }}>
-                <Text style={{ fontSize: 16, color: '#2D1810', fontFamily: 'PlusJakartaSans_500Medium' }}>+91</Text>
-              </View>
+              <TextInput
+                value={countryCode}
+                onChangeText={(v) => setCountryCode(v.startsWith('+') ? v : '+' + v.replace(/[^0-9]/g, ''))}
+                keyboardType="phone-pad"
+                maxLength={5}
+                style={{ width: 56, paddingHorizontal: 12, paddingVertical: 16, fontSize: 16, color: '#2D1810', fontFamily: 'PlusJakartaSans_500Medium', backgroundColor: '#FFF5EE', borderRightWidth: 1, borderRightColor: 'rgba(224,120,86,0.15)', textAlign: 'center' }}
+              />
               <TextInput
                 value={phone}
                 onChangeText={setPhone}
                 placeholder={t('phone_placeholder')}
                 keyboardType="phone-pad"
-                maxLength={10}
+                maxLength={15}
                 style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 16, fontSize: 16, color: '#2D1810', fontFamily: 'PlusJakartaSans_400Regular' }}
               />
             </View>
@@ -142,8 +155,8 @@ export default function AuthScreen() {
 
             <TouchableOpacity
               onPress={sendOtp}
-              disabled={phone.length < 10 || loading}
-              style={{ backgroundColor: phone.length >= 10 ? '#E07856' : 'rgba(224,120,86,0.4)', borderRadius: 20, paddingVertical: 16, alignItems: 'center' }}
+              disabled={phone.length < 5 || countryCode.length < 2 || loading}
+              style={{ backgroundColor: phone.length >= 5 && countryCode.length >= 2 ? '#E07856' : 'rgba(224,120,86,0.4)', borderRadius: 20, paddingVertical: 16, alignItems: 'center' }}
             >
               {loading
                 ? <ActivityIndicator color="white" />
@@ -158,7 +171,7 @@ export default function AuthScreen() {
               {t('verify_otp')}
             </Text>
             <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', color: '#2D1810', opacity: 0.55, marginBottom: 40 }}>
-              Sent to +91 {phone}
+              Sent to {countryCode} {phone}
             </Text>
 
             <View style={{ flexDirection: 'row', gap: 10, marginBottom: 32 }}>

@@ -1,6 +1,7 @@
 import '../global.css';
 import '../i18n';
 import React, { useEffect } from 'react';
+import { View, Text, TouchableOpacity, Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -20,11 +21,33 @@ import {
 } from '@expo-google-fonts/hind';
 import * as SplashScreen from 'expo-splash-screen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import { Settings } from 'react-native-fbsdk-next';
 
 SplashScreen.preventAutoHideAsync();
 
+export function ErrorBoundary({ error, retry }: { error: Error; retry: () => void }) {
+  return (
+    <View style={{ flex: 1, backgroundColor: '#FFF5EE', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+      <Text style={{ fontSize: 40, marginBottom: 16 }}>😥</Text>
+      <Text style={{ fontSize: 20, fontWeight: '700', color: '#2D1810', marginBottom: 8, textAlign: 'center' }}>
+        Something went wrong
+      </Text>
+      <Text style={{ fontSize: 14, color: 'rgba(45,24,16,0.6)', textAlign: 'center', marginBottom: 24, lineHeight: 20 }}>
+        {error.message}
+      </Text>
+      <TouchableOpacity
+        onPress={retry}
+        style={{ backgroundColor: '#E07856', borderRadius: 20, paddingVertical: 14, paddingHorizontal: 32 }}
+      >
+        <Text style={{ color: 'white', fontSize: 16, fontWeight: '700' }}>Try Again</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontsError] = useFonts({
     Fraunces_700Bold,
     Fraunces_700Bold_Italic,
     PlusJakartaSans_400Regular,
@@ -37,10 +60,18 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded]);
+    if (fontsLoaded || fontsError) SplashScreen.hideAsync();
+  }, [fontsLoaded, fontsError]);
 
-  if (!fontsLoaded) return null;
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      requestTrackingPermissionsAsync().then(({ status }) => {
+        Settings.setAdvertiserTrackingEnabled(status === 'granted');
+      }).catch(() => {});
+    }
+  }, []);
+
+  if (!fontsLoaded && !fontsError) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

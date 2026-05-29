@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -6,11 +6,16 @@ import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 export default function ProgressScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const history = useScanStore((s) => s.scanHistory);
+
+  useEffect(() => {
+    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'progress' });
+  }, []);
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>

@@ -27,8 +27,7 @@
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.CAMERA"
       ]
     },
     "web": {
@@ -38,6 +37,7 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      "@react-native-firebase/analytics",
       "expo-router",
       "expo-font",
       [
@@ -51,7 +51,26 @@
         {
           "photosPermission": "GlowUp needs photo library access to upload a photo for skin analysis."
         }
-      ]
+      ],
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermission": "GlowUp needs camera access to scan your skin."
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "TODO_FACEBOOK_APP_ID",
+          "clientToken": "TODO_FACEBOOK_CLIENT_TOKEN",
+          "displayName": "GlowUp",
+          "scheme": "fbTODO_FACEBOOK_APP_ID",
+          "advertiserIDCollectionEnabled": true,
+          "autoLogAppEventsEnabled": true,
+          "isAutoInitEnabled": true
+        }
+      ],
+      "expo-tracking-transparency"
     ],
     "experiments": {
       "typedRoutes": true

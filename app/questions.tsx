@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useUserStore } from '@/stores/useUserStore';
 import { saveProfile } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import { logEvent, setUserProperties, EVENTS } from '@/lib/analytics';
 
 const QUESTIONS = [
   {
@@ -79,7 +80,10 @@ export default function QuestionsScreen() {
   const q = !isNameStep ? QUESTIONS[step] : null;
 
   function selectOption(val: string) {
-    if (q) setAnswers((prev) => ({ ...prev, [q.key]: val }));
+    if (q) {
+      setAnswers((prev) => ({ ...prev, [q.key]: val }));
+      logEvent(EVENTS.ONBOARDING_Q_ANSWERED, { question: q.key, answer: val, step });
+    }
   }
 
   async function finish() {
@@ -95,6 +99,16 @@ export default function QuestionsScreen() {
       ageRange: answers.q5 ?? '',
     };
     updateUser(profile);
+    logEvent(EVENTS.ONBOARDING_Q_COMPLETED, {
+      skin_type: profile.skinType,
+      main_concern: profile.mainConcern,
+      age_range: profile.ageRange,
+    });
+    setUserProperties({
+      skin_type: profile.skinType || null,
+      main_concern: profile.mainConcern || null,
+      age_range: profile.ageRange || null,
+    });
 
     if (user?.uid) {
       saveProfile(user.uid, {
@@ -158,8 +172,9 @@ export default function QuestionsScreen() {
           <Animated.View entering={FadeInRight.springify()}>
             <TextInput
               value={nameInput}
-              onChangeText={setNameInput}
+              onChangeText={(v) => setNameInput(v.replace(/[\x00-\x1F\x7F]/g, ''))}
               placeholder={t('q6_placeholder')}
+              maxLength={50}
               autoFocus
               style={{
                 backgroundColor: 'white',
