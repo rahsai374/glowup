@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Deletion — GlowUp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;1,700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #FFF5EE;
+      color: #2D1810;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 0 16px 80px;
+    }
+
+    .header {
+      background: #E07856;
+      margin: 0 -16px;
+      padding: 48px 32px 36px;
+      margin-bottom: 48px;
+    }
+
+    .header .app-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 10px;
+    }
+
+    .header h1 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: clamp(28px, 6vw, 42px);
+      font-weight: 700;
+      color: white;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .header .meta {
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .notice {
+      background: white;
+      border-left: 4px solid #E07856;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin-bottom: 40px;
+      font-size: 14px;
+      color: rgba(45,24,16,0.7);
+    }
+
+    .notice strong { color: #E07856; }
+
+    h2 {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #2D1810;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid rgba(224,120,86,0.2);
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #E07856;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 28px;
+      margin-bottom: 10px;
+    }
+
+    p { margin-bottom: 16px; }
+
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li { margin-bottom: 8px; }
+
+    strong { font-weight: 600; color: #2D1810; }
+
+    a {
+      color: #E07856;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      box-shadow: 0 2px 12px rgba(45,24,16,0.06);
+    }
+
+    .email-box {
+      background: white;
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin: 28px 0;
+      box-shadow: 0 4px 20px rgba(45,24,16,0.08);
+      text-align: center;
+      border: 1.5px solid rgba(224,120,86,0.2);
+    }
+
+    .email-box .label {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #E07856;
+      margin-bottom: 8px;
+    }
+
+    .email-box .email {
+      font-size: clamp(18px, 4vw, 24px);
+      font-family: 'Fraunces', Georgia, serif;
+      font-weight: 700;
+      color: #2D1810;
+    }
+
+    .email-box .email a {
+      color: #2D1810;
+    }
+
+    .email-box .email a:hover {
+      color: #E07856;
+    }
+
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 48px;
+      margin-bottom: 20px;
+    }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 32px;
+      height: 32px;
+      background: #E07856;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .disclaimer {
+      background: rgba(224,120,86,0.08);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      font-size: 14px;
+      border: 1.5px solid rgba(224,120,86,0.2);
+    }
+
+    .footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(224,120,86,0.2);
+      font-size: 13px;
+      color: rgba(45,24,16,0.5);
+      text-align: center;
+    }
+
+    .footer a { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="app-name">GlowUp</div>
+    <h1>Account Deletion</h1>
+    <div class="meta">How to request deletion of your account and data</div>
+  </div>
+
+  <div class="container">
+    <div class="notice">
+      <strong>Your data, your choice.</strong> We respect your right to have your account and personal data permanently deleted. This page explains how to request deletion and what happens when you do.
+    </div>
+
+    <h2>How to Request Account Deletion</h2>
+
+    <p>To delete your GlowUp account and all associated data, send an email to:</p>
+
+    <div class="email-box">
+      <div class="label">Send your request to</div>
+      <div class="email"><a href="mailto:rahul.sharma.sai@gmail.com?subject=GlowUp%20Account%20Deletion%20Request">rahul.sharma.sai@gmail.com</a></div>
+    </div>
+
+    <h3>Steps to follow</h3>
+
+    <ol class="steps">
+      <li>Send an email to <strong>rahul.sharma.sai@gmail.com</strong> with the subject line <strong>"GlowUp Account Deletion Request"</strong>.</li>
+      <li>Include the <strong>phone number</strong> associated with your GlowUp account in the body of the email so we can locate your account.</li>
+      <li>We will verify your identity and process the deletion within <strong>7 business days</strong>.</li>
+      <li>You will receive a confirmation email once your account and data have been permanently deleted.</li>
+    </ol>
+
+    <h2>What Data Gets Deleted</h2>
+
+    <p>When your account deletion request is processed, the following data is permanently removed from our systems:</p>
+
+    <div class="highlight-box">
+      <ul>
+        <li><strong>Account profile</strong> — your phone number, name, and preferences</li>
+        <li><strong>Skin scan history</strong> — all photos, analysis results, and AI-generated recommendations</li>
+        <li><strong>Routine data</strong> — personalized skincare routines and progress tracking</li>
+        <li><strong>Questionnaire responses</strong> — skin type, concerns, and lifestyle answers</li>
+        <li><strong>Analytics data</strong> — usage events linked to your account</li>
+      </ul>
+    </div>
+
+    <h2>Important Notes</h2>
+
+    <div class="disclaimer">
+      <ul>
+        <li>Account deletion is <strong>permanent and irreversible</strong>. Once deleted, your data cannot be recovered.</li>
+        <li>If you sign back in after deletion, a new account will be created with no previous history.</li>
+        <li>We may retain anonymized, aggregated data that cannot be linked back to you for product improvement purposes.</li>
+        <li>Deletion requests sent from a different email may require additional verification.</li>
+      </ul>
+    </div>
+
+    <h2>Questions?</h2>
+
+    <p>If you have any questions about the deletion process or your data, reach out to us at <a href="mailto:rahul.sharma.sai@gmail.com">rahul.sharma.sai@gmail.com</a>.</p>
+
+    <div class="footer">
+      <p>&copy; 2025 GlowUp. All rights reserved.</p>
+      <p><a href="privacy-policy.html">Privacy Policy</a></p>
+    </div>
+  </div>
+</body>
+</html>
