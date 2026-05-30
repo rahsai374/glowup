@@ -38,7 +38,9 @@ export const useNotificationStore = create<NotificationStore>()(
         set((state) => {
           const newItem: NotificationItem = { ...item, read: false };
           const updated = [newItem, ...state.notifications].slice(0, MAX_NOTIFICATIONS);
-          return { notifications: updated, unreadCount: state.unreadCount + 1 };
+          // Recalculate from array to avoid drift when an unread item is evicted at MAX_NOTIFICATIONS
+          const unreadCount = updated.filter((n) => !n.read).length;
+          return { notifications: updated, unreadCount };
         }),
 
       markAllRead: () =>

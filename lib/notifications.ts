@@ -2,7 +2,7 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
-import { Router } from 'expo-router';
+import { Router, type Href } from 'expo-router';
 import { db, doc, setDoc, serverTimestamp } from '@/lib/firebase';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { useNotificationStore } from '@/stores/useNotificationStore';
@@ -32,12 +32,12 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
     return null;
   }
 
-  await logEvent(EVENTS.PUSH_OPTIN_PROMPT);
-
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
 
   if (existingStatus !== 'granted') {
+    // Only log prompt event when the OS dialog is actually being shown
+    await logEvent(EVENTS.PUSH_OPTIN_PROMPT);
     const { status } = await Notifications.requestPermissionsAsync();
     finalStatus = status;
   }
@@ -64,7 +64,9 @@ export async function savePushToken(uid: string, token: string): Promise<void> {
   await setDoc(doc(db, 'users', uid), { pushToken: token, pushTokenUpdatedAt: serverTimestamp() }, { merge: true });
 }
 
-const KNOWN_ROUTES = new Set([
+type StringHref = Extract<Href, string>;
+
+const VALID_ROUTES: readonly StringHref[] = [
   '/(tabs)',
   '/(tabs)/progress',
   '/(tabs)/tips',
@@ -74,7 +76,11 @@ const KNOWN_ROUTES = new Set([
   '/routine',
   '/product-check',
   '/notifications',
-]);
+] as const;
+
+function isValidRoute(route: string): route is StringHref {
+  return (VALID_ROUTES as readonly string[]).includes(route);
+}
 
 export function handleNotificationTap(
   response: Notifications.NotificationResponse,
@@ -86,6 +92,6 @@ export function handleNotificationTap(
 
   logEvent(EVENTS.NOTIFICATION_TAPPED, { type, route }).catch(() => {});
 
-  const target = KNOWN_ROUTES.has(route) ? route : '/(tabs)';
-  router.push(target as any);
+  const target: StringHref = isValidRoute(route) ? route : '/(tabs)';
+  router.push(target);
 }
