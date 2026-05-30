@@ -28,6 +28,15 @@ export const EVENTS = {
   TAB_VIEWED: 'tab_viewed',
   PRODUCT_LINK_TAPPED: 'product_link_tapped',
   PROFILE_UPDATED: 'profile_updated',
+
+  // Product Check
+  PRODUCT_CHECK_OPENED: 'product_check_opened',         // screen mount
+  PRODUCT_SEARCHED: 'product_searched',                  // user types query (debounced)
+  PRODUCT_SEARCH_NO_RESULTS: 'product_search_no_results',// search returned 0 results
+  PRODUCT_SELECTED: 'product_selected',                  // user taps a product card
+  PRODUCT_VERDICT_VIEWED: 'product_verdict_viewed',      // results step shown
+  PRODUCT_BARCODE_TAPPED: 'product_barcode_tapped',      // barcode CTA tapped
+  PRODUCT_CHECK_ANOTHER: 'product_check_another',        // "Check Another" tapped
 } as const;
 
 export async function logEvent(

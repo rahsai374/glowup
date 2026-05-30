@@ -16,6 +16,7 @@ import {
   ProductCategory,
 } from '@/lib/productTypes';
 import type { SkinType } from '@/lib/routineData';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 type Step = 'search' | 'analyzing' | 'results';
 
@@ -34,13 +35,37 @@ export default function ProductCheckScreen() {
   const [step, setStep] = useState<Step>('search');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handleSelectProduct = useCallback((product: Product) => {
-    setSelectedProduct(product);
-    setStep('analyzing');
-    setTimeout(() => setStep('results'), 2200);
+  useEffect(() => {
+    logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'home_card' });
   }, []);
 
+  const handleSelectProduct = useCallback((product: Product) => {
+    logEvent(EVENTS.PRODUCT_SELECTED, {
+      product_id: product.id,
+      product_name: product.name,
+      brand: product.brand,
+      category: product.category,
+      price: product.price,
+    });
+    setSelectedProduct(product);
+    setStep('analyzing');
+    setTimeout(() => {
+      setStep('results');
+      const match = product.skinTypeMatch[userSkinType] || product.skinTypeMatch['all'];
+      logEvent(EVENTS.PRODUCT_VERDICT_VIEWED, {
+        product_id: product.id,
+        product_name: product.name,
+        brand: product.brand,
+        category: product.category,
+        suitability: match.suitability,
+        match_score: match.matchScore,
+        skin_type: userSkinType,
+      });
+    }, 2200);
+  }, [userSkinType]);
+
   const handleReset = useCallback(() => {
+    logEvent(EVENTS.PRODUCT_CHECK_ANOTHER);
     setStep('search');
     setSelectedProduct(null);
     setQuery('');
@@ -164,6 +189,18 @@ function SearchStep({
 }) {
   const isSearching = query.length >= 2;
 
+  // Debounced search analytics (800ms after user stops typing)
+  useEffect(() => {
+    if (query.length < 2) return;
+    const timer = setTimeout(() => {
+      logEvent(EVENTS.PRODUCT_SEARCHED, { query, result_count: results.length });
+      if (results.length === 0) {
+        logEvent(EVENTS.PRODUCT_SEARCH_NO_RESULTS, { query });
+      }
+    }, 800);
+    return () => clearTimeout(timer);
+  }, [query, results.length]);
+
   return (
     <ScrollView
       style={{ flex: 1 }}
@@ -241,7 +278,10 @@ function SearchStep({
       {/* Barcode scan CTA */}
       <Animated.View entering={FadeInDown.delay(120).springify()} style={{ paddingHorizontal: 24, marginBottom: 20 }}>
         <TouchableOpacity
-          onPress={() => Alert.alert(hindi ? 'जल्द आ रहा है' : 'Coming Soon', hindi ? 'बारकोड स्कैन जल्द उपलब्ध होगा' : 'Barcode scanning will be available soon')}
+          onPress={() => {
+            logEvent(EVENTS.PRODUCT_BARCODE_TAPPED);
+            Alert.alert(hindi ? 'जल्द आ रहा है' : 'Coming Soon', hindi ? 'बारकोड स्कैन जल्द उपलब्ध होगा' : 'Barcode scanning will be available soon');
+          }}
           activeOpacity={0.7}
           style={{
             backgroundColor: 'rgba(224,120,86,0.05)',
