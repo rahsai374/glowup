@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, FadeOut, withRepeat, withTiming, useAnimatedStyle, useSharedValue, Easing } from 'react-native-reanimated';
@@ -189,17 +189,21 @@ function SearchStep({
 }) {
   const isSearching = query.length >= 2;
 
-  // Debounced search analytics (800ms after user stops typing)
+  // Debounced search analytics — keyed on query only.
+  // results.length read via ref so async product-store updates
+  // don't restart the timer for an unchanged query string.
+  const resultsLengthRef = useRef(results.length);
+  useEffect(() => { resultsLengthRef.current = results.length; }, [results.length]);
+
   useEffect(() => {
     if (query.length < 2) return;
     const timer = setTimeout(() => {
-      logEvent(EVENTS.PRODUCT_SEARCHED, { query, result_count: results.length });
-      if (results.length === 0) {
-        logEvent(EVENTS.PRODUCT_SEARCH_NO_RESULTS, { query });
-      }
+      const count = resultsLengthRef.current;
+      logEvent(EVENTS.PRODUCT_SEARCHED, { query, result_count: count });
+      if (count === 0) logEvent(EVENTS.PRODUCT_SEARCH_NO_RESULTS, { query });
     }, 800);
     return () => clearTimeout(timer);
-  }, [query, results.length]);
+  }, [query]);
 
   return (
     <ScrollView

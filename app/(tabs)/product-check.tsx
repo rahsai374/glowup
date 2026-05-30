@@ -37,8 +37,11 @@ export default function ProductCheckTab() {
   useFocusEffect(
     useCallback(() => {
       logEvent(EVENTS.TAB_VIEWED, { tab_name: 'product_check' });
-      logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
-    }, [])
+      // Only log PRODUCT_CHECK_OPENED when user is on the search step (not mid-verdict)
+      if (step === 'search') {
+        logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
+      }
+    }, [step])
   );
 
   const handleSelectProduct = useCallback((product: Product) => {
@@ -168,17 +171,22 @@ function SearchStep({
 }) {
   const isSearching = query.length >= 2;
 
-  // Debounced search analytics
+  // Debounced search analytics — keyed on query only.
+  // results.length read via ref so async product-store updates
+  // don't restart the timer for an unchanged query string.
+  const resultsLengthRef = useRef(results.length);
+  useEffect(() => { resultsLengthRef.current = results.length; }, [results.length]);
+
   useEffect(() => {
     if (query.length < 2) return;
     const timer = setTimeout(() => {
-      logEvent(EVENTS.PRODUCT_SEARCHED, { query, result_count: results.length });
-      if (results.length === 0) {
-        logEvent(EVENTS.PRODUCT_SEARCH_NO_RESULTS, { query });
-      }
+      const count = resultsLengthRef.current;
+      logEvent(EVENTS.PRODUCT_SEARCHED, { query, result_count: count });
+      if (count === 0) logEvent(EVENTS.PRODUCT_SEARCH_NO_RESULTS, { query });
     }, 800);
     return () => clearTimeout(timer);
-  }, [query, results.length]);
+  }, [query]);
+
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: bottomPadding }} keyboardShouldPersistTaps="handled">
       <Animated.View entering={FadeInDown.delay(0).springify()} style={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 12 }}>
