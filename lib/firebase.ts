@@ -1,5 +1,4 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp, collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 export const firebaseConfig = {
@@ -14,7 +13,5 @@ export const firebaseConfig = {
 const isNew = getApps().length === 0;
 const app = isNew ? initializeApp(firebaseConfig) : getApps()[0];
 
-export const db = getFirestore(app);
 export const storage = getStorage(app);
-export { doc, setDoc, getDoc, updateDoc, serverTimestamp, collection, getDocs, query, orderBy, limit };
 export default app;
