@@ -162,14 +162,8 @@ export default function ScanScreen() {
       quality: 0.8,
     });
     if (!result.canceled) {
-      const uri = result.assets[0].uri;
-      const faces = imageFaceDetector.detectFaces({ uri });
-      if (faces.length === 0) {
-        Alert.alert('No face detected', 'Please choose a photo that clearly shows your face.');
-        return;
-      }
       logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
-      await processImage(uri);
+      await processImage(result.assets[0].uri);
     }
   }
 
@@ -200,6 +194,29 @@ export default function ScanScreen() {
         { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
       if (!compressed.base64) throw new Error('base64 missing from manipulator');
+
+      // Gallery images (wasReady = false) require on-device face validation before Gemini.
+      // compressed.uri is an 800px file:// JPEG in app cache — MLInputImage can always read it.
+      // Camera images skip this: the live frame processor already confirmed a face (wasReady).
+      if (!wasReady) {
+        try {
+          const faces = imageFaceDetector.detectFaces(compressed.uri);
+          if (faces.length === 0) {
+            stopScanning();
+            setCapturedUri(null);
+            setState('choice');
+            Alert.alert('No face detected', 'Please choose a photo that clearly shows your face.');
+            return;
+          }
+        } catch (e: any) {
+          stopScanning();
+          setCapturedUri(null);
+          setState('choice');
+          Alert.alert('Photo not supported', "Couldn't read this photo for face detection. Please try a different one.");
+          return;
+        }
+      }
+
       const result = await analyzeSkin(
         compressed.base64,
         'image/jpeg',
