@@ -12876,5 +12876,753 @@
         "resultHi": "दिखने में कम टैन और प्राकृतिक दमक"
       }
     ]
+  },
+  {
+    "id": "himalaya-sun-protect-spf50",
+    "name": "Himalaya Sun Protect+ Ultra Light SPF 50 Sunscreen",
+    "brand": "Himalaya",
+    "category": "sunscreen",
+    "concerns": [
+      "pigmentation",
+      "anti_aging"
+    ],
+    "price": 249,
+    "priceDisplay": "₹249",
+    "size": "30g",
+    "description": "Lightweight SPF 50 sunscreen with 90% natural ingredients, no white cast",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "ayurvedic",
+      "bestseller"
+    ],
+    "rating": 4.4,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 87
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 83
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Zinc Oxide",
+        "nameHi": "ज़िंक ऑक्साइड",
+        "benefitEn": "Mineral UV filter, gentle on sensitive skin",
+        "benefitHi": "मिनरल UV फ़िल्टर, संवेदनशील त्वचा के लिए सौम्य",
+        "rating": "good"
+      },
+      {
+        "name": "Aloe Vera",
+        "nameHi": "एलोवेरा",
+        "benefitEn": "Soothes and hydrates while providing sun protection",
+        "benefitHi": "सन प्रोटेक्शन देते हुए त्वचा शांत और नम रखता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "UV protection without white cast",
+      "No sun tan or new pigmentation",
+      "Lightweight feel suitable for Indian climate"
+    ],
+    "improvementsHi": [
+      "बिना सफ़ेद परत UV सुरक्षा",
+      "सन टैन या नई झाइयां नहीं",
+      "भारतीय मौसम के लिए हल्का अनुभव"
+    ],
+    "warningsEn": [
+      "Reapply every 2–3 hours outdoors"
+    ],
+    "warningsHi": [
+      "बाहर हर 2–3 घंटे में दोबारा लगाएं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "UV protection from first use",
+        "resultHi": "पहले इस्तेमाल से UV सुरक्षा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "No new tanning, maintained skin tone",
+        "resultHi": "नया टैन नहीं, रंगत बरकरार"
+      }
+    ]
+  },
+  {
+    "id": "mamaearth-vitamin-c-sunscreen",
+    "name": "Mamaearth Vitamin C Daily Glow Sunscreen SPF 50",
+    "brand": "Mamaearth",
+    "category": "sunscreen",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 349,
+    "priceDisplay": "₹349",
+    "size": "50g",
+    "description": "Vitamin C and turmeric sunscreen for glow and tan protection",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "popular"
+    ],
+    "rating": 4,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 74
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 84
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 78
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Vitamin C",
+        "nameHi": "विटामिन C",
+        "benefitEn": "Brightens while protecting from UV",
+        "benefitHi": "UV से बचाते हुए चमक देता है",
+        "rating": "good"
+      },
+      {
+        "name": "Turmeric",
+        "nameHi": "हल्दी",
+        "benefitEn": "Anti-inflammatory, prevents tan darkening",
+        "benefitHi": "सूजन-रोधी, टैन को गहरा होने से रोकता है",
+        "rating": "good"
+      },
+      {
+        "name": "SPF 50 PA++++",
+        "nameHi": "SPF 50 PA++++",
+        "benefitEn": "Broad spectrum UVA/UVB protection",
+        "benefitHi": "व्यापक UVA/UVB सुरक्षा",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Protection from tanning and pigmentation",
+      "Mild brightening from Vitamin C",
+      "No white cast, suitable for Indian skin tones"
+    ],
+    "improvementsHi": [
+      "टैनिंग और झाइयों से सुरक्षा",
+      "विटामिन C से हल्की चमक",
+      "सफ़ेद परत नहीं, भारतीय रंगत के लिए उपयुक्त"
+    ],
+    "warningsEn": [
+      "Contains fragrance",
+      "Reapply every 2–3 hours"
+    ],
+    "warningsHi": [
+      "सुगंध है",
+      "हर 2–3 घंटे में दोबारा लगाएं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "Sun protection from first use",
+        "resultHi": "पहले इस्तेमाल से सन प्रोटेक्शन"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Less tanning, mild glow improvement",
+        "resultHi": "कम टैन, हल्की चमक में सुधार"
+      }
+    ]
+  },
+  {
+    "id": "lakme-sun-expert-spf50-lotion",
+    "name": "Lakme SPF 50 PA++++ Sunscreen Lotion",
+    "brand": "Lakme",
+    "category": "sunscreen",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 394,
+    "priceDisplay": "₹394",
+    "size": "100ml",
+    "description": "Waterlight SPF 50 lotion with niacinamide, no white cast",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "bestseller"
+    ],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 86
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 84
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Niacinamide",
+        "nameHi": "नियासिनामाइड",
+        "benefitEn": "Brightens skin while protecting from UV",
+        "benefitHi": "UV से बचाते हुए रंगत निखारता है",
+        "rating": "good"
+      },
+      {
+        "name": "Waterlight Formula",
+        "nameHi": "वॉटरलाइट फ़ॉर्मूला",
+        "benefitEn": "Feather-light texture, no sticky residue",
+        "benefitHi": "बेहद हल्की बनावट, चिपचिपाहट नहीं",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Daily UV protection without heaviness",
+      "Reduced tanning over time",
+      "Brighter complexion from niacinamide"
+    ],
+    "improvementsHi": [
+      "बिना भारीपन रोज़ाना UV सुरक्षा",
+      "समय के साथ कम टैन",
+      "नियासिनामाइड से चमकदार रंगत"
+    ],
+    "warningsEn": [
+      "Reapply every 2–3 hours when outdoors"
+    ],
+    "warningsHi": [
+      "बाहर हर 2–3 घंटे में दोबारा लगाएं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "Instant UV protection, no white cast",
+        "resultHi": "तुरंत UV सुरक्षा, सफ़ेद परत नहीं"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visibly less tanning, brighter tone",
+        "resultHi": "दिखने में कम टैन, चमकदार रंगत"
+      }
+    ]
+  },
+  {
+    "id": "deconstruct-gel-sunscreen-spf50",
+    "name": "Deconstruct Gel Sunscreen SPF 50 PA++++",
+    "brand": "Deconstruct",
+    "category": "sunscreen",
+    "concerns": [
+      "acne",
+      "pigmentation"
+    ],
+    "price": 349,
+    "priceDisplay": "₹349",
+    "size": "50g",
+    "description": "India's #1 bestselling gel sunscreen — lightweight, non-greasy, no white cast",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "bestseller",
+      "dermat-recommended"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 94
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 90
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 86
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "New-Gen UV Filters",
+        "nameHi": "न्यू-जेन UV फ़िल्टर",
+        "benefitEn": "100% photostable broad spectrum protection",
+        "benefitHi": "100% फ़ोटोस्टेबल व्यापक सुरक्षा",
+        "rating": "good"
+      },
+      {
+        "name": "Acrylates Copolymer",
+        "nameHi": "एक्रिलेट्स कोपॉलिमर",
+        "benefitEn": "Gel base for airy, non-sticky finish",
+        "benefitHi": "हल्के, गैर-चिपचिपे फ़िनिश के लिए जेल बेस",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Complete UV protection without greasiness",
+      "No white cast on all Indian skin tones",
+      "Comfortable daily wear for oily skin"
+    ],
+    "improvementsHi": [
+      "बिना चिपचिपाहट पूर्ण UV सुरक्षा",
+      "सभी भारतीय रंगतों पर सफ़ेद परत नहीं",
+      "तैलीय त्वचा के लिए आरामदायक रोज़ाना पहनाव"
+    ],
+    "warningsEn": [
+      "Reapply every 2–3 hours when outdoors"
+    ],
+    "warningsHi": [
+      "बाहर हर 2–3 घंटे में दोबारा लगाएं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "UV protection with comfortable matte finish",
+        "resultHi": "आरामदायक मैट फ़िनिश के साथ UV सुरक्षा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Controlled oil, no new tanning",
+        "resultHi": "नियंत्रित तेल, नया टैन नहीं"
+      }
+    ]
+  },
+  {
+    "id": "ponds-light-cream-cera-hyamino",
+    "name": "Pond's Light Cream with Cera-Hyamino",
+    "brand": "Pond's",
+    "category": "moisturizer",
+    "concerns": [
+      "dryness"
+    ],
+    "price": 244,
+    "priceDisplay": "₹244",
+    "size": "200ml",
+    "description": "Lightweight daily cream with Cera-Hyamino for ultimate soft, smooth skin",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "bestseller"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "caution",
+        "matchScore": 50
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "dry": {
+        "suitability": "excellent",
+        "matchScore": 90
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 74
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Cera-Hyamino Complex",
+        "nameHi": "सेरा-हयामिनो कॉम्प्लेक्स",
+        "benefitEn": "Repairs skin barrier and locks in moisture",
+        "benefitHi": "त्वचा बाधा ठीक करता है और नमी बंद रखता है",
+        "rating": "good"
+      },
+      {
+        "name": "Glycerin",
+        "nameHi": "ग्लिसरीन",
+        "benefitEn": "Deep, lasting hydration",
+        "benefitHi": "गहरी, लंबे समय तक नमी",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Deeply moisturized, soft skin",
+      "Repaired dry skin barrier",
+      "Smooth, comfortable skin all day"
+    ],
+    "improvementsHi": [
+      "गहराई से नम, मुलायम त्वचा",
+      "रूखी त्वचा बाधा ठीक",
+      "दिनभर चिकनी, आरामदायक त्वचा"
+    ],
+    "warningsEn": [
+      "May feel heavy for very oily skin"
+    ],
+    "warningsHi": [
+      "बहुत तैलीय त्वचा के लिए भारी लग सकता है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Softer, more hydrated skin",
+        "resultHi": "मुलायम, अधिक नम त्वचा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visibly smoother skin barrier",
+        "resultHi": "दिखने में मुलायम त्वचा बाधा"
+      }
+    ]
+  },
+  {
+    "id": "cerave-moisturizing-cream",
+    "name": "CeraVe Moisturizing Cream",
+    "brand": "CeraVe",
+    "category": "moisturizer",
+    "concerns": [
+      "dryness"
+    ],
+    "price": 375,
+    "priceDisplay": "₹375",
+    "size": "50g",
+    "description": "Dermatologist-developed cream with ceramides for 48hr hydration",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "dermat-recommended",
+      "fragrance-free",
+      "bestseller"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "caution",
+        "matchScore": 48
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "dry": {
+        "suitability": "excellent",
+        "matchScore": 95
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 76
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "3 Essential Ceramides",
+        "nameHi": "3 ज़रूरी सेरामाइड",
+        "benefitEn": "Restores and maintains the skin's natural barrier",
+        "benefitHi": "त्वचा की प्राकृतिक बाधा बहाल और बनाए रखता है",
+        "rating": "good"
+      },
+      {
+        "name": "Hyaluronic Acid",
+        "nameHi": "हयालूरोनिक एसिड",
+        "benefitEn": "Retains skin's natural moisture",
+        "benefitHi": "त्वचा की प्राकृतिक नमी बनाए रखता है",
+        "rating": "good"
+      },
+      {
+        "name": "MVE Technology",
+        "nameHi": "MVE टेक्नोलॉजी",
+        "benefitEn": "Controlled release of moisture for 48 hours",
+        "benefitHi": "48 घंटे नमी का नियंत्रित प्रवाह",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "48-hour moisturization",
+      "Restored skin barrier",
+      "Healed dry, flaky patches",
+      "Recommended for eczema-prone skin"
+    ],
+    "improvementsHi": [
+      "48 घंटे नमी",
+      "त्वचा बाधा बहाल",
+      "रूखे, पपड़ीदार पैच ठीक",
+      "एग्ज़िमा वाली त्वचा के लिए सुझाव"
+    ],
+    "warningsEn": [
+      "Too rich for oily skin on face",
+      "Best for dry to very dry skin"
+    ],
+    "warningsHi": [
+      "चेहरे की तैलीय त्वचा के लिए बहुत गाढ़ा",
+      "रूखी से बहुत रूखी त्वचा के लिए सबसे अच्छा"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "Instant deep moisturization",
+        "resultHi": "तुरंत गहरी नमी"
+      },
+      {
+        "weeksEn": "2 weeks",
+        "weeksHi": "2 हफ़्ते",
+        "resultEn": "Repaired skin barrier, less flaking",
+        "resultHi": "त्वचा बाधा ठीक, कम पपड़ी"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Healthier, softer skin overall",
+        "resultHi": "कुल मिलाकर स्वस्थ, मुलायम त्वचा"
+      }
+    ]
+  },
+  {
+    "id": "biotique-morning-nectar-lotion",
+    "name": "Biotique Morning Nectar Moisturizer Lotion",
+    "brand": "Biotique",
+    "category": "moisturizer",
+    "concerns": [
+      "dryness",
+      "dark_spots"
+    ],
+    "price": 212,
+    "priceDisplay": "₹212",
+    "size": "190ml",
+    "description": "Honey and wheat germ daily moisturizer for flawless, nourished skin",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "ayurvedic",
+      "bestseller"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "caution",
+        "matchScore": 50
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "dry": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 84
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 74
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Wild Honey",
+        "nameHi": "जंगली शहद",
+        "benefitEn": "Deep moisture and natural radiance",
+        "benefitHi": "गहरी नमी और प्राकृतिक चमक",
+        "rating": "good"
+      },
+      {
+        "name": "Wheat Germ Oil",
+        "nameHi": "गेहूं बीज तेल",
+        "benefitEn": "Rich in Vitamin E, fights dark spots",
+        "benefitHi": "विटामिन E से भरपूर, काले धब्बों से लड़ता है",
+        "rating": "good"
+      },
+      {
+        "name": "Aloe Vera",
+        "nameHi": "एलोवेरा",
+        "benefitEn": "Soothes and heals skin naturally",
+        "benefitHi": "प्राकृतिक रूप से त्वचा शांत और ठीक करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Soft, nourished skin all day",
+      "Gradual reduction in dark spots",
+      "Natural glow from Ayurvedic ingredients"
+    ],
+    "improvementsHi": [
+      "दिनभर मुलायम, पोषित त्वचा",
+      "काले धब्बों में धीरे-धीरे कमी",
+      "आयुर्वेदिक सामग्री से प्राकृतिक चमक"
+    ],
+    "warningsEn": [
+      "May feel slightly heavy for very oily skin in summer"
+    ],
+    "warningsHi": [
+      "गर्मियों में बहुत तैलीय त्वचा के लिए थोड़ा भारी लग सकता है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Softer, more nourished skin",
+        "resultHi": "मुलायम, अधिक पोषित त्वचा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Glowing, healthy complexion",
+        "resultHi": "चमकदार, स्वस्थ रंगत"
+      },
+      {
+        "weeksEn": "8 weeks",
+        "weeksHi": "8 हफ़्ते",
+        "resultEn": "Visibly reduced dark spots",
+        "resultHi": "दिखने में कम काले धब्बे"
+      }
+    ]
+  },
+  {
+    "id": "neutrogena-hydro-boost-gel",
+    "name": "Neutrogena Hydro Boost Water Gel",
+    "brand": "Neutrogena",
+    "category": "moisturizer",
+    "concerns": [
+      "dryness"
+    ],
+    "price": 749,
+    "priceDisplay": "₹749",
+    "size": "50g",
+    "description": "Oil-free hyaluronic acid gel moisturizer for 24hr plump, dewy skin",
+    "imageUrl": null,
+    "tags": [
+      "premium-budget",
+      "dermat-recommended",
+      "bestseller"
+    ],
+    "rating": 4.4,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 90
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 75
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 85
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Hyaluronic Acid",
+        "nameHi": "हयालूरोनिक एसिड",
+        "benefitEn": "Holds 1000x water, intense plumping hydration",
+        "benefitHi": "1000 गुना पानी बनाए रखता है, गहरी नमी",
+        "rating": "good"
+      },
+      {
+        "name": "Oil-Free Gel Base",
+        "nameHi": "ऑयल-फ्री जेल बेस",
+        "benefitEn": "Lightweight, non-comedogenic, no greasiness",
+        "benefitHi": "हल्का, रोमछिद्र न बंद करने वाला, चिपचिपाहट नहीं",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Intensely hydrated, plump skin",
+      "Dewy finish without oiliness",
+      "24-hour moisture for all skin types"
+    ],
+    "improvementsHi": [
+      "गहराई से नम, भरी हुई त्वचा",
+      "बिना तैलीयपन ड्यूई फ़िनिश",
+      "सभी त्वचा प्रकारों के लिए 24 घंटे नमी"
+    ],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "Instant plumping hydration",
+        "resultHi": "तुरंत भरी हुई नमी"
+      },
+      {
+        "weeksEn": "2 weeks",
+        "weeksHi": "2 हफ़्ते",
+        "resultEn": "Consistently hydrated, bouncy skin",
+        "resultHi": "लगातार नम, स्थिर त्वचा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visibly plumper, healthier-looking skin",
+        "resultHi": "दिखने में भरी हुई, स्वस्थ त्वचा"
+      }
+    ]
   }
 ]
