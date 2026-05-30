@@ -16,27 +16,32 @@ Replace the "Coming Soon" Product Check placeholder with a functional product ca
 
 ## 2. Approach Decision
 
-**Chosen: Firestore collection + bundled fallback + AsyncStorage cache + Fuse.js in-memory search**
+**Chosen: Firebase Storage JSON file + AsyncStorage cache + bundled fallback + Fuse.js in-memory search**
 
 | Option | Verdict | Rationale |
 |---|---|---|
 | A) Static JSON only | Rejected | No ability to update products without OTA push or app rebuild. |
-| B) Firestore + local cache + bundled fallback | **Selected** | Update products anytime from Firebase console. Background refresh on app open. Offline-capable via cache. Bundled JSON as cold-start fallback. |
-| C) Remote JSON (CDN) | Rejected | Same network requirement as B but without Firestore's console UI, security rules, or query flexibility. |
+| B) Firestore collection (150 docs) | Rejected | Burns 150 reads per app open. Wastes Firestore quota better spent on user data/scans. |
+| C) Firestore single document | Rejected | Works but still burns Firestore reads. 1MB doc size limit. |
+| D) Firebase Storage JSON file | **Selected** | 1 file download (~50KB). Zero Firestore reads. No size limit. Costs only bandwidth (5GB/day free). Update by uploading a new file. |
 
-**Why Firestore works at this scale:**
-- 150 doc reads per app open. Spark free plan allows 50K reads/day.
-- Even 300 daily users = 45K reads/day — within free tier.
-- Background refresh keeps data fresh without blocking the UI.
-- Firebase console provides a no-code admin panel for editing products.
+**Why Firebase Storage:**
+- Zero Firestore read cost — reserves quota for user profiles and scan history.
+- ~50KB download per app open is negligible (even on slow Indian mobile networks: <200ms).
+- Firebase Storage is already configured in the project (`lib/firebase.ts` exports `storage`).
+- Update workflow: upload a new `products.json` to Firebase Storage console → reflected on next app open.
+- Storage free tier: 5GB stored, 1GB/day downloads — effectively unlimited at this scale.
 
 **Data flow:**
 ```
-App open → read AsyncStorage cache → render immediately (or bundled fallback if no cache)
-        → background: fetch Firestore `products` collection
-        → on success: update AsyncStorage cache + update in-memory state
-        → on failure: silently use cached/bundled data
+App open → read AsyncStorage cache → render UI immediately
+        ↘ (or bundled fallback if no cache yet)
+        → background (fire-and-forget): download products.json from Firebase Storage
+        → on success: replace AsyncStorage cache + update in-memory state
+        → on failure: do nothing — cached/bundled data stays, user never notices
 ```
+
+**Critical constraint:** The background fetch MUST NOT block app load or product page load. The UI always renders from cache/bundle first. The fetch is fire-and-forget — if it succeeds, the product list silently updates; if it fails, nothing happens.
 
 ---
 
@@ -129,35 +134,27 @@ export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
 
 ---
 
-## 4. Firestore Schema & Data Sync
+## 4. Firebase Storage & Data Sync
 
-### 4.1 Firestore Collection
+### 4.1 Storage Layout
+
+A single JSON file in Firebase Storage:
 
 ```
-products/{productId}          # top-level collection (not nested under users)
-  ├── name: string
-  ├── brand: string
-  ├── category: string
-  ├── skinTypes: string[]
-  ├── concerns: string[]
-  ├── price: number
-  ├── priceDisplay: string
-  ├── size: string
-  ├── description: string
-  ├── imageUrl: string | null
-  ├── tags: string[]
-  └── rating: number
+gs://{bucket}/data/products.json
 ```
 
-**Top-level collection** (not under `users/`) — products are global, not per-user. Firestore security rules allow read-only access for authenticated users:
+This file contains the full product array — one file, one download, all products. At ~150 products this is approximately 50-80KB.
+
+**Firebase Storage security rules:**
 
 ```
 rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /products/{productId} {
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /data/products.json {
       allow read: if request.auth != null;
-      allow write: if false;  // admin-only via Firebase console
+      allow write: if false;  // upload via Firebase console or Admin SDK only
     }
   }
 }
@@ -165,73 +162,101 @@ service cloud.firestore {
 
 ### 4.2 Seed Data Upload
 
-A one-time script uploads the initial ~150 products from `data/products-seed.json` to Firestore. This runs locally via `node scripts/seed-products.js` using Firebase Admin SDK (service account key, not committed to repo).
+Upload the initial `products.json` to Firebase Storage. Two methods:
+
+1. **Firebase console:** Storage → Upload file → `data/products.json` (manual, one-time)
+2. **Script:** `node scripts/upload-products.js` using Firebase Admin SDK (for automation)
 
 ```
 scripts/
-  seed-products.js        # reads products-seed.json → writes to Firestore
+  upload-products.js      # uploads data/products-seed.json → Storage as data/products.json
 data/
-  products-seed.json      # the compiled product list (also serves as bundled fallback)
+  products-seed.json      # the compiled product list (also serves as bundled app fallback)
 ```
 
-### 4.3 Data Sync Hook
+To update products later: edit `products-seed.json` (or prepare a new JSON) and re-upload to Firebase Storage. Next app open picks up the new data.
+
+### 4.3 Product Store (Zustand)
 
 ```typescript
-// hooks/useProductStore.ts (Zustand store)
+// stores/useProductStore.ts
 
 interface ProductStore {
   products: Product[];
-  isLoading: boolean;
   lastSynced: number | null;
-  hydrate: () => Promise<void>;     // load from cache on mount
-  syncFromFirestore: () => Promise<void>;  // background refresh
+  hydrate: () => void;                    // sync load from cache/bundle
+  syncFromStorage: () => Promise<void>;   // background fetch, fire-and-forget
 }
 ```
 
-**Sync flow on app open:**
+### 4.4 Sync Flow
 
 ```typescript
-// Called from _layout.tsx after auth resolves (alongside hydrateFromFirestore)
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ref, getDownloadURL } from 'firebase/storage';
+import { storage } from '@/lib/firebase';
+import BUNDLED_PRODUCTS from '@/data/products-seed.json';
 
-async function hydrate() {
-  // 1. Try AsyncStorage cache first (instant, offline-safe)
-  const cached = await AsyncStorage.getItem('products_cache');
-  if (cached) {
-    set({ products: JSON.parse(cached), isLoading: false });
-  } else {
-    // 2. Fall back to bundled seed data (first-ever app open)
-    set({ products: BUNDLED_PRODUCTS, isLoading: false });
-  }
+const CACHE_KEY = 'products_cache';
+
+// Step 1: Called on app open — synchronous-ish, never blocks
+function hydrate() {
+  // Try cache first
+  AsyncStorage.getItem(CACHE_KEY).then(cached => {
+    if (cached) {
+      set({ products: JSON.parse(cached) });
+    }
+  });
+  // If no cache exists yet, bundled data is the initial state
 }
 
-async function syncFromFirestore() {
-  // 3. Background fetch — non-blocking, runs after UI is rendered
+// Step 2: Called after hydrate — fire-and-forget, non-blocking
+async function syncFromStorage() {
   try {
-    const snap = await getDocs(collection(db, 'products'));
-    const fresh = snap.docs.map(d => ({ id: d.id, ...d.data() })) as Product[];
+    const url = await getDownloadURL(ref(storage, 'data/products.json'));
+    const response = await fetch(url);
+    if (!response.ok) return;
+    const fresh: Product[] = await response.json();
     set({ products: fresh, lastSynced: Date.now() });
-    await AsyncStorage.setItem('products_cache', JSON.stringify(fresh));
-  } catch (e) {
-    console.warn('[products] background sync failed, using cached data');
+    await AsyncStorage.setItem(CACHE_KEY, JSON.stringify(fresh));
+  } catch {
+    // Silent failure — cached/bundled data stays untouched
   }
 }
 ```
 
-**Key behaviors:**
-- **Non-blocking:** UI renders immediately from cache/bundle. Firestore fetch happens in background.
-- **Silent failure:** If background sync fails (offline, Firestore outage), user never notices — cached data stays.
-- **Cache invalidation:** On every successful sync, cache is fully replaced. No partial updates, no versioning complexity.
-- **No stale check throttle for MVP:** Syncs on every app open. At 150 docs this is fast (~200-400ms) and within free tier limits. Can add a "sync at most once per hour" check later if needed.
+**Initialization in `_layout.tsx`:**
 
-### 4.4 Bundled Fallback
+```typescript
+// After auth resolves, alongside existing hydrateFromFirestore()
+useProductStore.getState().hydrate();
+useProductStore.getState().syncFromStorage(); // fire-and-forget, no await
+```
 
-`data/products-seed.json` is imported directly as the cold-start fallback. This ensures the app always has product data even on first install with no network:
+### 4.5 Key Behaviors
+
+- **Never blocks app load:** `hydrate()` reads from cache (fast) or falls back to bundled data. `syncFromStorage()` is called without `await` — true fire-and-forget.
+- **Never blocks product page:** The product screen reads from the Zustand store, which is already populated from cache/bundle before the user can navigate there.
+- **Cache only replaced on success:** If `syncFromStorage()` fails at any point (network error, parse error, Storage outage), the existing cache is untouched. The user keeps seeing the last known good data.
+- **Silent update:** If the background fetch succeeds and the data changed, the Zustand store updates and the product screen re-renders with fresh data. No loading spinner, no flash — products just update in place.
+- **Bundled fallback:** `BUNDLED_PRODUCTS` (imported from `data/products-seed.json`) is the Zustand store's initial state. This guarantees data exists even on first install with no network and no cache.
+
+### 4.6 Bundled Fallback
+
+`data/products-seed.json` is imported directly as the store's initial state:
 
 ```typescript
 import BUNDLED_PRODUCTS from '@/data/products-seed.json';
+
+// In store definition:
+products: BUNDLED_PRODUCTS as Product[],
 ```
 
-This file is also the source for the Firestore seed script — single source of truth during initial setup. After seeding, Firestore becomes the authoritative source, and the bundle is only a fallback.
+This file serves dual purpose:
+1. **App fallback** — always available, no network needed
+2. **Upload source** — the same file gets uploaded to Firebase Storage as the initial `products.json`
+
+After upload, Firebase Storage is the authoritative source. The bundle is a safety net that may drift behind — acceptable for MVP.
 
 ---
 
@@ -446,18 +471,18 @@ const [skinTypeFilter, setSkinTypeFilter] = useState<SkinType | null>(userSkinTy
 lib/
   productTypes.ts        # Product/ProductCategory types + CATEGORY_EMOJI map
 data/
-  products-seed.json     # Bundled fallback (~150 products) + Firestore seed source
+  products-seed.json     # Bundled fallback (~150 products) + Firebase Storage upload source
 scripts/
-  seed-products.js       # One-time Firestore upload script (Firebase Admin SDK)
+  upload-products.js     # One-time Firebase Storage upload script (Firebase Admin SDK)
 stores/
-  useProductStore.ts     # Zustand store: products[], hydrate(), syncFromFirestore()
+  useProductStore.ts     # Zustand store: products[], hydrate(), syncFromStorage()
 hooks/
   useProductSearch.ts    # Fuse.js search hook with filter state
 app/
   product-check.tsx      # Replaced: "Coming Soon" → full product catalog screen
 ```
 
-**New Zustand store** (`useProductStore`) manages product data lifecycle: hydrate from AsyncStorage cache, background sync from Firestore, expose products array for the search hook.
+**New Zustand store** (`useProductStore`) manages product data lifecycle: hydrate from AsyncStorage cache, fire-and-forget background sync from Firebase Storage, expose products array for the search hook.
 
 **No changes to routineData.ts.** The routine step `product` field stays independent. A future `productId` reference can link them later if needed.
 
@@ -550,9 +575,9 @@ Not in this scope. Future work could add a `productId: string` field to `Routine
 |---|---|---|---|
 | `fuse.js` | ^7.0 | Fuzzy search | **New** (~5KB gzipped) |
 | `@react-native-async-storage/async-storage` | ^2.1.0 | Local product cache | Already installed |
-| `firebase/firestore` | — | Product collection reads | Already installed |
+| `firebase/storage` | — | Download products.json | Already installed (`lib/firebase.ts` exports `storage`) |
 
-No other new dependencies. Uses existing `react-native-reanimated`, `expo-image` (or RN `Image`), and design system components.
+No other new dependencies. Zero Firestore usage for this feature. Uses existing `react-native-reanimated`, `expo-image` (or RN `Image`), and design system components.
 
 ---
 
@@ -565,4 +590,5 @@ No other new dependencies. Uses existing `react-native-reanimated`, `expo-image`
 - Admin panel for product management (use Firebase console directly)
 - Routine ↔ product cross-linking
 - Hindi product names/descriptions
-- Real-time Firestore listeners (snapshot-based sync) — background fetch on app open is sufficient
+- Real-time sync / push notifications on product updates — background fetch on app open is sufficient
+- Conditional fetch (ETag/If-Modified-Since) — at ~50KB, re-downloading every app open is negligible
