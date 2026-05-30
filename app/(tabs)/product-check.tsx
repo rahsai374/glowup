@@ -36,12 +36,11 @@ export default function ProductCheckTab() {
 
   useFocusEffect(
     useCallback(() => {
+      // Empty deps — fires only on actual focus/blur, not on step state changes.
+      // PRODUCT_CHECK_OPENED is logged separately in handleSelectProduct reset path.
       logEvent(EVENTS.TAB_VIEWED, { tab_name: 'product_check' });
-      // Only log PRODUCT_CHECK_OPENED when user is on the search step (not mid-verdict)
-      if (step === 'search') {
-        logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
-      }
-    }, [step])
+      logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
+    }, [])
   );
 
   const handleSelectProduct = useCallback((product: Product) => {

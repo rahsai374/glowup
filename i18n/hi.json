@@ -149,5 +149,7 @@
   "delete_account_error_title": "Delete नहीं हुआ",
   "delete_account_error_reauth": "Security के लिए — पहले log out करो, फिर log in करो, फिर delete try करो।",
   "delete_account_error_generic": "कुछ गड़बड़ हुई। फिर try करो या glowup.skincarepartner@gmail.com पर email करो।",
-  "delete": "Delete करो"
+  "delete": "Delete करो",
+  "scan_cooldown_title": "थोड़ा रुकिए",
+  "scan_cooldown_body": "{{seconds}} सेकंड बाद scan कर सकते हैं"
 }

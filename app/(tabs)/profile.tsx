@@ -75,10 +75,12 @@ export default function ProfileScreen() {
               style: 'destructive',
               onPress: async () => {
                 try {
-                  const uid = user?.uid;
-                  if (uid) await deleteAccount(uid);
+                  // Delete Auth account first — if this fails (e.g. requires-recent-login),
+                  // Firestore data is untouched and the user can retry after re-auth.
                   const currentUser = rnAuth().currentUser;
                   if (currentUser) await currentUser.delete();
+                  const uid = user?.uid;
+                  if (uid) await deleteAccount(uid);
                   logout();
                   clearScans([]);
                   router.replace('/splash');

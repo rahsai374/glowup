@@ -149,5 +149,7 @@
   "delete_account_error_title": "Deletion Failed",
   "delete_account_error_reauth": "For your security, please log out and log back in, then try deleting again.",
   "delete_account_error_generic": "Something went wrong. Please try again or email glowup.skincarepartner@gmail.com.",
-  "delete": "Delete"
+  "delete": "Delete",
+  "scan_cooldown_title": "Please wait",
+  "scan_cooldown_body": "You can scan again in {{seconds}} second"
 }

@@ -1,4 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
+
+const SCAN_COOLDOWN_MS = 30_000;
 import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
@@ -59,7 +61,6 @@ export default function ScanScreen() {
   const device = useCameraDevice('front');
   const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastScanTime = useRef<number>(0);
-  const SCAN_COOLDOWN_MS = 30_000;
 
   React.useEffect(() => {
     return () => {
@@ -176,7 +177,7 @@ export default function ScanScreen() {
     const elapsed = now - lastScanTime.current;
     if (elapsed < SCAN_COOLDOWN_MS) {
       const remaining = Math.ceil((SCAN_COOLDOWN_MS - elapsed) / 1000);
-      Alert.alert('Please wait', `You can scan again in ${remaining} second${remaining === 1 ? '' : 's'}.`);
+      Alert.alert(t('scan_cooldown_title'), t('scan_cooldown_body', { seconds: remaining }));
       return;
     }
     lastScanTime.current = now;

@@ -1,7 +1,7 @@
 import '../global.css';
 import '../i18n';
 import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import {
@@ -22,8 +22,9 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-// import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
-// import { Settings } from 'react-native-fbsdk-next';
+// TODO: Re-enable ATT + FB advertiser tracking once FB App ID credentials are configured.
+// See analytics TODOs in MEMORY.md. Requires: requestTrackingPermissionsAsync (expo-tracking-transparency)
+// and Settings.setAdvertiserTrackingEnabled (react-native-fbsdk-next).
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,13 +65,6 @@ export default function RootLayout() {
     if (fontsLoaded || fontsError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontsError]);
 
-  // useEffect(() => {
-  //   if (Platform.OS === 'ios') {
-  //     requestTrackingPermissionsAsync().then(({ status }) => {
-  //       Settings.setAdvertiserTrackingEnabled(status === 'granted');
-  //     }).catch(() => {});
-  //   }
-  // }, []);
 
   if (!fontsLoaded && !fontsError) return null;
 

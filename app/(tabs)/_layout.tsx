@@ -3,6 +3,15 @@ import { Tabs } from 'expo-router';
 import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: focused ? 22 : 20 }}>{emoji}</Text>
+      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+    </View>
+  );
+}
+
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
 
@@ -34,48 +43,28 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: focused ? 22 : 20 }}>🏠</Text>
-              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: focused ? 22 : 20 }}>📊</Text>
-              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon emoji="📊" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="product-check"
         options={{
           title: 'Product',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: focused ? 22 : 20 }}>🧪</Text>
-              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🧪" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center' }}>
-              <Text style={{ fontSize: focused ? 22 : 20 }}>👤</Text>
-              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
-            </View>
-          ),
+          tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
         }}
       />
     </Tabs>
