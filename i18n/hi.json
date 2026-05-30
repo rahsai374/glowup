@@ -138,5 +138,9 @@
   "nudge_center": "Center करो — एक भी detail miss नहीं करना",
   "nudge_steady": "Steady रहो — sharp shot, sharp skin insights",
   "nudge_ready": "Perfect glow angle — देखते हैं क्या glow हो रहा है ✨",
-  "nudge_no_face": "कहाँ गए? Glow zone में आओ"
+  "nudge_no_face": "कहाँ गए? Glow zone में आओ",
+
+  "notifications_title": "Notifications",
+  "notifications_empty": "अभी कोई notification नहीं",
+  "notifications_empty_body": "Tips, reminders, और skin updates की जानकारी यहाँ मिलेगी।"
 }

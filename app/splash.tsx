@@ -11,6 +11,7 @@ import Animated, {
 import rnAuth from '@react-native-firebase/auth';
 import { hydrateFromFirestore } from '@/lib/firestore';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -30,6 +31,10 @@ export default function SplashScreen() {
     const minSplash = new Promise((r) => setTimeout(r, 2500));
     const hydrate = hydrateFromFirestore(currentUser.uid).catch(() => {});
     const hardTimeout = new Promise((r) => setTimeout(r, 5000));
+
+    registerForPushNotificationsAsync()
+      .then((token) => { if (token) savePushToken(currentUser.uid, token); })
+      .catch(() => {});
 
     Promise.all([minSplash, Promise.race([hydrate, hardTimeout])]).then(() => {
       router.replace('/(tabs)');
