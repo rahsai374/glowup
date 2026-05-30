@@ -28,6 +28,11 @@ export const EVENTS = {
   TAB_VIEWED: 'tab_viewed',
   PRODUCT_LINK_TAPPED: 'product_link_tapped',
   PROFILE_UPDATED: 'profile_updated',
+
+  PUSH_OPTIN_PROMPT: 'push_optin_prompt',
+  PUSH_OPTIN_RESPONSE: 'push_optin_response',
+  NOTIFICATION_RECEIVED: 'notification_received',
+  NOTIFICATION_TAPPED: 'notification_tapped',
 } as const;
 
 export async function logEvent(

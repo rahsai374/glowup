@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores/useUserStore';
 import { db, doc, getDoc } from '@/lib/firebase';
 import { hydrateFromFirestore } from '@/lib/firestore';
 import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
+import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -92,6 +93,10 @@ export default function AuthScreen() {
         ageRange: '',
       });
 
+      registerForPushNotificationsAsync()
+        .then((token) => { if (token) savePushToken(uid, token); })
+        .catch(() => {});
+
       try {
         const snap = await getDoc(doc(db, 'users', uid));
         if (snap.exists()) {
@@ -101,7 +106,6 @@ export default function AuthScreen() {
           return;
         }
       } catch (err) {
-        // Firestore unreachable — treat as new user and proceed to questions
         console.warn('[auth] Firestore check failed, treating as new user:', err);
       }
       logSignUp('phone');

@@ -138,5 +138,9 @@
   "nudge_center": "Center up — don't let me miss a single detail",
   "nudge_steady": "Hold steady — sharp shot, sharper skin insights",
   "nudge_ready": "Perfect glow angle — let's see what's glowing ✨",
-  "nudge_no_face": "Where'd you go? Step into the glow zone"
+  "nudge_no_face": "Where'd you go? Step into the glow zone",
+
+  "notifications_title": "Notifications",
+  "notifications_empty": "No notifications yet",
+  "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here."
 }
