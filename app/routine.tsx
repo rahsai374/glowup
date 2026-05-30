@@ -368,6 +368,10 @@ export default function RoutineScreen() {
                 onPress={() => {
                   setTab(t_);
                   setExpanded(0);
+                  logEvent(EVENTS.ROUTINE_TAB_SWITCHED, {
+                    tab: t_,
+                    step_count: routine ? routine[t_].length : 0,
+                  });
                 }}
                 style={{
                   flex: 1,
@@ -402,7 +406,18 @@ export default function RoutineScreen() {
               step={step}
               index={i}
               expanded={expanded === i}
-              onPress={() => setExpanded(expanded === i ? null : i)}
+              onPress={() => {
+                const opening = expanded !== i;
+                setExpanded(opening ? i : null);
+                if (opening) {
+                  logEvent(EVENTS.ROUTINE_STEP_EXPANDED, {
+                    step_id: step.id,
+                    step_title: step.title,
+                    tab,
+                    position: i + 1,
+                  });
+                }
+              }}
             />
           ))}
         </ScrollView>

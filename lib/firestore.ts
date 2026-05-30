@@ -1,4 +1,5 @@
 import { db, doc, setDoc, getDoc, updateDoc, serverTimestamp, collection, getDocs, query, orderBy, limit } from '@/lib/firebase';
+import { deleteDoc } from 'firebase/firestore';
 import { useUserStore, type UserProfile, type StreakData } from '@/stores/useUserStore';
 import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
@@ -37,6 +38,14 @@ export async function updateStreak(uid: string, streak: StreakData): Promise<voi
   } catch (e) {
     console.warn('[firestore] updateStreak failed:', e);
   }
+}
+
+export async function deleteAccount(uid: string): Promise<void> {
+  const scansRef = collection(db, 'users', uid, 'scans');
+  const scansSnap = await getDocs(scansRef);
+  const deletes = scansSnap.docs.map((d) => deleteDoc(d.ref));
+  await Promise.all(deletes);
+  await deleteDoc(doc(db, 'users', uid));
 }
 
 export async function hydrateFromFirestore(uid: string): Promise<void> {

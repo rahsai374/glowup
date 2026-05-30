@@ -1,4 +1,6 @@
 import React, { useState, useRef, useCallback, useMemo } from 'react';
+
+const SCAN_COOLDOWN_MS = 30_000;
 import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
 import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
@@ -17,6 +19,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
+import { StatusBar } from 'expo-status-bar';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { analyzeSkin } from '@/lib/gemini';
@@ -57,6 +60,7 @@ export default function ScanScreen() {
   const { setCurrentScan, addToHistory, scanHistory } = useScanStore();
   const device = useCameraDevice('front');
   const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const lastScanTime = useRef<number>(0);
 
   React.useEffect(() => {
     return () => {
@@ -169,6 +173,14 @@ export default function ScanScreen() {
   }
 
   async function processImage(uri: string, wasReady = false) {
+    const now = Date.now();
+    const elapsed = now - lastScanTime.current;
+    if (elapsed < SCAN_COOLDOWN_MS) {
+      const remaining = Math.ceil((SCAN_COOLDOWN_MS - elapsed) / 1000);
+      Alert.alert(t('scan_cooldown_title'), t('scan_cooldown_body', { seconds: remaining }));
+      return;
+    }
+    lastScanTime.current = now;
     setCapturedUri(uri);
     setState('analyzing');
     logEvent(EVENTS.SCAN_PHOTO_CAPTURED);
@@ -218,6 +230,7 @@ export default function ScanScreen() {
   if (state === 'camera') {
     return (
       <View style={{ flex: 1, backgroundColor: 'black' }}>
+        <StatusBar style="light" />
         {device ? (
           <VisionCamera
             style={{ flex: 1 }}
@@ -314,6 +327,7 @@ export default function ScanScreen() {
   if (state === 'analyzing') {
     return (
       <ImageBackground source={{ uri: capturedUri ?? '' }} resizeMode="cover" style={{ flex: 1 }}>
+        <StatusBar style="light" />
         <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0,0,0,0.3)' }} />
         <View style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, backgroundColor: 'rgba(224,120,86,0.3)' }} />
         <Animated.View

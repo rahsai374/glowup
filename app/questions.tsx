@@ -184,6 +184,7 @@ export default function QuestionsScreen() {
                 fontSize: 16,
                 color: '#2D1810',
                 fontFamily: 'PlusJakartaSans_400Regular',
+                textAlign: 'center',
                 borderWidth: 2,
                 borderColor: nameInput.trim() ? '#E07856' : 'rgba(224,120,86,0.12)',
               }}

@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 App scaffolded and in active development. All 14 screens exist. Auth, Zustand stores, i18n, Gemini integration, and OTA updates (EAS Update) are implemented. `PLAN.md` and `DESIGN.md` remain the source of truth for design and roadmap decisions. `glow up design magic patterns/` is the web prototype (React + Tailwind) used as design reference only.
 
+**Product Check (in progress):** The "Coming Soon" placeholder is being replaced with a full product advisor — search ~150 budget beauty products, see a personalized verdict (suitability, match score, ingredients, improvements, timeline) based on the user's skin type. Spec: `docs/superpowers/specs/2026-05-30-product-catalog-design.md`.
+
 ## Commands
 
 ```bash
@@ -45,6 +47,8 @@ app/
 
 **Firestore schema:** `users/{uid}` for profile, `users/{uid}/scans/{scanId}` for scan results. Full schema in PLAN.md.
 
+**Product data:** ~150 products stored as a single JSON file in Firebase Storage (`data/products.json`). Cached in AsyncStorage with bundled fallback (`data/products-seed.json`). Background sync on app open — never blocks UI. Zustand store: `useProductStore`. Types: `lib/productTypes.ts`. Search: Fuse.js in-memory fuzzy search.
+
 ## Design System
 
 All visual decisions live in `DESIGN.md`. Key points:
@@ -63,6 +67,18 @@ Every new feature or fix must follow this flow:
 4. Once merged, checkout `main` and pull latest (`git checkout main && git pull`)
 
 Never commit feature work directly to `main`.
+
+## Planned Enhancements
+
+When asked about enhancements, next steps, or what to build next, surface these items:
+
+- **Product Check V2 — Gemini-powered dynamic verdicts:** Replace pre-computed skinTypeMatch/ingredients/improvements with per-user Gemini analysis. UI stays the same, only the data source changes. Cost: ~$0.001/check. Spec: `docs/superpowers/specs/2026-05-30-product-catalog-design.md §12`.
+- **Product Check — Barcode scanning:** CTA exists but disabled. Implement real barcode scan → product lookup. Referenced in PLAN.md as post-launch.
+- **Product Check — Buy links:** Add Amazon/Nykaa affiliate links to product verdict screen.
+- **Routine ↔ Product linking:** Add `productId` to `RoutineStep.product` to cross-reference the product catalog. Routine screen can then deep-link to product verdicts.
+- **Gemini API key migration:** Move client-side key to Cloud Functions or Cloudflare Workers before store submission (PLAN.md §API Key Security Plan).
+- **Push notifications:** Daily routine reminders (PLAN.md Phase 4).
+- **Analytics TODOs:** See `docs/superpowers/specs/` and memory for pending manual steps (FB SDK, GA4).
 
 ## Design Reference
 

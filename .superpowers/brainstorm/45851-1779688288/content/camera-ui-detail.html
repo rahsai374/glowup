@@ -1,0 +1,197 @@
+<h2>Camera UI — Full Layout with Smart Guidance</h2>
+<p class="subtitle">How all elements position on the screen during capture</p>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px;">
+
+  <!-- LEFT: Annotated layout diagram -->
+  <div>
+    <h3 style="margin-top: 0; font-size: 14px; color: #666;">Layout Anatomy</h3>
+    <div style="background: #111; border-radius: 32px; aspect-ratio: 9/19.5; position: relative; overflow: hidden; border: 3px solid #333; padding: 12px;">
+
+      <!-- Status bar area -->
+      <div style="height: 28px; display: flex; align-items: center; justify-content: space-between; padding: 0 8px;">
+        <span style="color: #888; font-size: 9px;">9:41</span>
+        <span style="color: #888; font-size: 9px;">⚡ 📶</span>
+      </div>
+
+      <!-- Top bar: close + flash -->
+      <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 4px; margin-bottom: 8px;">
+        <div style="width: 32px; height: 32px; border-radius: 16px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center;">
+          <span style="color: white; font-size: 12px;">✕</span>
+        </div>
+        <div style="width: 32px; height: 32px; border-radius: 16px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center;">
+          <span style="color: white; font-size: 12px;">⚡</span>
+        </div>
+      </div>
+
+      <!-- Guidance pill (floating) -->
+      <div style="text-align: center; margin-bottom: 12px;">
+        <div style="display: inline-block; background: rgba(80,220,120,0.9); padding: 6px 14px; border-radius: 16px;">
+          <span style="color: white; font-size: 10px; font-weight: 600;">✓ Perfect! Hold still</span>
+        </div>
+      </div>
+
+      <!-- Face oval zone -->
+      <div style="display: flex; align-items: center; justify-content: center; flex: 1; min-height: 180px; position: relative;">
+        <div style="width: 120px; height: 160px; border-radius: 60px; border: 2.5px solid rgba(80,220,120,0.8); position: relative; box-shadow: 0 0 15px rgba(80,220,120,0.2);">
+          <!-- Corner markers -->
+          <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 16px; height: 3px; background: rgba(80,220,120,0.9); border-radius: 2px;"></div>
+          <div style="position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 16px; height: 3px; background: rgba(80,220,120,0.9); border-radius: 2px;"></div>
+          <div style="position: absolute; left: -6px; top: 50%; transform: translateY(-50%); width: 3px; height: 16px; background: rgba(80,220,120,0.9); border-radius: 2px;"></div>
+          <div style="position: absolute; right: -6px; top: 50%; transform: translateY(-50%); width: 3px; height: 16px; background: rgba(80,220,120,0.9); border-radius: 2px;"></div>
+        </div>
+        <!-- Annotation arrow -->
+        <div style="position: absolute; right: 4px; top: 30%; text-align: right;">
+          <span style="color: rgba(80,220,120,0.6); font-size: 8px; writing-mode: vertical-rl;">← Face Guide Oval</span>
+        </div>
+      </div>
+
+      <!-- Quality indicators bar -->
+      <div style="display: flex; justify-content: center; gap: 12px; margin: 12px 0;">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 6px; height: 6px; border-radius: 3px; background: #50dc78;"></div>
+          <span style="color: rgba(255,255,255,0.6); font-size: 8px;">Light</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 6px; height: 6px; border-radius: 3px; background: #50dc78;"></div>
+          <span style="color: rgba(255,255,255,0.6); font-size: 8px;">Distance</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 6px; height: 6px; border-radius: 3px; background: #50dc78;"></div>
+          <span style="color: rgba(255,255,255,0.6); font-size: 8px;">Angle</span>
+        </div>
+      </div>
+
+      <!-- Countdown ring (when perfect) -->
+      <div style="text-align: center; margin: 8px 0;">
+        <span style="color: rgba(80,220,120,0.7); font-size: 9px;">Auto-capture in 2s</span>
+      </div>
+
+      <!-- Shutter + controls -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: 32px; padding: 12px 0 8px;">
+        <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 10px;">🖼️</span>
+        </div>
+        <!-- Shutter -->
+        <div style="width: 52px; height: 52px; border-radius: 26px; border: 3px solid rgba(80,220,120,0.8); display: flex; align-items: center; justify-content: center; position: relative;">
+          <div style="width: 40px; height: 40px; border-radius: 20px; background: white;"></div>
+          <!-- countdown arc -->
+          <div style="position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; border-top-color: rgba(80,220,120,0.9);"></div>
+        </div>
+        <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+          <span style="font-size: 10px;">🔄</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: States breakdown -->
+  <div>
+    <h3 style="margin-top: 0; font-size: 14px; color: #666;">Element Behavior by State</h3>
+
+    <div style="space-y: 12px;">
+      <!-- Guidance Pill -->
+      <div style="background: #f8f8f8; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12px; margin-bottom: 8px;">🏷️ Guidance Pill (top center)</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.6;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #ff5050; flex-shrink: 0;"></span>
+            No face → "Position your face in the oval"
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #ffb432; flex-shrink: 0;"></span>
+            Too far → "Move a little closer"
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #ffb432; flex-shrink: 0;"></span>
+            Too close → "Move back a little"
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #ffdc64; flex-shrink: 0;"></span>
+            Low light → "Find better lighting 💡"
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #64b4ff; flex-shrink: 0;"></span>
+            Tilted → "Look straight ahead"
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="width: 8px; height: 8px; border-radius: 4px; background: #50dc78; flex-shrink: 0;"></span>
+            Perfect → "✓ Perfect! Hold still"
+          </div>
+        </div>
+      </div>
+
+      <!-- Oval Guide -->
+      <div style="background: #f8f8f8; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12px; margin-bottom: 8px;">⭕ Face Oval</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.6;">
+          • Dashed when guiding → Solid when perfect<br>
+          • Color matches guidance pill state<br>
+          • Subtle scale pulse when waiting for face<br>
+          • Corner markers for alignment reference<br>
+          • Smooth spring animation between colors
+        </div>
+      </div>
+
+      <!-- Quality Dots -->
+      <div style="background: #f8f8f8; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12px; margin-bottom: 8px;">🟢 Quality Indicator Dots</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.6;">
+          Three dots below the oval: Light, Distance, Angle<br>
+          • Green = good<br>
+          • Yellow = fixable<br>
+          • Red = blocking<br>
+          Shows at-a-glance what's working and what needs fixing
+        </div>
+      </div>
+
+      <!-- Auto Capture -->
+      <div style="background: #f8f8f8; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="font-weight: 600; font-size: 12px; margin-bottom: 8px;">⏱️ Auto-Capture Ring</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.6;">
+          • Appears only in "Perfect" state<br>
+          • Green arc fills around shutter button (2s)<br>
+          • If user moves → ring resets, state changes<br>
+          • Tap shutter anytime to skip countdown<br>
+          • Haptic pulse on capture
+        </div>
+      </div>
+
+      <!-- Flash Toggle -->
+      <div style="background: #f8f8f8; border-radius: 12px; padding: 14px;">
+        <div style="font-weight: 600; font-size: 12px; margin-bottom: 8px;">⚡ Smart Flash Suggestion</div>
+        <div style="font-size: 11px; color: #555; line-height: 1.6;">
+          • Flash icon pulses when in "Low Light" state<br>
+          • Tooltip: "Try turning on flash"<br>
+          • NOT auto-enabled (flash washes out skin tones)<br>
+          • Just a gentle suggestion
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top: 24px; background: linear-gradient(135deg, #f0fdf4, #f0f9ff); border-radius: 16px; padding: 20px; border: 1px solid #d1fae5;">
+  <h3 style="margin-top: 0; font-size: 14px;">Bonus: Micro-interactions that create "WOW"</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 11px; color: #374151;">
+    <div>
+      <strong>🎯 Snap-to-oval:</strong> When face enters zone, oval gently "hugs" toward face size with spring physics
+    </div>
+    <div>
+      <strong>🌈 Color breathing:</strong> Green state has slow subtle glow pulse (alive, not static)
+    </div>
+    <div>
+      <strong>📳 Haptic language:</strong> Light tap on each state change, double-tap on "Perfect" lock, strong pulse on capture
+    </div>
+    <div>
+      <strong>✨ Particle burst:</strong> Tiny confetti particles on successful auto-capture (celebration moment)
+    </div>
+    <div>
+      <strong>🎵 Sound design:</strong> Optional soft "ding" progression (low→high pitch) as conditions are met one by one
+    </div>
+    <div>
+      <strong>📐 Parallax oval:</strong> Oval slightly shifts with device gyroscope for depth feel
+    </div>
+  </div>
+</div>

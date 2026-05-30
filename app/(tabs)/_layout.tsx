@@ -1,7 +1,16 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function TabIcon({ emoji, focused }: { emoji: string; focused: boolean }) {
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: focused ? 22 : 20 }}>{emoji}</Text>
+      {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+    </View>
+  );
+}
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
@@ -34,28 +43,28 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>🏠</Text>,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🏠" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>📊</Text>,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="📊" focused={focused} />,
         }}
       />
       <Tabs.Screen
-        name="tips"
+        name="product-check"
         options={{
-          title: 'Tips',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>💡</Text>,
+          title: 'Product',
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🧪" focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>👤</Text>,
+          tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
         }}
       />
     </Tabs>

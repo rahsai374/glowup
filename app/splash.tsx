@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import Animated, {
   FadeInDown,
@@ -10,8 +11,11 @@ import Animated, {
 } from 'react-native-reanimated';
 import rnAuth from '@react-native-firebase/auth';
 import { hydrateFromFirestore } from '@/lib/firestore';
+import { useProductStore } from '@/stores/useProductStore';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
+
+const appIcon = require('@/assets/icon.png');
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -31,6 +35,9 @@ export default function SplashScreen() {
     const minSplash = new Promise((r) => setTimeout(r, 2500));
     const hydrate = hydrateFromFirestore(currentUser.uid).catch(() => {});
     const hardTimeout = new Promise((r) => setTimeout(r, 5000));
+
+    useProductStore.getState().hydrate();
+    useProductStore.getState().syncFromStorage();
 
     registerForPushNotificationsAsync()
       .then((token) => { if (token) savePushToken(currentUser.uid, token); })
@@ -53,6 +60,7 @@ export default function SplashScreen() {
         gap: 16,
       }}
     >
+      <StatusBar style="light" />
       <Animated.View style={iconStyle}>
         <View
           style={{
@@ -78,14 +86,13 @@ export default function SplashScreen() {
       <Animated.Text
         entering={FadeInDown.delay(500).springify()}
         style={{
-          fontSize: 11,
-          fontFamily: 'PlusJakartaSans_400Regular',
-          color: 'rgba(255,255,255,0.85)',
-          letterSpacing: 4,
-          textTransform: 'uppercase',
+          fontSize: 14,
+          fontFamily: 'Fraunces_700Bold_Italic',
+          color: 'rgba(255,255,255,0.8)',
+          letterSpacing: 0.5,
         }}
       >
-        AI Skin Routine
+        Your skin care partner
       </Animated.Text>
 
       <Animated.Text

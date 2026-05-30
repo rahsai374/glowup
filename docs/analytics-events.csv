@@ -1,0 +1,33 @@
+Screen,Event Name,Trigger,Params,What It Tells You,Platform
+Splash,app_opened,App launches,is_authenticated (bool),DAU + authenticated vs new user ratio,GA4 + FB
+Language,language_selected,User picks language,language (en/hi),Hindi vs English user split,GA4 + FB
+Any Tab,tab_viewed,Tab becomes active,tab_name (home/progress/product_check/profile),Most visited tab,GA4 + FB
+Auth,otp_requested,User submits phone number,—,Signup + login attempt volume,GA4 + FB
+Auth,login,OTP verified — returning user,method (phone),Returning user login rate,GA4 + FB
+Auth,sign_up,OTP verified — new user,method (phone),New registrations,GA4 + FB
+Auth,setUserId,OTP verified,uid,Links all events to user identity,GA4
+Onboarding,onboarding_slide_viewed,Each slide appears,slide_index (0/1/2),Drop-off per slide,GA4 + FB
+Onboarding,onboarding_completed,User taps Get Started,—,Onboarding completion rate,GA4 + FB
+Onboarding,onboarding_skipped,User skips slides,skipped_at_slide,Where users abandon onboarding,GA4 + FB
+Questions,onboarding_q_answered,Each question answered,question / answer / step,Per-question answer distribution,GA4 + FB
+Questions,onboarding_q_completed,All questions done,skin_type / main_concern / age_range,User profile breakdown,GA4 + FB
+Questions,setUserProperties,All questions done,skin_type / main_concern / age_range,Segments all future events by skin type,GA4
+Scan,scan_started,Camera or gallery tapped,source (camera/gallery),Camera vs gallery preference,GA4 + FB
+Scan,scan_photo_captured,Photo taken/selected,—,Capture success rate,GA4 + FB
+Scan,scan_completed,Gemini returns result,overall_score / skin_type / top_concern,Score distribution + AI reliability,GA4 + FB
+Scan,scan_failed,Gemini or network error,error_message,Failure modes to fix,GA4 + FB
+Results,results_viewed,Results screen mounts,overall_score / skin_type,Score seen per skin type,GA4 + FB
+Routine,routine_viewed,Routine screen mounts,has_scan (bool),Routine engagement rate,GA4 + FB
+Routine,routine_tab_switched,Morning/Night/Weekly tab tapped,tab / step_count,Which routine time is most used,GA4 + FB
+Routine,routine_step_expanded,Step card opened (not collapsed),step_id / step_title / tab / position,Most-read steps + drop-off after position N,GA4 + FB
+Routine,product_link_tapped,Product link in routine tapped,product_name,Which routine products users want to buy,GA4 + FB
+Share,share_opened,Share screen mounts,overall_score,Share screen open rate,GA4 + FB
+Share,share_completed,User shares card,—,Actual shares — viral coefficient,GA4 + FB
+Profile,profile_updated,Name or language saved,field (name/language),Profile completion + language switches,GA4 + FB
+Product Check,product_check_opened,Screen mounts,source (tab/home_card),Which entry point drives more usage,GA4 + FB
+Product Check,product_searched,800ms after user stops typing,query / result_count,What users search for,GA4 + FB
+Product Check,product_search_no_results,Search returns 0 results,query,Exact catalog gaps — what to add next,GA4 + FB
+Product Check,product_selected,Product card tapped,product_id / product_name / brand / category / price,Most-checked products,GA4 + FB
+Product Check,product_verdict_viewed,Results step shown,product_id / product_name / brand / category / suitability / match_score / skin_type,Verdict quality distribution per skin type,GA4 + FB
+Product Check,product_barcode_tapped,Barcode CTA tapped,—,Demand signal for barcode scanning feature,GA4 + FB
+Product Check,product_check_another,Check Another button tapped,—,Session depth — products checked per session,GA4 + FB

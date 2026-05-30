@@ -69,13 +69,13 @@ type StringHref = Extract<Href, string>;
 const VALID_ROUTES: readonly StringHref[] = [
   '/(tabs)',
   '/(tabs)/progress',
-  '/(tabs)/tips',
+  '/(tabs)/product-check',
   '/(tabs)/profile',
   '/scan',
   '/results',
   '/routine',
   '/product-check',
-  '/notifications',
+  // '/notifications', -- excluded until .expo/types/router.d.ts regenerates after expo start
 ] as const;
 
 function isValidRoute(route: string): route is StringHref {

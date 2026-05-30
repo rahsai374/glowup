@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { View, Text, TouchableOpacity, Share } from 'react-native';
+import { View, Text, TouchableOpacity, Share, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,6 +8,9 @@ import { useScanStore } from '@/stores/useScanStore';
 import { useUserStore } from '@/stores/useUserStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { StatusBar } from 'expo-status-bar';
+
+const appIcon = require('@/assets/icon.png');
 
 export default function ShareScreen() {
   const router = useRouter();
@@ -19,8 +22,10 @@ export default function ShareScreen() {
   const cardStyle = useAnimatedStyle(() => ({ transform: [{ scale: cardScale.value }] }));
 
   React.useEffect(() => {
+    // Log unconditionally — if scan is null, router.back() fires in the
+    // effect below and the screen is immediately dismissed anyway.
+    logEvent(EVENTS.SHARE_OPENED, { overall_score: scan?.overall_score ?? 0 });
     if (!scan) return;
-    logEvent(EVENTS.SHARE_OPENED, { overall_score: scan.overall_score });
     cardScale.value = withSpring(1, { damping: 14, stiffness: 100 });
   }, []);
 
@@ -39,6 +44,7 @@ export default function ShareScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#1A1A1A' }}>
+      <StatusBar style="light" />
       <TouchableOpacity
         onPress={() => router.back()}
         style={{ position: 'absolute', top: insets.top + 16, left: 24, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 10, zIndex: 20 }}
@@ -74,9 +80,7 @@ export default function ShareScreen() {
             <Text style={{ fontSize: 18, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>
               {user?.name || 'My Score'}
             </Text>
-            <View style={{ backgroundColor: '#E07856', borderRadius: 8, paddingHorizontal: 8, paddingVertical: 3 }}>
-              <Text style={{ fontSize: 10, color: 'white', fontFamily: 'PlusJakartaSans_700Bold' }}>GlowUp</Text>
-            </View>
+            <Image source={appIcon} style={{ width: 28, height: 28, borderRadius: 6 }} />
           </View>
 
           <ScoreCircle score={scan.overall_score} size={160} />

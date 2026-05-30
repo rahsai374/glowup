@@ -14,19 +14,17 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rahul.glowup",
+      "bundleIdentifier": "com.glowup.app",
       "infoPlist": {
         "UIBackgroundModes": ["remote-notification"]
       }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.rahul.glowup",
+      "package": "com.glowup.app",
       "adaptiveIcon": {
         "backgroundColor": "#E07856",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [

@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { View, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
@@ -59,8 +60,14 @@ export default function HomeScreen() {
 
   useEffect(() => {
     tickStreak();
-    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'home' });
   }, []);
+
+  // useFocusEffect fires every time the tab comes into view — not just on first mount
+  useFocusEffect(
+    useCallback(() => {
+      logEvent(EVENTS.TAB_VIEWED, { tab_name: 'home' });
+    }, [])
+  );
 
   const now = new Date();
   const nowHour = now.getHours();
@@ -136,7 +143,7 @@ export default function HomeScreen() {
           name={user?.name || 'Friend'}
           greeting={greetingText}
           onAvatarPress={() => router.push('/(tabs)/profile')}
-          onBellPress={() => router.push('/notifications')}
+          onBellPress={() => router.push('/notifications' as any)}
         />
 
         {currentScore !== null && (
