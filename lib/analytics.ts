@@ -37,6 +37,10 @@ export const EVENTS = {
   PRODUCT_VERDICT_VIEWED: 'product_verdict_viewed',      // results step shown
   PRODUCT_BARCODE_TAPPED: 'product_barcode_tapped',      // barcode CTA tapped
   PRODUCT_CHECK_ANOTHER: 'product_check_another',        // "Check Another" tapped
+
+  // Routine
+  ROUTINE_TAB_SWITCHED: 'routine_tab_switched',          // morning / night / weekly tab pressed
+  ROUTINE_STEP_EXPANDED: 'routine_step_expanded',         // a step card opened
 } as const;
 
 export async function logEvent(
