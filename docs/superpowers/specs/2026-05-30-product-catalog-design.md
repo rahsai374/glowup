@@ -68,13 +68,34 @@ export type ProductCategory =
   | 'lip_care'
   | 'spot_treatment';
 
+export type ProductSuitability = 'excellent' | 'good' | 'caution' | 'avoid';
+
+export interface SkinTypeMatch {
+  suitability: ProductSuitability;
+  matchScore: number;  // 0–100
+}
+
+export interface ProductIngredient {
+  name: string;
+  nameHi: string;
+  benefitEn: string;
+  benefitHi: string;
+  rating: 'good' | 'neutral' | 'bad';
+}
+
+export interface ProductTimeline {
+  weeksEn: string;
+  weeksHi: string;
+  resultEn: string;
+  resultHi: string;
+}
+
 export interface Product {
   id: string;                    // kebab-case slug, e.g. "himalaya-neem-face-wash"
   name: string;                  // "Himalaya Purifying Neem Face Wash"
   brand: string;                 // "Himalaya"
   category: ProductCategory;     // "cleanser"
-  skinTypes: SkinType[];         // reuses existing type from routineData.ts
-  concerns: Concern[];           // reuses existing type from routineData.ts
+  concerns: Concern[];           // what concerns this product addresses
   price: number;                 // numeric ₹ value for sorting/filtering (e.g. 175)
   priceDisplay: string;          // "₹175" — pre-formatted for display
   size: string;                  // "150ml" / "50g"
@@ -82,16 +103,40 @@ export interface Product {
   imageUrl: string | null;       // Amazon/Nykaa CDN URL, null if unavailable
   tags: string[];                // ["bestseller", "ayurvedic", "dermat-recommended"]
   rating: number;                // approximate rating out of 5 (e.g. 4.3)
+
+  // ── Per-skin-type match data (pre-computed) ──────────────────────────
+  skinTypeMatch: Record<SkinType, SkinTypeMatch>;
+  // Looked up by user's skin type at render time:
+  //   const match = product.skinTypeMatch[userSkinType];
+  //   match.suitability → "excellent" | "good" | "caution" | "avoid"
+  //   match.matchScore  → 0–100
+
+  // ── Ingredient analysis ──────────────────────────────────────────────
+  keyIngredients: ProductIngredient[];
+
+  // ── Expected improvements ────────────────────────────────────────────
+  improvementsEn: string[];      // ["Visible reduction in dark spots", ...]
+  improvementsHi: string[];      // ["काले धब्बे और झाइयों में कमी", ...]
+
+  // ── Warnings / cautions ──────────────────────────────────────────────
+  warningsEn: string[];          // general cautions (e.g. "Patch test first")
+  warningsHi: string[];
+
+  // ── Expected timeline ────────────────────────────────────────────────
+  expectedTimeline: ProductTimeline[];
 }
 ```
 
 **Key decisions:**
 
+- **`skinTypeMatch` is a Record keyed by SkinType** — pre-computed suitability + match score for each skin type. The UI looks up the user's skin type and displays the corresponding verdict. The `'all'` key provides a general-purpose fallback.
+- **`keyIngredients`** — each ingredient has a `rating` (good/neutral/bad) and bilingual benefit text. Drives the ingredient analysis card in the results view.
+- **`improvementsEn/Hi` + `expectedTimeline`** — pre-authored content describing what areas the product helps improve and when the user can expect results. This is the "is this product right for my skin" answer.
+- **`warningsEn/Hi`** — general cautions (e.g. "Contains SLS — may dry out sensitive skin", "Patch test recommended"). Empty array if no warnings.
 - **`price` is numeric** — enables sort-by-price and price range filtering. `priceDisplay` avoids runtime formatting.
-- **Reuses `SkinType` and `Concern`** from `lib/routineData.ts` — single source of truth, no type divergence.
 - **`imageUrl` is nullable** — when null or when the URL fails to load, the UI falls back to a category emoji icon.
-- **`tags` array** — flexible metadata for badges and secondary filtering (bestseller, ayurvedic, dermatologist-recommended, fragrance-free, etc.).
-- **`rating`** — approximate average rating from Amazon/Nykaa at time of data compilation. Displayed as stars on product cards.
+- **`concerns`** replaces the old `skinTypes` array — suitability is now captured in `skinTypeMatch`, so a flat `skinTypes` list is redundant.
+- **Future: Gemini-powered verdicts.** In a later version, `skinTypeMatch`, `keyIngredients`, improvements, warnings, and timeline can be generated dynamically per user via Gemini instead of pre-computed. The UI stays the same — only the data source changes.
 
 ### 3.2 Category Emoji Map (fallback icons)
 
@@ -112,7 +157,33 @@ export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
 };
 ```
 
-### 3.3 Sample Product Entry
+### 3.3 Suitability Config (UI colors)
+
+```typescript
+export const SUITABILITY_CONFIG: Record<ProductSuitability, {
+  labelEn: string; labelHi: string;
+  bg: string; light: string; text: string; border: string;
+}> = {
+  excellent: {
+    labelEn: 'Excellent Match', labelHi: 'बेहतरीन मैच',
+    bg: '#22C55E', light: '#F0FDF4', text: '#15803D', border: '#BBF7D0',
+  },
+  good: {
+    labelEn: 'Good Match', labelHi: 'अच्छा मैच',
+    bg: '#10B981', light: '#ECFDF5', text: '#047857', border: '#A7F3D0',
+  },
+  caution: {
+    labelEn: 'Use With Caution', labelHi: 'सावधानी से उपयोग करें',
+    bg: '#F97316', light: '#FFF7ED', text: '#C2410C', border: '#FED7AA',
+  },
+  avoid: {
+    labelEn: 'Not Recommended', labelHi: 'अनुशंसित नहीं',
+    bg: '#EF4444', light: '#FEF2F2', text: '#B91C1C', border: '#FECACA',
+  },
+};
+```
+
+### 3.4 Sample Product Entry
 
 ```json
 {
@@ -120,15 +191,89 @@ export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
   "name": "Minimalist 2% Salicylic Acid Face Wash",
   "brand": "Minimalist",
   "category": "cleanser",
-  "skinTypes": ["oily", "combination"],
   "concerns": ["acne", "dark_spots"],
   "price": 299,
   "priceDisplay": "₹299",
   "size": "100ml",
   "description": "Gentle BHA cleanser that unclogs pores without stripping moisture",
   "imageUrl": "https://m.media-amazon.com/images/I/51xKHOBpLkL._SL300_.jpg",
-  "tags": ["bestseller", "dermat-recommended"],
-  "rating": 4.3
+  "tags": ["bestseller", "dermat-recommended", "mid-range"],
+  "rating": 4.3,
+
+  "skinTypeMatch": {
+    "oily":        { "suitability": "excellent", "matchScore": 92 },
+    "combination": { "suitability": "good",      "matchScore": 78 },
+    "dry":         { "suitability": "caution",   "matchScore": 45 },
+    "normal":      { "suitability": "good",      "matchScore": 72 },
+    "all":         { "suitability": "good",      "matchScore": 72 }
+  },
+
+  "keyIngredients": [
+    {
+      "name": "Salicylic Acid 2%",
+      "nameHi": "सैलिसिलिक एसिड 2%",
+      "benefitEn": "Unclogs pores, reduces acne and blackheads",
+      "benefitHi": "रोमछिद्र खोलता है, मुंहासे और ब्लैकहेड्स कम करता है",
+      "rating": "good"
+    },
+    {
+      "name": "Zinc PCA",
+      "nameHi": "ज़िंक PCA",
+      "benefitEn": "Controls excess oil production",
+      "benefitHi": "अतिरिक्त तेल उत्पादन नियंत्रित करता है",
+      "rating": "good"
+    },
+    {
+      "name": "SLS-Free Formula",
+      "nameHi": "SLS-मुक्त फॉर्मूला",
+      "benefitEn": "Gentle cleansing without stripping moisture",
+      "benefitHi": "नमी छीने बिना सौम्य सफाई",
+      "rating": "good"
+    }
+  ],
+
+  "improvementsEn": [
+    "Fewer breakouts and clearer skin",
+    "Reduced blackheads and whiteheads",
+    "Less oily T-zone throughout the day",
+    "Smoother skin texture"
+  ],
+  "improvementsHi": [
+    "कम मुंहासे और साफ़ त्वचा",
+    "ब्लैकहेड्स और व्हाइटहेड्स में कमी",
+    "दिनभर T-zone पर कम तेल",
+    "मुलायम त्वचा"
+  ],
+
+  "warningsEn": [
+    "May cause dryness if used more than twice daily",
+    "Always follow with a moisturizer"
+  ],
+  "warningsHi": [
+    "दिन में दो बार से ज़्यादा उपयोग करने पर रूखापन हो सकता है",
+    "इसके बाद हमेशा मॉइस्चराइज़र लगाएं"
+  ],
+
+  "expectedTimeline": [
+    {
+      "weeksEn": "1–2 weeks",
+      "weeksHi": "1–2 हफ़्ते",
+      "resultEn": "Skin feels less oily, fewer new breakouts",
+      "resultHi": "त्वचा कम तैलीय, नए मुंहासे कम"
+    },
+    {
+      "weeksEn": "4 weeks",
+      "weeksHi": "4 हफ़्ते",
+      "resultEn": "Visible reduction in blackheads and acne marks",
+      "resultHi": "ब्लैकहेड्स और एक्ने के निशान कम दिखने लगते हैं"
+    },
+    {
+      "weeksEn": "8 weeks",
+      "weeksHi": "8 हफ़्ते",
+      "resultEn": "Clearer, smoother skin with controlled oil",
+      "resultHi": "साफ़, मुलायम त्वचा और नियंत्रित तेल"
+    }
+  ]
 }
 ```
 
@@ -262,7 +407,7 @@ After upload, Firebase Storage is the authoritative source. The bundle is a safe
 
 ## 5. Fuzzy Search
 
-### 4.1 Library
+### 5.1 Library
 
 **Fuse.js** (~5KB gzipped). Chosen over alternatives:
 
@@ -273,7 +418,7 @@ After upload, Firebase Storage is the authoritative source. The bundle is a safe
 | Custom prefix | Rejected | No typo tolerance ("sunscren" won't match "sunscreen") |
 | MiniSearch | Rejected | Similar to Fuse.js but less RN community adoption |
 
-### 4.2 Search Configuration
+### 5.2 Search Configuration
 
 ```typescript
 import Fuse from 'fuse.js';
@@ -297,7 +442,7 @@ const fuseOptions: Fuse.IFuseOptions<Product> = {
 - `brand` next (0.3) — "himalaya", "minimalist", "plum" are common queries
 - `category` + `tags` (0.15 each) — enables "sunscreen", "ayurvedic" style searches
 
-### 4.3 Search + Filter Pipeline
+### 5.3 Search + Filter Pipeline
 
 ```
 User input → Fuse.js fuzzy match → post-filter by active skin type chips
@@ -307,7 +452,7 @@ User input → Fuse.js fuzzy match → post-filter by active skin type chips
 
 When search query is empty, all products are shown (filtered only by active chips), grouped by category.
 
-### 4.4 Search Hook
+### 5.4 Search Hook
 
 ```typescript
 // hooks/useProductSearch.ts
@@ -325,9 +470,10 @@ export function useProductSearch(products: Product[]) {
       : products;
 
     if (skinTypeFilter) {
-      filtered = filtered.filter(p =>
-        p.skinTypes.includes(skinTypeFilter) || p.skinTypes.includes('all')
-      );
+      filtered = filtered.filter(p => {
+        const match = p.skinTypeMatch[skinTypeFilter];
+        return match && (match.suitability === 'excellent' || match.suitability === 'good');
+      });
     }
     if (categoryFilter) {
       filtered = filtered.filter(p => p.category === categoryFilter);
@@ -345,7 +491,7 @@ export function useProductSearch(products: Product[]) {
 
 ## 6. Product Images
 
-### 5.1 Source
+### 6.1 Source
 
 Amazon India product images from public CDN URLs.
 
@@ -356,7 +502,7 @@ The `_SL300_` suffix requests a 300px-wide version — adequate for product card
 - Served from Amazon's global CDN (fast in India)
 - Stable for existing products (URLs persist for years)
 
-### 5.2 Fallback Strategy
+### 6.2 Fallback Strategy
 
 ```
 imageUrl loads successfully → show product image
@@ -388,7 +534,7 @@ function ProductImage({ product }: { product: Product }) {
 }
 ```
 
-### 5.3 Image Risk & Mitigation
+### 6.3 Image Risk & Mitigation
 
 | Risk | Likelihood | Mitigation |
 |---|---|---|
@@ -398,69 +544,185 @@ function ProductImage({ product }: { product: Product }) {
 
 ---
 
-## 7. Screen Design — Product Catalog
+## 7. Screen Design — Product Check (3-Step Flow)
 
-### 6.1 Screen Structure
+The screen has 3 states managed by local component state, matching the original design prototype. All 3 states live in `app/product-check.tsx` — no new routes.
 
-The existing `app/product-check.tsx` is replaced with a full product browse screen.
+```typescript
+type Step = 'search' | 'analyzing' | 'results';
+const [step, setStep] = useState<Step>('search');
+const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+```
+
+### 7.1 Step 1 — Search & Browse
 
 ```
 ┌─────────────────────────────────┐
-│ ←  Product Guide      (header)  │
-│    "Find your perfect match"    │
+│ ←  Product Check       (header) │
+│    "Is it right for your skin?" │
+│    "Personalized for your       │
+│     oily skin"                  │
 ├─────────────────────────────────┤
 │ 🔍 Search products...           │
 ├─────────────────────────────────┤
-│ [Oily] [Dry] [Combo] [Normal]  │  ← skin type filter pills
-│ [Cleanser] [Moisturizer] [Sun..│  ← category filter pills (scroll)
+│ ┌─ Scan Barcode ─────────────┐  │  ← dashed border CTA (future)
+│ │  📷  Scan Barcode          │  │
+│ └────────────────────────────┘  │
 ├─────────────────────────────────┤
-│ ┌──────────┐ ┌──────────┐      │
-│ │  image   │ │  image   │      │  ← 2-column product grid
-│ │  Brand   │ │  Brand   │      │
-│ │  Name    │ │  Name    │      │
-│ │  ₹175    │ │  ₹299    │      │
-│ │  ★★★★☆  │ │  ★★★★★  │      │
-│ └──────────┘ └──────────┘      │
-│ ┌──────────┐ ┌──────────┐      │
-│ │  ...     │ │  ...     │      │
-│ └──────────┘ └──────────┘      │
-│                                 │
-│  (scrollable, pb-24)            │
+│ POPULAR PRODUCTS                │
+│ ┌────────────────────────────┐  │
+│ │ 🧪  Plum Niacinamide Serum│  │  ← product list (not grid)
+│ │     Serum • ₹385        → │  │
+│ └────────────────────────────┘  │
+│ ┌────────────────────────────┐  │
+│ │ 🍊  Mamaearth Vit C Wash  │  │
+│ │     Face Wash • ₹249    → │  │
+│ └────────────────────────────┘  │
+│ ...                             │
 └─────────────────────────────────┘
 ```
 
-### 6.2 Design Tokens (per DESIGN.md)
+**Behavior:**
+- Empty query shows top 4–6 popular products (sorted by rating or tagged `bestseller`)
+- Typing filters via Fuse.js fuzzy search
+- Tapping a product → sets `selectedProduct`, transitions to `analyzing` step
+- Barcode scan CTA is present but disabled for MVP (shows "Coming soon" toast)
+- Header subline shows user's skin type: "Personalized for your {skinType} skin"
+
+### 7.2 Step 2 — Analyzing Animation
+
+```
+┌─────────────────────────────────┐
+│                                 │
+│                                 │
+│         ┌──────────┐            │
+│         │  ◌ spin  │            │
+│         │   🧪     │            │  ← product emoji + spinning ring
+│         └──────────┘            │
+│                                 │
+│     "Matching to your skin..."  │
+│     "Analyzing 3 ingredients"   │
+│                                 │
+│                                 │
+└─────────────────────────────────┘
+```
+
+**Behavior:**
+- Animated spinner ring around the product emoji (reanimated `withRepeat`)
+- Shows "Matching to your skin..." text
+- Shows ingredient count: "Analyzing {n} ingredients"
+- Auto-transitions to `results` after ~2s delay (`setTimeout`)
+- Pure animation — no actual computation happening (data is pre-computed)
+
+### 7.3 Step 3 — Product Verdict
+
+```
+┌─────────────────────────────────┐
+│ ←  (back to search)    (header) │
+├─────────────────────────────────┤
+│ ┌────────────────────────────┐  │
+│ │ 🧪 Plum Niacinamide Serum │  │  ← product info
+│ │    Plum • ₹385            │  │
+│ ├────────────────────────────┤  │
+│ │ ✅ Excellent Match         │  │  ← verdict band (color-coded)
+│ │    For your oily skin     │  │
+│ ├────────────────────────────┤  │
+│ │ Match Score        92/100 │  │  ← animated progress bar
+│ │ ████████████████████░░░░  │  │
+│ └────────────────────────────┘  │
+│                                 │
+│ KEY INGREDIENTS                 │
+│ ┌────────────────────────────┐  │
+│ │ ✅ Salicylic Acid 2%      │  │  ← green = good
+│ │    Unclogs pores, reduces │  │
+│ │    acne and blackheads    │  │
+│ ├────────────────────────────┤  │
+│ │ ✅ Zinc PCA               │  │
+│ │    Controls excess oil    │  │
+│ └────────────────────────────┘  │
+│                                 │
+│ ✨ EXPECTED IMPROVEMENTS        │
+│ ┌────────────────────────────┐  │
+│ │ 1. Fewer breakouts        │  │
+│ │ 2. Reduced blackheads     │  │
+│ │ 3. Less oily T-zone      │  │
+│ │ 4. Smoother texture       │  │
+│ └────────────────────────────┘  │
+│                                 │
+│ 🕐 WHEN TO EXPECT RESULTS      │
+│ ┌────────────────────────────┐  │
+│ │ 1–2 weeks │ Less oily,    │  │
+│ │           │ fewer breakout│  │
+│ │ 4 weeks   │ Blackheads    │  │
+│ │           │ visibly reduce│  │
+│ │ 8 weeks   │ Clear, smooth │  │
+│ │           │ controlled oil│  │
+│ └────────────────────────────┘  │
+│                                 │
+│ ⚠️ IMPORTANT WARNINGS           │
+│ ┌────────────────────────────┐  │
+│ │ ⚠ May cause dryness if    │  │
+│ │   used more than twice    │  │
+│ │ ⚠ Always follow with a    │  │
+│ │   moisturizer             │  │
+│ └────────────────────────────┘  │
+│                                 │
+│ ┌────────────────────────────┐  │
+│ │    Check Another Product   │  │  ← resets to search step
+│ └────────────────────────────┘  │
+└─────────────────────────────────┘
+```
+
+**Behavior:**
+- Back button returns to search step (not router.back())
+- Verdict band color from `SUITABILITY_CONFIG` based on `product.skinTypeMatch[userSkinType].suitability`
+- Match score bar animates from 0 to `matchScore` over 1s
+- Ingredients show color-coded icons: green (good), yellow (neutral), red (bad)
+- Improvements numbered list in warm card
+- Timeline shows week milestones with expected results
+- Warnings section only shown if `warningsEn.length > 0`
+- "Check Another Product" resets state to search step
+- All text switches between En/Hi based on i18n language
+
+### 7.4 Design Tokens
 
 | Element | Style |
 |---|---|
 | Background | `bg-[#FFF5EE]` with ambient blobs |
-| Header | Fraunces h1 `"Product Guide"` + italic serif subline |
-| Search bar | `bg-white rounded-2xl py-3 px-4 border border-[#E07856]/10` |
-| Filter pills | Active: `bg-[#E07856] text-white rounded-xl`. Inactive: `bg-white border border-[#E07856]/15 rounded-xl` |
-| Product card | `bg-white rounded-2xl p-3 border border-[#E07856]/10 shadow-soft` |
-| Product image | `w-full aspect-square rounded-xl bg-[#FFF5EE]` (cream bg while loading) |
-| Brand text | `text-[10px] uppercase tracking-widest text-[#2D1810]/40 font-sans` |
-| Product name | `text-sm font-sans font-semibold text-[#2D1810]` (2 lines max) |
-| Price badge | `text-sm font-bold text-[#E07856]` |
-| Rating stars | `text-xs text-[#D4A574]` |
-| Empty state | Centered emoji + "No products match" + "Clear filters" CTA |
+| Header | Fraunces h1 + italic serif subline with user's skin type |
+| Search bar | `bg-white rounded-2xl py-4 px-4 border border-[#E07856]/10` |
+| Product list item | `bg-white rounded-2xl p-4 border border-[#E07856]/10 shadow-soft` |
+| Verdict card | `bg-white rounded-3xl shadow-soft border border-[#E07856]/10` |
+| Verdict band | Color from `SUITABILITY_CONFIG` — light bg + colored icon circle + bold label |
+| Match score bar | `h-2.5 rounded-full` — color from suitability config |
+| Ingredient card | `bg-white rounded-2xl p-4 border border-[#E07856]/10` |
+| Ingredient icon | `w-8 h-8 rounded-full` — green-100/red-100/yellow-100 bg |
+| Improvements card | `bg-[#FFF9F5] border border-[#D4A574]/30 rounded-2xl p-4` |
+| Timeline card | `bg-white rounded-2xl p-4 border border-[#E07856]/10` |
+| Warnings card | `bg-orange-50 border border-orange-200 rounded-2xl p-4` |
+| "Check Another" CTA | `bg-white text-[#2D1810] border border-[#E07856]/20 rounded-2xl py-4` |
 
-### 6.3 Motion
+### 7.5 Motion
 
 | Element | Animation |
 |---|---|
-| Page enter | `FadeInDown.springify()` on header |
-| Product cards | Staggered `FadeInDown.delay(idx * 60)` on initial load |
-| Filter chip toggle | Spring scale (0.95 → 1.0) on press |
-| Search → results | No transition (instant, in-memory) |
+| Step transitions | `AnimatePresence` — fade between search/analyzing/results |
+| Analyzing spinner | `withRepeat(withTiming(360, 1000), -1)` rotation on ring |
+| Analyzing pulse | `withRepeat(withTiming({scale: [1, 1.2, 1]}, 1500), -1)` on outer ring |
+| Match score bar | `withTiming(width: matchScore%, 1000, easeOut)` |
+| Ingredient cards | Stagger `FadeInDown.delay(idx * 100)` |
+| Improvement items | Stagger `FadeInDown.delay(idx * 80)` |
+| Product list items | Stagger `FadeInDown.delay(idx * 50)` |
 
-### 6.4 User's Skin Type Pre-selected
+### 7.6 User's Skin Type Pre-selected
 
-On first load, pre-select the user's self-reported skin type (from Q2 during onboarding, stored in user profile) as the default filter. The user can clear it or switch to another type. This makes the default view immediately relevant.
+The verdict is automatically personalized to the user's skin type from onboarding (Q2). No manual skin type selection needed on this screen — the header subline and all verdicts reflect the user's stored skin type.
 
 ```typescript
-const userSkinType = useUserStore(s => s.skinType);
-const [skinTypeFilter, setSkinTypeFilter] = useState<SkinType | null>(userSkinType ?? null);
+const userSkinType = useUserStore(s => s.skinType) as SkinType;
+const match = selectedProduct?.skinTypeMatch[userSkinType];
+// match.suitability → "excellent" | "good" | "caution" | "avoid"
+// match.matchScore  → 0–100
 ```
 
 ---
@@ -535,7 +797,7 @@ Web search for "best budget [category] India [skin type]" across Amazon IN bests
 
 ### 9.5 Quality Checks
 
-- Every product must have: name, brand, category, at least one skinType, price, description
+- Every product must have: name, brand, category, price, description, skinTypeMatch (all 5 keys), at least 1 ingredient, at least 1 improvement
 - Image URLs verified as loadable at compile time
 - No duplicate products (same product in different sizes counts as one entry, use most common size)
 - Price accuracy: ±20% tolerance (prices fluctuate; seed data is indicative, not real-time)
@@ -552,16 +814,23 @@ Product catalog is already routed at `/product-check`. No routing changes needed
 
 Log events using existing analytics infrastructure:
 
-| Event | When |
-|---|---|
-| `PRODUCT_CATALOG_VIEWED` | Screen mount |
-| `PRODUCT_SEARCHED` | User submits search (debounce 500ms) with query param |
-| `PRODUCT_FILTER_APPLIED` | Filter chip toggled, with filter type + value |
-| `PRODUCT_TAPPED` | Product card pressed, with product ID |
+| Event | When | Params |
+|---|---|---|
+| `PRODUCT_CHECK_VIEWED` | Screen mount (search step) | — |
+| `PRODUCT_SEARCHED` | User types in search bar (debounce 500ms) | `query` |
+| `PRODUCT_SELECTED` | User taps a product card | `product_id`, `product_name` |
+| `PRODUCT_VERDICT_VIEWED` | Results step renders | `product_id`, `suitability`, `match_score` |
+| `PRODUCT_CHECK_ANOTHER` | User taps "Check Another Product" | — |
 
 ### 10.3 i18n
 
-Product names and descriptions stay in English for MVP (brand names are English, product names are English on packaging). The UI chrome (header, search placeholder, filter labels, empty state) gets `en` + `hi` translations added to the i18n namespace.
+Product names stay in English (brand names are English on packaging). All other content is bilingual:
+- **UI chrome** (header, search placeholder, verdict labels, section headings) → `en` + `hi` i18n keys
+- **Ingredient names + benefits** → `name`/`nameHi`, `benefitEn`/`benefitHi` fields in data
+- **Improvements** → `improvementsEn`/`improvementsHi` in data
+- **Warnings** → `warningsEn`/`warningsHi` in data
+- **Timeline** → `weeksEn`/`weeksHi`, `resultEn`/`resultHi` in data
+- **Suitability labels** → `SUITABILITY_CONFIG` has `labelEn`/`labelHi`
 
 ### 10.4 Future: Routine Linking
 
@@ -583,12 +852,12 @@ No other new dependencies. Zero Firestore usage for this feature. Uses existing 
 
 ## 12. Out of Scope
 
-- Product detail modal/screen (tap does nothing for MVP beyond analytics logging — detail screen is a fast follow)
+- Barcode scanning (CTA is shown but disabled with "Coming soon" toast — future feature per PLAN.md)
 - "Buy now" / external links to Amazon/Nykaa (future feature)
+- Gemini-powered dynamic verdicts (V2 — replace pre-computed data with per-user AI analysis)
 - User reviews or ratings input
-- Product comparison
+- Product comparison between multiple products
 - Admin panel for product management (use Firebase console directly)
 - Routine ↔ product cross-linking
-- Hindi product names/descriptions
 - Real-time sync / push notifications on product updates — background fetch on app open is sufficient
-- Conditional fetch (ETag/If-Modified-Since) — at ~50KB, re-downloading every app open is negligible
+- Conditional fetch (ETag/If-Modified-Since) — at ~50-200KB, re-downloading every app open is negligible
