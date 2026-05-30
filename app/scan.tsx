@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 const SCAN_COOLDOWN_MS = 30_000;
 import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
-import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
+import { useFaceDetectorOutput, useImageFaceDetector } from 'react-native-vision-camera-face-detector';
 import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-native-vision-camera';
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
@@ -70,6 +70,8 @@ export default function ScanScreen() {
       }
     };
   }, []);
+
+  const imageFaceDetector = useImageFaceDetector({ performanceMode: 'fast' });
 
   const ovalBounds = useMemo(
     () => ({ width: OVAL_W, height: OVAL_H, centerX: OVAL_CENTER_X, centerY: OVAL_CENTER_Y }),
@@ -180,7 +182,6 @@ export default function ScanScreen() {
       Alert.alert(t('scan_cooldown_title'), t('scan_cooldown_body', { seconds: remaining }));
       return;
     }
-    lastScanTime.current = now;
     setCapturedUri(uri);
     setState('analyzing');
     logEvent(EVENTS.SCAN_PHOTO_CAPTURED);
@@ -192,6 +193,33 @@ export default function ScanScreen() {
         { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
       if (!compressed.base64) throw new Error('base64 missing from manipulator');
+
+      // wasReady=true means the live camera frame processor already confirmed a face — skip ML Kit.
+      // wasReady=false (gallery, or camera tapped before face centered) requires on-device validation.
+      // compressed.uri is an 800px file:// JPEG in app cache — MLInputImage can always read it.
+      if (!wasReady) {
+        try {
+          const faces = imageFaceDetector.detectFaces(compressed.uri);
+          if (faces.length === 0) {
+            stopScanning();
+            setCapturedUri(null);
+            setState('choice');
+            logEvent(EVENTS.SCAN_FAILED, { error_message: 'no_face_detected' });
+            Alert.alert('No face detected', 'Please make sure your face is clearly visible in the photo.');
+            return;
+          }
+        } catch (e: any) {
+          stopScanning();
+          setCapturedUri(null);
+          setState('choice');
+          logEvent(EVENTS.SCAN_FAILED, { error_message: 'face_detection_error' });
+          Alert.alert('Photo not supported', "Couldn't process this photo. Please try again.");
+          return;
+        }
+      }
+
+      lastScanTime.current = now;
+
       const result = await analyzeSkin(
         compressed.base64,
         'image/jpeg',
