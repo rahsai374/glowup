@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.glowup.app"
+      "bundleIdentifier": "com.glowup.app",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
@@ -61,7 +64,14 @@
           "isAutoInitEnabled": true
         }
       ],
-      "expo-tracking-transparency"
+      "expo-tracking-transparency",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#E07856"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

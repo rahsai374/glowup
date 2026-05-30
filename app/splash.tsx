@@ -13,6 +13,7 @@ import rnAuth from '@react-native-firebase/auth';
 import { hydrateFromFirestore } from '@/lib/firestore';
 import { useProductStore } from '@/stores/useProductStore';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
 const appIcon = require('@/assets/icon.png');
 
@@ -37,6 +38,10 @@ export default function SplashScreen() {
 
     useProductStore.getState().hydrate();
     useProductStore.getState().syncFromStorage();
+
+    registerForPushNotificationsAsync()
+      .then((token) => { if (token) savePushToken(currentUser.uid, token); })
+      .catch(() => {});
 
     Promise.all([minSplash, Promise.race([hydrate, hardTimeout])]).then(() => {
       router.replace('/(tabs)');

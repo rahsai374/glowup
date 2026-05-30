@@ -143,6 +143,7 @@ export default function HomeScreen() {
           name={user?.name || 'Friend'}
           greeting={greetingText}
           onAvatarPress={() => router.push('/(tabs)/profile')}
+          onBellPress={() => router.push('/notifications' as any)}
         />
 
         {currentScore !== null && (

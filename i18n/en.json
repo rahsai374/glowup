@@ -151,5 +151,8 @@
   "delete_account_error_generic": "Something went wrong. Please try again or email glowup.skincarepartner@gmail.com.",
   "delete": "Delete",
   "scan_cooldown_title": "Please wait",
-  "scan_cooldown_body": "You can scan again in {{seconds}} second"
+  "scan_cooldown_body": "You can scan again in {{seconds}} second",
+  "notifications_title": "Notifications",
+  "notifications_empty": "No notifications yet",
+  "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here."
 }

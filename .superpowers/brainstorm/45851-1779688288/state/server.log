@@ -1,0 +1,5 @@
+{"type":"server-started","port":56356,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:56356","screen_dir":"/Users/rahul/projects/glowup/.superpowers/brainstorm/45851-1779688288/content","state_dir":"/Users/rahul/projects/glowup/.superpowers/brainstorm/45851-1779688288/state"}
+{"type":"screen-added","file":"/Users/rahul/projects/glowup/.superpowers/brainstorm/45851-1779688288/content/scan-states-overview.html"}
+{"type":"screen-added","file":"/Users/rahul/projects/glowup/.superpowers/brainstorm/45851-1779688288/content/camera-ui-detail.html"}
+{"type":"screen-added","file":"/Users/rahul/projects/glowup/.superpowers/brainstorm/45851-1779688288/content/implementation-summary.html"}
+{"type":"server-stopped","reason":"owner process exited"}

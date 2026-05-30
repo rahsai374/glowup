@@ -151,5 +151,8 @@
   "delete_account_error_generic": "कुछ गड़बड़ हुई। फिर try करो या glowup.skincarepartner@gmail.com पर email करो।",
   "delete": "Delete करो",
   "scan_cooldown_title": "थोड़ा रुकिए",
-  "scan_cooldown_body": "{{seconds}} सेकंड बाद scan कर सकते हैं"
+  "scan_cooldown_body": "{{seconds}} सेकंड बाद scan कर सकते हैं",
+  "notifications_title": "Notifications",
+  "notifications_empty": "अभी कोई notification नहीं",
+  "notifications_empty_body": "Tips, reminders, और skin updates की जानकारी यहाँ मिलेगी।"
 }

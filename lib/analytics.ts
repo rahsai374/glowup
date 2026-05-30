@@ -30,17 +30,23 @@ export const EVENTS = {
   PROFILE_UPDATED: 'profile_updated',
 
   // Product Check
-  PRODUCT_CHECK_OPENED: 'product_check_opened',         // screen mount
-  PRODUCT_SEARCHED: 'product_searched',                  // user types query (debounced)
-  PRODUCT_SEARCH_NO_RESULTS: 'product_search_no_results',// search returned 0 results
-  PRODUCT_SELECTED: 'product_selected',                  // user taps a product card
-  PRODUCT_VERDICT_VIEWED: 'product_verdict_viewed',      // results step shown
-  PRODUCT_BARCODE_TAPPED: 'product_barcode_tapped',      // barcode CTA tapped
-  PRODUCT_CHECK_ANOTHER: 'product_check_another',        // "Check Another" tapped
+  PRODUCT_CHECK_OPENED: 'product_check_opened',
+  PRODUCT_SEARCHED: 'product_searched',
+  PRODUCT_SEARCH_NO_RESULTS: 'product_search_no_results',
+  PRODUCT_SELECTED: 'product_selected',
+  PRODUCT_VERDICT_VIEWED: 'product_verdict_viewed',
+  PRODUCT_BARCODE_TAPPED: 'product_barcode_tapped',
+  PRODUCT_CHECK_ANOTHER: 'product_check_another',
 
   // Routine
-  ROUTINE_TAB_SWITCHED: 'routine_tab_switched',          // morning / night / weekly tab pressed
-  ROUTINE_STEP_EXPANDED: 'routine_step_expanded',         // a step card opened
+  ROUTINE_TAB_SWITCHED: 'routine_tab_switched',
+  ROUTINE_STEP_EXPANDED: 'routine_step_expanded',
+
+  // Push notifications
+  PUSH_OPTIN_PROMPT: 'push_optin_prompt',
+  PUSH_OPTIN_RESPONSE: 'push_optin_response',
+  NOTIFICATION_RECEIVED: 'notification_received',
+  NOTIFICATION_TAPPED: 'notification_tapped',
 } as const;
 
 export async function logEvent(
