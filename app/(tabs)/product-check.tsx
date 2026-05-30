@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import Animated, { FadeInDown, FadeIn, withRepeat, withTiming, useAnimatedStyle, useSharedValue, Easing } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,6 +15,7 @@ import {
   ProductCategory,
 } from '@/lib/productTypes';
 import type { SkinType } from '@/lib/routineData';
+import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, EVENTS } from '@/lib/analytics';
 
 type Step = 'search' | 'analyzing' | 'results';
@@ -33,10 +34,12 @@ export default function ProductCheckTab() {
   const [step, setStep] = useState<Step>('search');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  useEffect(() => {
-    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'product_check' });
-    logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      logEvent(EVENTS.TAB_VIEWED, { tab_name: 'product_check' });
+      logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'tab' });
+    }, [])
+  );
 
   const handleSelectProduct = useCallback((product: Product) => {
     logEvent(EVENTS.PRODUCT_SELECTED, {

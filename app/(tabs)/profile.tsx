@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import Animated, { FadeInDown, FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,6 +10,7 @@ import { useScanStore } from '@/stores/useScanStore';
 import { updateProfileField, deleteAccount } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import i18n from '@/i18n';
+import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
 
 const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup-legal/';
@@ -27,9 +28,11 @@ export default function ProfileScreen() {
   const [name, setName] = useState(user?.name ?? '');
   const [saved, setSaved] = useState(false);
 
-  useEffect(() => {
-    logEvent(EVENTS.TAB_VIEWED, { tab_name: 'profile' });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      logEvent(EVENTS.TAB_VIEWED, { tab_name: 'profile' });
+    }, [])
+  );
 
   function save() {
     const trimmed = name.trim();
