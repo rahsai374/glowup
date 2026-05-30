@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 const SCAN_COOLDOWN_MS = 30_000;
 import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
 import { useCameraPermissions } from 'expo-camera';
-import { useFaceDetectorOutput } from 'react-native-vision-camera-face-detector';
+import { useFaceDetectorOutput, useImageFaceDetector } from 'react-native-vision-camera-face-detector';
 import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-native-vision-camera';
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
@@ -70,6 +70,8 @@ export default function ScanScreen() {
       }
     };
   }, []);
+
+  const imageFaceDetector = useImageFaceDetector({ performanceMode: 'fast' });
 
   const ovalBounds = useMemo(
     () => ({ width: OVAL_W, height: OVAL_H, centerX: OVAL_CENTER_X, centerY: OVAL_CENTER_Y }),
@@ -160,8 +162,14 @@ export default function ScanScreen() {
       quality: 0.8,
     });
     if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      const faces = imageFaceDetector.detectFaces({ uri });
+      if (faces.length === 0) {
+        Alert.alert('No face detected', 'Please choose a photo that clearly shows your face.');
+        return;
+      }
       logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
-      await processImage(result.assets[0].uri);
+      await processImage(uri);
     }
   }
 
