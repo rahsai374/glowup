@@ -12270,5 +12270,611 @@
         "resultHi": "बैक्टीरिया से होने वाले मुंहासे कम"
       }
     ]
+  },
+  {
+    "id": "ethiglo-deep-cleansing-foam",
+    "name": "Ethiglo Deep Cleansing Facial Foam",
+    "brand": "Ethiglo",
+    "category": "cleanser",
+    "concerns": [
+      "acne",
+      "dark_spots"
+    ],
+    "price": 227,
+    "priceDisplay": "₹227",
+    "size": "70ml",
+    "description": "Dermatologist-prescribed foam wash for clean, healthy skin",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "dermat-recommended",
+      "popular"
+    ],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 82
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Ethyl Ascorbic Acid",
+        "nameHi": "एथिल एस्कॉर्बिक एसिड",
+        "benefitEn": "Stable Vitamin C for brightening and dark spot reduction",
+        "benefitHi": "चमक और काले धब्बे कम करने के लिए स्थिर विटामिन C",
+        "rating": "good"
+      },
+      {
+        "name": "Niacinamide",
+        "nameHi": "नियासिनामाइड",
+        "benefitEn": "Controls oil and minimizes pores",
+        "benefitHi": "तेल नियंत्रित करता है और रोमछिद्र कम करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Cleaner, brighter skin with regular use",
+      "Reduced dark spots and blemishes",
+      "Controlled oil without dryness"
+    ],
+    "improvementsHi": [
+      "नियमित उपयोग से साफ़, चमकदार त्वचा",
+      "काले धब्बे और दाग़ में कमी",
+      "बिना रूखापन तेल नियंत्रण"
+    ],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels cleaner and smoother",
+        "resultHi": "त्वचा साफ़ और मुलायम"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visible brightening and reduced blemishes",
+        "resultHi": "दिखने में चमक और कम दाग़"
+      }
+    ]
+  },
+  {
+    "id": "ponds-detan-face-wash",
+    "name": "Pond's Detan Face Wash",
+    "brand": "Pond's",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 168,
+    "priceDisplay": "₹168",
+    "size": "100g",
+    "description": "Vitamin C and niacinamide face wash for tan removal in 7 days",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "bestseller"
+    ],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 76
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 84
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 78
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Vitamin C",
+        "nameHi": "विटामिन C",
+        "benefitEn": "Brightens and fights tan and pigmentation",
+        "benefitHi": "टैन और झाइयां मिटाता है, चमक बढ़ाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Niacinamide",
+        "nameHi": "नियासिनामाइड",
+        "benefitEn": "Evens skin tone and reduces dark spots",
+        "benefitHi": "रंगत समान करता है और काले धब्बे कम करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Visible tan reduction in 7 days",
+      "Brighter, more even complexion",
+      "Reduced dullness from sun exposure"
+    ],
+    "improvementsHi": [
+      "7 दिनों में दिखने वाली टैन कमी",
+      "चमकदार, समान रंगत",
+      "धूप से बेजानपन में कमी"
+    ],
+    "warningsEn": [
+      "Contains fragrance"
+    ],
+    "warningsHi": [
+      "सुगंध है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "First signs of tan reduction",
+        "resultHi": "टैन कम होने के पहले संकेत"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Noticeably brighter, de-tanned skin",
+        "resultHi": "काफ़ी चमकदार, डी-टैन्ड त्वचा"
+      }
+    ]
+  },
+  {
+    "id": "lakme-perfect-radiance-face-wash",
+    "name": "Lakme Perfect Radiance Brightening Face Wash",
+    "brand": "Lakme",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 156,
+    "priceDisplay": "₹156",
+    "size": "100g",
+    "description": "Niacinamide face wash for glowing skin and reduced pigmentation",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "popular"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 75
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 78
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "98% Pure Niacinamide",
+        "nameHi": "98% शुद्ध नियासिनामाइड",
+        "benefitEn": "Reduces pigmentation and brightens skin",
+        "benefitHi": "झाइयां कम करता है और त्वचा चमकाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Glycerin",
+        "nameHi": "ग्लिसरीन",
+        "benefitEn": "Hydrates without heaviness",
+        "benefitHi": "बिना भारीपन हाइड्रेट करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Visibly brighter, radiant complexion",
+      "Reduced pigmentation and uneven tone",
+      "Glowing skin from first wash"
+    ],
+    "improvementsHi": [
+      "दिखने में चमकदार, दमकती रंगत",
+      "झाइयां और असमान रंगत में कमी",
+      "पहली बार धोने से चमकती त्वचा"
+    ],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin looks brighter after every wash",
+        "resultHi": "हर बार धोने के बाद त्वचा चमकदार"
+      },
+      {
+        "weeksEn": "6 weeks",
+        "weeksHi": "6 हफ़्ते",
+        "resultEn": "Reduced pigmentation and even tone",
+        "resultHi": "कम झाइयां और समान रंगत"
+      }
+    ]
+  },
+  {
+    "id": "garnier-bright-complete-face-wash",
+    "name": "Garnier Bright Complete Vitamin C Face Wash",
+    "brand": "Garnier",
+    "category": "cleanser",
+    "concerns": [
+      "dark_spots",
+      "pigmentation"
+    ],
+    "price": 209,
+    "priceDisplay": "₹209",
+    "size": "160g",
+    "description": "Vitamin C face wash for brightening and glowing skin daily",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "bestseller"
+    ],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 75
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 84
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 77
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Vitamin C",
+        "nameHi": "विटामिन C",
+        "benefitEn": "Brightens skin and fights dark spots",
+        "benefitHi": "त्वचा चमकाता है और काले धब्बों से लड़ता है",
+        "rating": "good"
+      },
+      {
+        "name": "Lemon Extract",
+        "nameHi": "नींबू अर्क",
+        "benefitEn": "Natural brightening and exfoliation",
+        "benefitHi": "प्राकृतिक चमक और एक्सफोलिएशन",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Brighter, more radiant complexion",
+      "Gradual fading of dark spots",
+      "Fresh, clean skin with every wash"
+    ],
+    "improvementsHi": [
+      "चमकदार, दमकती रंगत",
+      "काले धब्बों में धीरे-धीरे कमी",
+      "हर बार धोने पर तरोताज़ा, साफ़ त्वचा"
+    ],
+    "warningsEn": [
+      "Contains fragrance"
+    ],
+    "warningsHi": [
+      "सुगंध है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "2 weeks",
+        "weeksHi": "2 हफ़्ते",
+        "resultEn": "Skin feels brighter and cleaner",
+        "resultHi": "त्वचा चमकदार और साफ़"
+      },
+      {
+        "weeksEn": "6 weeks",
+        "weeksHi": "6 हफ़्ते",
+        "resultEn": "Visible brightening and spot reduction",
+        "resultHi": "दिखने में चमक और धब्बों में कमी"
+      }
+    ]
+  },
+  {
+    "id": "biotique-fruit-brightening-face-wash",
+    "name": "Biotique Bio Fruit Brightening Face Wash",
+    "brand": "Biotique",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 208,
+    "priceDisplay": "₹208",
+    "size": "200ml",
+    "description": "Fruit enzyme face wash for bright, spotless complexion",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "ayurvedic",
+      "popular"
+    ],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 78
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 79
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Papaya Extract",
+        "nameHi": "पपीता अर्क",
+        "benefitEn": "Natural enzyme exfoliation for brighter skin",
+        "benefitHi": "चमकदार त्वचा के लिए प्राकृतिक एंजाइम एक्सफोलिएशन",
+        "rating": "good"
+      },
+      {
+        "name": "Pineapple Extract",
+        "nameHi": "अनानास अर्क",
+        "benefitEn": "Brightens and removes dead skin cells",
+        "benefitHi": "चमक बढ़ाता है और मृत त्वचा हटाता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Brighter, fruit-fresh complexion",
+      "Reduced tan and dullness",
+      "Smoother skin texture"
+    ],
+    "improvementsHi": [
+      "चमकदार, तरोताज़ा रंगत",
+      "कम टैन और बेजानपन",
+      "मुलायम त्वचा बनावट"
+    ],
+    "warningsEn": [
+      "Fruit enzymes may tingle on very sensitive skin"
+    ],
+    "warningsHi": [
+      "फल एंजाइम बहुत संवेदनशील त्वचा पर झुनझुनी कर सकते हैं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Fresher, cleaner-looking skin",
+        "resultHi": "तरोताज़ा, साफ़ दिखने वाली त्वचा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visibly brighter and smoother complexion",
+        "resultHi": "दिखने में चमकदार और मुलायम रंगत"
+      }
+    ]
+  },
+  {
+    "id": "mamaearth-rice-dewy-face-wash",
+    "name": "Mamaearth Rice Dewy Bright Face Wash",
+    "brand": "Mamaearth",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dryness"
+    ],
+    "price": 214,
+    "priceDisplay": "₹214",
+    "size": "100ml",
+    "description": "Rice water and niacinamide face wash for glass skin effect",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "popular"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "dry": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 82
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Rice Water",
+        "nameHi": "चावल का पानी",
+        "benefitEn": "Brightens and hydrates for glass skin effect",
+        "benefitHi": "ग्लास स्किन इफ़ेक्ट के लिए चमक और हाइड्रेशन",
+        "rating": "good"
+      },
+      {
+        "name": "Niacinamide",
+        "nameHi": "नियासिनामाइड",
+        "benefitEn": "Evens skin tone and reduces dullness",
+        "benefitHi": "रंगत समान करता है और बेजानपन कम करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Dewy, glass-like skin texture",
+      "Even skin tone and reduced dullness",
+      "Hydrated and plump skin"
+    ],
+    "improvementsHi": [
+      "ड्यूई, ग्लास जैसी त्वचा बनावट",
+      "समान रंगत और कम बेजानपन",
+      "हाइड्रेटेड और भरी हुई त्वचा"
+    ],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels smoother and more hydrated",
+        "resultHi": "त्वचा मुलायम और अधिक हाइड्रेटेड"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visible brightening and dewy glow",
+        "resultHi": "दिखने में चमक और ड्यूई ग्लो"
+      }
+    ]
+  },
+  {
+    "id": "mamaearth-ubtan-face-wash",
+    "name": "Mamaearth Ubtan Natural Glow Face Wash",
+    "brand": "Mamaearth",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 275,
+    "priceDisplay": "₹275",
+    "size": "200ml",
+    "description": "Turmeric and saffron ubtan face wash for tan removal and glow",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "popular"
+    ],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 80
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 76
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Turmeric",
+        "nameHi": "हल्दी",
+        "benefitEn": "Traditional Indian brightening ingredient",
+        "benefitHi": "पारंपरिक भारतीय ब्राइटनिंग सामग्री",
+        "rating": "good"
+      },
+      {
+        "name": "Saffron",
+        "nameHi": "केसर",
+        "benefitEn": "Adds radiance and natural glow",
+        "benefitHi": "चमक और प्राकृतिक ग्लो देता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Reduced tan and sun damage",
+      "Natural glow from traditional ubtan ingredients",
+      "Brighter, healthier complexion"
+    ],
+    "improvementsHi": [
+      "कम टैन और सन डैमेज",
+      "पारंपरिक उबटन सामग्री से प्राकृतिक चमक",
+      "चमकदार, स्वस्थ रंगत"
+    ],
+    "warningsEn": [
+      "Contains fragrance and color"
+    ],
+    "warningsHi": [
+      "सुगंध और रंग है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels fresher, mild glow",
+        "resultHi": "त्वचा तरोताज़ा, हल्की चमक"
+      },
+      {
+        "weeksEn": "6 weeks",
+        "weeksHi": "6 हफ़्ते",
+        "resultEn": "Visible tan reduction and natural radiance",
+        "resultHi": "दिखने में कम टैन और प्राकृतिक दमक"
+      }
+    ]
   }
 ]
