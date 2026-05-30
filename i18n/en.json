@@ -144,7 +144,10 @@
   "cancel": "Cancel",
   "privacy_policy": "Privacy Policy",
   "delete_account": "Delete Account",
-  "delete_account_confirm": "This will permanently delete your account and all your data. This cannot be undone.",
-  "delete_account_final": "Are you really sure? All your scans, routines, and profile data will be permanently deleted.",
+  "delete_account_confirm": "What gets deleted:\n\n• Your profile, name & phone number\n• All skin scans & scores\n• Your personalized routine\n\nData is permanently removed within 30 days. This cannot be undone.",
+  "delete_account_final": "Are you sure? This is permanent and cannot be reversed.",
+  "delete_account_error_title": "Deletion Failed",
+  "delete_account_error_reauth": "For your security, please log out and log back in, then try deleting again.",
+  "delete_account_error_generic": "Something went wrong. Please try again or email glowup.skincarepartner@gmail.com.",
   "delete": "Delete"
 }

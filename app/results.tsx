@@ -172,9 +172,12 @@ export default function ResultsScreen() {
             </Text>
           </TouchableOpacity>
 
-          <Text style={{ fontSize: 11, color: 'rgba(45,24,16,0.4)', fontFamily: 'PlusJakartaSans_400Regular', textAlign: 'center', marginTop: 16 }}>
-            {t('not_medical')}
-          </Text>
+          <View style={{ backgroundColor: 'rgba(224,120,86,0.07)', borderRadius: 16, padding: 14, marginTop: 16, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+            <Text style={{ fontSize: 14 }}>⚕️</Text>
+            <Text style={{ flex: 1, fontSize: 12, color: 'rgba(45,24,16,0.6)', fontFamily: 'PlusJakartaSans_400Regular', lineHeight: 18 }}>
+              {t('not_medical')}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>

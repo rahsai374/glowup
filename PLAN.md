@@ -29,7 +29,7 @@ Analyzes face photos using Gemini AI, returns skin health metrics, and recommend
 | Field | Value |
 |---|---|
 | App name | GlowUp |
-| Bundle ID | com.rahul.glowup |
+| Bundle ID | com.glowup.app |
 | Platforms | iOS + Android |
 | Languages | English, Hindi |
 | Design system | See [DESIGN.md](DESIGN.md) — tokens, typography, motion, per-screen briefs |

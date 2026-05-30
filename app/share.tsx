@@ -8,6 +8,7 @@ import { useScanStore } from '@/stores/useScanStore';
 import { useUserStore } from '@/stores/useUserStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { StatusBar } from 'expo-status-bar';
 
 const appIcon = require('@/assets/icon.png');
 
@@ -43,6 +44,7 @@ export default function ShareScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#1A1A1A' }}>
+      <StatusBar style="light" />
       <TouchableOpacity
         onPress={() => router.back()}
         style={{ position: 'absolute', top: insets.top + 16, left: 24, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 10, zIndex: 20 }}

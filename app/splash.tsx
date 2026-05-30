@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import Animated, {
   FadeInDown,
@@ -54,6 +55,7 @@ export default function SplashScreen() {
         gap: 16,
       }}
     >
+      <StatusBar style="light" />
       <Animated.View style={iconStyle}>
         <View
           style={{

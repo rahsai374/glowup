@@ -20,9 +20,10 @@ import {
   Hind_600SemiBold,
 } from '@expo-google-fonts/hind';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
-import { Settings } from 'react-native-fbsdk-next';
+// import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+// import { Settings } from 'react-native-fbsdk-next';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -63,18 +64,19 @@ export default function RootLayout() {
     if (fontsLoaded || fontsError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontsError]);
 
-  useEffect(() => {
-    if (Platform.OS === 'ios') {
-      requestTrackingPermissionsAsync().then(({ status }) => {
-        Settings.setAdvertiserTrackingEnabled(status === 'granted');
-      }).catch(() => {});
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Platform.OS === 'ios') {
+  //     requestTrackingPermissionsAsync().then(({ status }) => {
+  //       Settings.setAdvertiserTrackingEnabled(status === 'granted');
+  //     }).catch(() => {});
+  //   }
+  // }, []);
 
   if (!fontsLoaded && !fontsError) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
     </GestureHandlerRootView>
   );

@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:731207438930:android:6bf4bc4a64dd71ccc4c58b",
+        "android_client_info": {
+          "package_name": "com.glowup.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXiNXtgc7usH2DzSHcRyNHaRfR4Gfxx-w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:731207438930:android:c54e2588c18f90f1c4c58b",
         "android_client_info": {
           "package_name": "com.rahul.glowup"

@@ -93,7 +93,7 @@ A few callouts on the table that matter:
 
 1. **Meta Business Manager** at [business.facebook.com](https://business.facebook.com) — create one Business account under the founder's primary Facebook account. Add a backup admin (a co-founder, a trusted advisor, or a second account of your own — losing access to a solo-admin Business Manager is a months-long recovery).
 2. **Meta Ads Manager** is created automatically inside the Business when you add a payment method. Add an INR card; Meta will charge in INR with GST.
-3. **Meta App** at [developers.facebook.com/apps](https://developers.facebook.com/apps) — create a new app, type "Consumer" or "Business". This produces an **`app_id`** and an **`app_secret`** (server-only — never embed). In Settings → Basic, set the iOS Bundle ID (`com.rahul.glowup`) and Android Package Name (`com.rahul.glowup`) and add the Android key hash.
+3. **Meta App** at [developers.facebook.com/apps](https://developers.facebook.com/apps) — create a new app, type "Consumer" or "Business". This produces an **`app_id`** and an **`app_secret`** (server-only — never embed). In Settings → Basic, set the iOS Bundle ID (`com.glowup.app`) and Android Package Name (`com.glowup.app`) and add the Android key hash.
 4. **Client Token** at App → Settings → Advanced → Security → Client Token. **You need this for the FB SDK on mobile (SDK 13+ requires it).** Treat it as not-public-but-not-server-grade. [react-native-fbsdk-next docs](https://github.com/thebergamo/react-native-fbsdk-next).
 5. **Connect the app to your Business** — App Dashboard → Settings → Basic → Business Manager → assign your Business.
 6. **Events Manager → Data Sources → Connect App.** This creates a **`dataset_id`** for your app. The dataset is what receives App Events from the SDK and what Ads Manager points campaigns at for optimization.
@@ -111,7 +111,7 @@ A few callouts on the table that matter:
 ### 3.2 Accounts to create — Google side
 
 1. **Firebase project** at [console.firebase.google.com](https://console.firebase.google.com). You already have one for Auth/Firestore — reuse it. Verify the Google Analytics property got auto-created when the Firebase project was created; if not, link a new GA4 property under Project Settings → Integrations → Google Analytics.
-2. **Register both apps:** iOS app (bundle `com.rahul.glowup`) and Android app (package `com.rahul.glowup`). Download `GoogleService-Info.plist` and `google-services.json`. **Place them in the repo root** (gitignored — pull from a private secrets bucket on CI) and reference from `app.json` via the React Native Firebase config plugin (see §3.5).
+2. **Register both apps:** iOS app (bundle `com.glowup.app`) and Android app (package `com.glowup.app`). Download `GoogleService-Info.plist` and `google-services.json`. **Place them in the repo root** (gitignored — pull from a private secrets bucket on CI) and reference from `app.json` via the React Native Firebase config plugin (see §3.5).
 3. **GA4 property** — should be linked. Under Admin → Data streams, confirm one iOS stream and one Android stream exist with the right App IDs. Note the **Measurement ID** (`G-XXXXXX`) for each — needed for v2 Measurement Protocol.
 4. **Google Ads account** at [ads.google.com](https://ads.google.com). Even if we're not running Google Ads in week 1, create the account and link it to GA4 (GA4 → Admin → Product links → Google Ads). This makes GA4 conversions instantly available as Google Ads conversion actions when you do start.
 5. **Mark conversions in GA4.** GA4 → Admin → Events → toggle "Mark as conversion" for: `auth_otp_verified` (CompleteRegistration), `score_reveal`, `paywall_view`, `paywall_cta_tap`, `trial_start`, `subscription_purchase`, `subscription_renewal`, `affiliate_link_tap`, `affiliate_purchase_confirmed`, `rescan_initiated`.
@@ -180,7 +180,7 @@ The `useFrameworks: static` line is required for RNFirebase on iOS with RN 0.81+
 
 ```jsonc
 "ios": {
-  "bundleIdentifier": "com.rahul.glowup",
+  "bundleIdentifier": "com.glowup.app",
   "infoPlist": {
     "NSUserTrackingUsageDescription": "We use this to measure how well our ads find people like you, and to make GlowUp better. We never sell your data.",
     "SKAdNetworkItems": [
@@ -260,7 +260,7 @@ Walk the full funnel (onboarding → scan → paywall → trial) and confirm eve
 **Firebase DebugView.** Enable on a device:
 
 ```bash
-adb shell setprop debug.firebase.analytics.app com.rahul.glowup
+adb shell setprop debug.firebase.analytics.app com.glowup.app
 # iOS: pass -FIRDebugEnabled argument scheme in Xcode dev build
 ```
 

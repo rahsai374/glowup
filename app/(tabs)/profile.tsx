@@ -13,7 +13,7 @@ import i18n from '@/i18n';
 import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
 
-const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup-legal/';
+const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup/privacy-policy.html';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -79,10 +79,22 @@ export default function ProfileScreen() {
                   if (uid) await deleteAccount(uid);
                   const currentUser = rnAuth().currentUser;
                   if (currentUser) await currentUser.delete();
-                } catch {}
-                logout();
-                clearScans([]);
-                router.replace('/splash');
+                  logout();
+                  clearScans([]);
+                  router.replace('/splash');
+                } catch (e: any) {
+                  if (e?.code === 'auth/requires-recent-login') {
+                    Alert.alert(
+                      t('delete_account_error_title'),
+                      t('delete_account_error_reauth')
+                    );
+                  } else {
+                    Alert.alert(
+                      t('delete_account_error_title'),
+                      t('delete_account_error_generic')
+                    );
+                  }
+                }
               },
             },
           ]);

@@ -14,16 +14,14 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.rahul.glowup"
+      "bundleIdentifier": "com.glowup.app"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.rahul.glowup",
+      "package": "com.glowup.app",
       "adaptiveIcon": {
         "backgroundColor": "#E07856",
-        "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
@@ -37,7 +35,6 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-firebase/analytics",
       "expo-router",
       "expo-font",
       [
@@ -50,12 +47,6 @@
         "expo-image-picker",
         {
           "photosPermission": "GlowUp needs photo library access to upload a photo for skin analysis."
-        }
-      ],
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermission": "GlowUp needs camera access to scan your skin."
         }
       ],
       [
