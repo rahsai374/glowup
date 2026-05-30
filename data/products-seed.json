@@ -1,0 +1,407 @@
+[
+  {
+    "id": "minimalist-salicylic-acid-cleanser",
+    "name": "Minimalist 2% Salicylic Acid Face Wash",
+    "brand": "Minimalist",
+    "category": "cleanser",
+    "concerns": ["acne", "dark_spots"],
+    "price": 299,
+    "priceDisplay": "₹299",
+    "size": "100ml",
+    "description": "Gentle BHA cleanser that unclogs pores without stripping moisture",
+    "imageUrl": null,
+    "tags": ["bestseller", "dermat-recommended", "mid-range"],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 92 },
+      "combination": { "suitability": "good", "matchScore": 78 },
+      "dry": { "suitability": "caution", "matchScore": 45 },
+      "normal": { "suitability": "good", "matchScore": 72 },
+      "all": { "suitability": "good", "matchScore": 72 }
+    },
+    "keyIngredients": [
+      { "name": "Salicylic Acid 2%", "nameHi": "सैलिसिलिक एसिड 2%", "benefitEn": "Unclogs pores, reduces acne and blackheads", "benefitHi": "रोमछिद्र खोलता है, मुंहासे और ब्लैकहेड्स कम करता है", "rating": "good" },
+      { "name": "Zinc PCA", "nameHi": "ज़िंक PCA", "benefitEn": "Controls excess oil production", "benefitHi": "अतिरिक्त तेल उत्पादन नियंत्रित करता है", "rating": "good" },
+      { "name": "SLS-Free Formula", "nameHi": "SLS-मुक्त फॉर्मूला", "benefitEn": "Gentle cleansing without stripping moisture", "benefitHi": "नमी छीने बिना सौम्य सफाई", "rating": "good" }
+    ],
+    "improvementsEn": ["Fewer breakouts and clearer skin", "Reduced blackheads and whiteheads", "Less oily T-zone throughout the day", "Smoother skin texture"],
+    "improvementsHi": ["कम मुंहासे और साफ़ त्वचा", "ब्लैकहेड्स और व्हाइटहेड्स में कमी", "दिनभर T-zone पर कम तेल", "मुलायम त्वचा"],
+    "warningsEn": ["May cause dryness if used more than twice daily", "Always follow with a moisturizer"],
+    "warningsHi": ["दिन में दो बार से ज़्यादा उपयोग करने पर रूखापन हो सकता है", "इसके बाद हमेशा मॉइस्चराइज़र लगाएं"],
+    "expectedTimeline": [
+      { "weeksEn": "1–2 weeks", "weeksHi": "1–2 हफ़्ते", "resultEn": "Skin feels less oily, fewer new breakouts", "resultHi": "त्वचा कम तैलीय, नए मुंहासे कम" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Visible reduction in blackheads and acne marks", "resultHi": "ब्लैकहेड्स और एक्ने के निशान कम दिखने लगते हैं" },
+      { "weeksEn": "8 weeks", "weeksHi": "8 हफ़्ते", "resultEn": "Clearer, smoother skin with controlled oil", "resultHi": "साफ़, मुलायम त्वचा और नियंत्रित तेल" }
+    ]
+  },
+  {
+    "id": "plum-niacinamide-serum",
+    "name": "Plum 10% Niacinamide Face Serum",
+    "brand": "Plum",
+    "category": "serum",
+    "concerns": ["dark_spots", "pigmentation"],
+    "price": 385,
+    "priceDisplay": "₹385",
+    "size": "30ml",
+    "description": "Brightening serum that fades dark spots and controls oil",
+    "imageUrl": null,
+    "tags": ["bestseller", "vegan", "mid-range"],
+    "rating": 4.4,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 92 },
+      "combination": { "suitability": "excellent", "matchScore": 88 },
+      "dry": { "suitability": "good", "matchScore": 70 },
+      "normal": { "suitability": "excellent", "matchScore": 85 },
+      "all": { "suitability": "excellent", "matchScore": 85 }
+    },
+    "keyIngredients": [
+      { "name": "Niacinamide 10%", "nameHi": "नियासिनामाइड 10%", "benefitEn": "Reduces dark spots, controls oil", "benefitHi": "काले धब्बे कम करता है, तेल नियंत्रित करता है", "rating": "good" },
+      { "name": "Rice Water", "nameHi": "चावल का पानी", "benefitEn": "Brightens skin tone", "benefitHi": "रंगत निखारता है", "rating": "good" },
+      { "name": "Zinc PCA", "nameHi": "ज़िंक PCA", "benefitEn": "Calms acne and inflammation", "benefitHi": "मुंहासे और सूजन शांत करता है", "rating": "good" }
+    ],
+    "improvementsEn": ["Visible reduction in dark spots and pigmentation", "Smaller, less visible pores", "Balanced oil production on T-zone", "Brighter, more even skin tone"],
+    "improvementsHi": ["काले धब्बे और झाइयों में साफ़ कमी", "छोटे, कम दिखने वाले रोमछिद्र", "T-zone पर तेल का संतुलन", "चमकदार, समान रंगत"],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      { "weeksEn": "2 weeks", "weeksHi": "2 हफ़्ते", "resultEn": "Skin feels smoother and more hydrated", "resultHi": "त्वचा मुलायम और हाइड्रेटेड महसूस होती है" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Dark spots start fading visibly", "resultHi": "काले धब्बे दिखाई से कम होने लगते हैं" },
+      { "weeksEn": "8 weeks", "weeksHi": "8 हफ़्ते", "resultEn": "Even tone, controlled oil, fewer breakouts", "resultHi": "समान रंगत, तेल नियंत्रण, कम मुंहासे" }
+    ]
+  },
+  {
+    "id": "himalaya-neem-face-wash",
+    "name": "Himalaya Purifying Neem Face Wash",
+    "brand": "Himalaya",
+    "category": "cleanser",
+    "concerns": ["acne"],
+    "price": 75,
+    "priceDisplay": "₹75",
+    "size": "150ml",
+    "description": "Neem-based face wash that prevents pimples and purifies skin",
+    "imageUrl": null,
+    "tags": ["bestseller", "budget", "ayurvedic"],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 88 },
+      "combination": { "suitability": "good", "matchScore": 75 },
+      "dry": { "suitability": "caution", "matchScore": 40 },
+      "normal": { "suitability": "good", "matchScore": 68 },
+      "all": { "suitability": "good", "matchScore": 68 }
+    },
+    "keyIngredients": [
+      { "name": "Neem Extract", "nameHi": "नीम अर्क", "benefitEn": "Antibacterial, fights acne-causing bacteria", "benefitHi": "एंटीबैक्टीरियल, मुंहासे पैदा करने वाले बैक्टीरिया से लड़ता है", "rating": "good" },
+      { "name": "Turmeric", "nameHi": "हल्दी", "benefitEn": "Anti-inflammatory, reduces redness", "benefitHi": "सूजन-रोधी, लालिमा कम करता है", "rating": "good" }
+    ],
+    "improvementsEn": ["Fewer pimples and breakouts", "Cleaner, oil-free feel after wash", "Reduced inflammation around acne"],
+    "improvementsHi": ["कम मुंहासे", "धोने के बाद साफ़, तेल-मुक्त त्वचा", "मुंहासों के आसपास सूजन में कमी"],
+    "warningsEn": ["Can be drying for dry/sensitive skin", "Avoid using more than twice daily"],
+    "warningsHi": ["रूखी/संवेदनशील त्वचा के लिए रूखापन कर सकता है", "दिन में दो बार से ज़्यादा इस्तेमाल न करें"],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels cleaner, less oily", "resultHi": "त्वचा साफ़ और कम तैलीय" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Noticeable reduction in new pimples", "resultHi": "नए मुंहासों में कमी दिखने लगती है" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Clearer skin with fewer breakouts", "resultHi": "कम मुंहासों के साथ साफ़ त्वचा" }
+    ]
+  },
+  {
+    "id": "cetaphil-gentle-cleanser",
+    "name": "Cetaphil Gentle Skin Cleanser",
+    "brand": "Cetaphil",
+    "category": "cleanser",
+    "concerns": ["dryness"],
+    "price": 350,
+    "priceDisplay": "₹350",
+    "size": "125ml",
+    "description": "Ultra-gentle, soap-free cleanser for sensitive and dry skin",
+    "imageUrl": null,
+    "tags": ["dermat-recommended", "mid-range", "fragrance-free"],
+    "rating": 4.5,
+    "skinTypeMatch": {
+      "oily": { "suitability": "caution", "matchScore": 50 },
+      "combination": { "suitability": "good", "matchScore": 72 },
+      "dry": { "suitability": "excellent", "matchScore": 95 },
+      "normal": { "suitability": "excellent", "matchScore": 90 },
+      "all": { "suitability": "good", "matchScore": 77 }
+    },
+    "keyIngredients": [
+      { "name": "Cetyl Alcohol", "nameHi": "सेटाइल अल्कोहल", "benefitEn": "Moisturizes and softens skin", "benefitHi": "त्वचा को नमी और मुलायमी देता है", "rating": "good" },
+      { "name": "SLS-Free", "nameHi": "SLS-मुक्त", "benefitEn": "No harsh foaming agents", "benefitHi": "कोई कठोर फोमिंग एजेंट नहीं", "rating": "good" },
+      { "name": "pH Balanced", "nameHi": "pH संतुलित", "benefitEn": "Maintains skin's natural barrier", "benefitHi": "त्वचा की प्राकृतिक बाधा बनाए रखता है", "rating": "good" }
+    ],
+    "improvementsEn": ["No more tight, dry feeling after washing", "Reduced sensitivity and irritation", "Softer, more supple skin"],
+    "improvementsHi": ["धोने के बाद कसावट या रूखापन नहीं", "संवेदनशीलता और जलन में कमी", "मुलायम, कोमल त्वचा"],
+    "warningsEn": ["May not remove heavy makeup — use a separate makeup remover first"],
+    "warningsHi": ["भारी मेकअप नहीं हटा सकता — पहले मेकअप रिमूवर इस्तेमाल करें"],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels calmer, less tight after wash", "resultHi": "धोने के बाद त्वचा शांत, कम कसी हुई" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Skin barrier feels restored, less flaking", "resultHi": "त्वचा की बाधा बहाल, कम पपड़ी" }
+    ]
+  },
+  {
+    "id": "mamaearth-vitamin-c-wash",
+    "name": "Mamaearth Vitamin C Face Wash",
+    "brand": "Mamaearth",
+    "category": "cleanser",
+    "concerns": ["pigmentation", "dark_spots"],
+    "price": 249,
+    "priceDisplay": "₹249",
+    "size": "100ml",
+    "description": "Vitamin C and turmeric face wash for brighter, even-toned skin",
+    "imageUrl": null,
+    "tags": ["popular", "mid-range"],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 75 },
+      "combination": { "suitability": "good", "matchScore": 78 },
+      "dry": { "suitability": "caution", "matchScore": 55 },
+      "normal": { "suitability": "excellent", "matchScore": 82 },
+      "all": { "suitability": "good", "matchScore": 73 }
+    },
+    "keyIngredients": [
+      { "name": "Vitamin C", "nameHi": "विटामिन C", "benefitEn": "Brightens and fights pigmentation", "benefitHi": "चमक बढ़ाता है और झाइयां मिटाता है", "rating": "good" },
+      { "name": "Turmeric", "nameHi": "हल्दी", "benefitEn": "Anti-inflammatory, evens tone", "benefitHi": "सूजन कम करता है, रंगत समान करता है", "rating": "good" },
+      { "name": "SLS", "nameHi": "SLS", "benefitEn": "Can dry out skin if overused", "benefitHi": "ज़्यादा इस्तेमाल से त्वचा सूख सकती है", "rating": "neutral" }
+    ],
+    "improvementsEn": ["Brighter, more radiant skin", "Gradual fading of tan and dark patches", "Fresher-looking complexion"],
+    "improvementsHi": ["चमकदार, दमकती त्वचा", "टैन और काले धब्बों में धीरे-धीरे कमी", "तरोताज़ा दिखने वाली रंगत"],
+    "warningsEn": ["Contains SLS — may not suit very dry skin", "Patch test if you have sensitive skin"],
+    "warningsHi": ["SLS है — बहुत रूखी त्वचा के लिए उपयुक्त नहीं", "संवेदनशील त्वचा हो तो पैच टेस्ट करें"],
+    "expectedTimeline": [
+      { "weeksEn": "2 weeks", "weeksHi": "2 हफ़्ते", "resultEn": "Skin feels fresher and cleaner", "resultHi": "त्वचा तरोताज़ा और साफ़ महसूस होती है" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Visible brightening, reduced tan", "resultHi": "चमक में सुधार, टैन में कमी" }
+    ]
+  },
+  {
+    "id": "la-shield-sunscreen-spf50",
+    "name": "La Shield Fisico SPF 50 Sunscreen",
+    "brand": "La Shield",
+    "category": "sunscreen",
+    "concerns": ["pigmentation", "anti_aging"],
+    "price": 450,
+    "priceDisplay": "₹450",
+    "size": "50g",
+    "description": "Mineral sunscreen with broad-spectrum SPF 50 protection",
+    "imageUrl": null,
+    "tags": ["dermat-recommended", "mid-range"],
+    "rating": 4.4,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 90 },
+      "combination": { "suitability": "excellent", "matchScore": 88 },
+      "dry": { "suitability": "good", "matchScore": 75 },
+      "normal": { "suitability": "excellent", "matchScore": 92 },
+      "all": { "suitability": "excellent", "matchScore": 86 }
+    },
+    "keyIngredients": [
+      { "name": "Zinc Oxide", "nameHi": "ज़िंक ऑक्साइड", "benefitEn": "Physical UV filter, non-irritating", "benefitHi": "भौतिक UV फ़िल्टर, गैर-जलन", "rating": "good" },
+      { "name": "Titanium Dioxide", "nameHi": "टाइटेनियम डाइऑक्साइड", "benefitEn": "Broad-spectrum sun protection", "benefitHi": "व्यापक-स्पेक्ट्रम सूर्य सुरक्षा", "rating": "good" }
+    ],
+    "improvementsEn": ["Protection from UV damage and tanning", "Prevents new pigmentation from forming", "Slows visible signs of sun aging"],
+    "improvementsHi": ["UV क्षति और टैनिंग से सुरक्षा", "नई झाइयां बनने से रोकता है", "धूप से बुढ़ापे के संकेत धीमे करता है"],
+    "warningsEn": ["Reapply every 2-3 hours when outdoors", "May leave a slight white cast on darker skin tones"],
+    "warningsHi": ["बाहर रहने पर हर 2-3 घंटे में दोबारा लगाएं", "गहरे रंग की त्वचा पर हल्की सफ़ेद परत छोड़ सकता है"],
+    "expectedTimeline": [
+      { "weeksEn": "Immediate", "weeksHi": "तुरंत", "resultEn": "UV protection starts right away", "resultHi": "UV सुरक्षा तुरंत शुरू" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Reduced tanning, less new pigmentation", "resultHi": "कम टैनिंग, कम नई झाइयां" }
+    ]
+  },
+  {
+    "id": "biotique-bio-honey-cream",
+    "name": "Biotique Bio Honey Water Cream",
+    "brand": "Biotique",
+    "category": "moisturizer",
+    "concerns": ["dryness"],
+    "price": 150,
+    "priceDisplay": "₹150",
+    "size": "50g",
+    "description": "Lightweight honey-based moisturizer for soft, supple skin",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "caution", "matchScore": 45 },
+      "combination": { "suitability": "good", "matchScore": 70 },
+      "dry": { "suitability": "excellent", "matchScore": 88 },
+      "normal": { "suitability": "good", "matchScore": 78 },
+      "all": { "suitability": "good", "matchScore": 70 }
+    },
+    "keyIngredients": [
+      { "name": "Honey", "nameHi": "शहद", "benefitEn": "Natural humectant, locks in moisture", "benefitHi": "प्राकृतिक ह्यूमेक्टेंट, नमी बनाए रखता है", "rating": "good" },
+      { "name": "Wheat Germ Oil", "nameHi": "गेहूं के बीज का तेल", "benefitEn": "Rich in Vitamin E, nourishes skin", "benefitHi": "विटामिन E से भरपूर, त्वचा को पोषण देता है", "rating": "good" }
+    ],
+    "improvementsEn": ["Softer, more hydrated skin all day", "Reduced dry patches and flakiness", "Smoother makeup application"],
+    "improvementsHi": ["दिनभर मुलायम, हाइड्रेटेड त्वचा", "रूखे पैच और पपड़ी में कमी", "मेकअप बेहतर लगता है"],
+    "warningsEn": ["May feel heavy for oily skin types"],
+    "warningsHi": ["तैलीय त्वचा के लिए भारी लग सकता है"],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Immediate hydration, softer skin", "resultHi": "तुरंत हाइड्रेशन, मुलायम त्वचा" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Dry patches significantly reduced", "resultHi": "रूखे पैच काफ़ी कम" }
+    ]
+  },
+  {
+    "id": "derma-co-hyaluronic-acid-serum",
+    "name": "The Derma Co 2% Hyaluronic Acid Serum",
+    "brand": "The Derma Co",
+    "category": "serum",
+    "concerns": ["dryness", "anti_aging"],
+    "price": 349,
+    "priceDisplay": "₹349",
+    "size": "30ml",
+    "description": "Hydrating serum with hyaluronic acid for plump, dewy skin",
+    "imageUrl": null,
+    "tags": ["popular", "mid-range", "dermat-recommended"],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 75 },
+      "combination": { "suitability": "excellent", "matchScore": 85 },
+      "dry": { "suitability": "excellent", "matchScore": 95 },
+      "normal": { "suitability": "excellent", "matchScore": 90 },
+      "all": { "suitability": "excellent", "matchScore": 86 }
+    },
+    "keyIngredients": [
+      { "name": "Hyaluronic Acid 2%", "nameHi": "हयालूरोनिक एसिड 2%", "benefitEn": "Holds 1000x its weight in water, deep hydration", "benefitHi": "अपने वजन से 1000 गुना पानी बनाए रखता है", "rating": "good" },
+      { "name": "Vitamin B5", "nameHi": "विटामिन B5", "benefitEn": "Strengthens skin barrier", "benefitHi": "त्वचा की बाधा मजबूत करता है", "rating": "good" }
+    ],
+    "improvementsEn": ["Visibly plumper, dewy skin", "Fine lines appear softer", "Skin feels hydrated all day", "Better texture and bounce"],
+    "improvementsHi": ["दिखने में भरी हुई, चमकदार त्वचा", "बारीक रेखाएं मुलायम दिखती हैं", "दिनभर त्वचा हाइड्रेटेड", "बेहतर बनावट"],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Immediate hydration boost", "resultHi": "तुरंत हाइड्रेशन बूस्ट" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Skin looks plumper, fine lines softer", "resultHi": "त्वचा भरी हुई, बारीक रेखाएं मुलायम" },
+      { "weeksEn": "8 weeks", "weeksHi": "8 हफ़्ते", "resultEn": "Lasting hydration, improved skin texture", "resultHi": "लंबे समय तक हाइड्रेशन, बेहतर बनावट" }
+    ]
+  },
+  {
+    "id": "neutrogena-ultra-sheer-sunscreen",
+    "name": "Neutrogena Ultra Sheer Dry Touch SPF 50+",
+    "brand": "Neutrogena",
+    "category": "sunscreen",
+    "concerns": ["pigmentation", "anti_aging"],
+    "price": 550,
+    "priceDisplay": "₹550",
+    "size": "88ml",
+    "description": "Lightweight, non-greasy sunscreen with ultra-sheer finish",
+    "imageUrl": null,
+    "tags": ["popular", "premium-budget"],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 90 },
+      "combination": { "suitability": "excellent", "matchScore": 88 },
+      "dry": { "suitability": "good", "matchScore": 72 },
+      "normal": { "suitability": "excellent", "matchScore": 90 },
+      "all": { "suitability": "excellent", "matchScore": 85 }
+    },
+    "keyIngredients": [
+      { "name": "Helioplex Technology", "nameHi": "हीलियोप्लेक्स टेक्नोलॉजी", "benefitEn": "Superior broad-spectrum UV protection", "benefitHi": "बेहतर व्यापक-स्पेक्ट्रम UV सुरक्षा", "rating": "good" },
+      { "name": "Dry Touch Formula", "nameHi": "ड्राई टच फॉर्मूला", "benefitEn": "Matte finish, no greasy residue", "benefitHi": "मैट फ़िनिश, कोई चिपचिपाहट नहीं", "rating": "good" }
+    ],
+    "improvementsEn": ["Effective sun protection without greasiness", "Prevents tanning and pigmentation", "Works well under makeup"],
+    "improvementsHi": ["बिना चिपचिपाहट प्रभावी सन प्रोटेक्शन", "टैनिंग और झाइयां रोकता है", "मेकअप के नीचे अच्छा लगता है"],
+    "warningsEn": ["Reapply every 2-3 hours outdoors"],
+    "warningsHi": ["बाहर हर 2-3 घंटे में दोबारा लगाएं"],
+    "expectedTimeline": [
+      { "weeksEn": "Immediate", "weeksHi": "तुरंत", "resultEn": "UV protection from first application", "resultHi": "पहले इस्तेमाल से UV सुरक्षा" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "Visibly less tanning, brighter complexion", "resultHi": "कम टैनिंग, चमकदार रंगत" }
+    ]
+  },
+  {
+    "id": "dabur-gulabari-rose-water",
+    "name": "Dabur Gulabari Rose Water",
+    "brand": "Dabur",
+    "category": "toner",
+    "concerns": ["dryness", "pigmentation"],
+    "price": 90,
+    "priceDisplay": "₹90",
+    "size": "250ml",
+    "description": "Natural rose water toner that refreshes and tones skin",
+    "imageUrl": null,
+    "tags": ["bestseller", "budget", "ayurvedic"],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 72 },
+      "combination": { "suitability": "excellent", "matchScore": 85 },
+      "dry": { "suitability": "good", "matchScore": 78 },
+      "normal": { "suitability": "excellent", "matchScore": 88 },
+      "all": { "suitability": "good", "matchScore": 81 }
+    },
+    "keyIngredients": [
+      { "name": "Rosa Damascena", "nameHi": "गुलाब जल", "benefitEn": "Natural astringent, balances pH", "benefitHi": "प्राकृतिक एस्ट्रिंजेंट, pH संतुलित करता है", "rating": "good" }
+    ],
+    "improvementsEn": ["Refreshed, toned skin", "Better absorption of serums and moisturizers", "Mild brightening over time"],
+    "improvementsHi": ["तरोताज़ा, टोन्ड त्वचा", "सीरम और मॉइस्चराइज़र बेहतर अवशोषित होते हैं", "धीरे-धीरे हल्की चमक"],
+    "warningsEn": [],
+    "warningsHi": [],
+    "expectedTimeline": [
+      { "weeksEn": "Immediate", "weeksHi": "तुरंत", "resultEn": "Skin feels refreshed and toned", "resultHi": "त्वचा तरोताज़ा महसूस होती है" },
+      { "weeksEn": "4 weeks", "weeksHi": "4 हफ़्ते", "resultEn": "More even, hydrated complexion", "resultHi": "समान, हाइड्रेटेड रंगत" }
+    ]
+  },
+  {
+    "id": "pond-s-super-light-gel",
+    "name": "Pond's Super Light Gel Moisturiser",
+    "brand": "Pond's",
+    "category": "moisturizer",
+    "concerns": ["dryness"],
+    "price": 199,
+    "priceDisplay": "₹199",
+    "size": "100g",
+    "description": "Oil-free gel moisturiser with hyaluronic acid for oily skin",
+    "imageUrl": null,
+    "tags": ["bestseller", "budget"],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 92 },
+      "combination": { "suitability": "excellent", "matchScore": 88 },
+      "dry": { "suitability": "caution", "matchScore": 50 },
+      "normal": { "suitability": "good", "matchScore": 78 },
+      "all": { "suitability": "good", "matchScore": 77 }
+    },
+    "keyIngredients": [
+      { "name": "Hyaluronic Acid", "nameHi": "हयालूरोनिक एसिड", "benefitEn": "Lightweight hydration without heaviness", "benefitHi": "बिना भारीपन हल्का हाइड्रेशन", "rating": "good" },
+      { "name": "Vitamin E", "nameHi": "विटामिन E", "benefitEn": "Antioxidant protection", "benefitHi": "एंटीऑक्सीडेंट सुरक्षा", "rating": "good" }
+    ],
+    "improvementsEn": ["Hydrated skin without greasiness", "Matte finish that lasts all day", "Good base for makeup"],
+    "improvementsHi": ["बिना चिपचिपाहट हाइड्रेटेड त्वचा", "दिनभर चलने वाला मैट फ़िनिश", "मेकअप के लिए अच्छा बेस"],
+    "warningsEn": ["Not moisturizing enough for very dry skin"],
+    "warningsHi": ["बहुत रूखी त्वचा के लिए पर्याप्त मॉइस्चराइज़िंग नहीं"],
+    "expectedTimeline": [
+      { "weeksEn": "Immediate", "weeksHi": "तुरंत", "resultEn": "Instant lightweight hydration", "resultHi": "तुरंत हल्का हाइड्रेशन" },
+      { "weeksEn": "2 weeks", "weeksHi": "2 हफ़्ते", "resultEn": "Balanced oil-moisture levels", "resultHi": "तेल-नमी का संतुलन" }
+    ]
+  },
+  {
+    "id": "dot-and-key-vitamin-c-serum",
+    "name": "Dot & Key Vitamin C + E Super Bright Serum",
+    "brand": "Dot & Key",
+    "category": "serum",
+    "concerns": ["dark_spots", "pigmentation"],
+    "price": 545,
+    "priceDisplay": "₹545",
+    "size": "20ml",
+    "description": "Concentrated Vitamin C serum for dark spots and radiant glow",
+    "imageUrl": null,
+    "tags": ["premium-budget", "popular"],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 78 },
+      "combination": { "suitability": "excellent", "matchScore": 85 },
+      "dry": { "suitability": "good", "matchScore": 72 },
+      "normal": { "suitability": "excellent", "matchScore": 88 },
+      "all": { "suitability": "good", "matchScore": 81 }
+    },
+    "keyIngredients": [
+      { "name": "Vitamin C 20%", "nameHi": "विटामिन C 20%", "benefitEn": "Powerful antioxidant, brightens dark spots", "benefitHi": "शक्तिशाली एंटीऑक्सीडेंट, काले धब्बे चमकाता है", "rating": "good" },
+      { "name": "Vitamin E", "nameHi": "विटामिन E", "benefitEn": "Boosts Vitamin C efficacy, moisturizes", "benefitHi": "विटामिन C की प्रभावशीलता बढ़ाता है", "rating": "good" },
+      { "name": "Ethyl Ascorbic Acid", "nameHi": "एथिल एस्कॉर्बिक एसिड", "benefitEn": "Stable form of Vitamin C, less irritating", "benefitHi": "विटामिन C का स्थिर रूप, कम जलन", "rating": "good" }
+    ],
+    "improvementsEn": ["Brighter, more radiant complexion", "Dark spots and blemishes fade visibly", "More even skin tone", "Natural glow without makeup"],
+    "improvementsHi": ["चमकदार, दमकती रंगत", "काले धब्बे और दाग़ दिखने में कम", "समान त्वचा रंगत", "बिना मेकअप प्राकृतिक चमक"],
+    "warningsEn": ["Always use sunscreen during the day when using Vitamin C", "May cause tingling on first use — normal"],
+    "warningsHi": ["विटामिन C इस्तेमाल करते समय दिन में सनस्क्रीन ज़रूरी", "पहली बार हल्की झुनझुनी हो सकती है — सामान्य है"],
+    "expectedTimeline": [
+      { "weeksEn": "2 weeks", "weeksHi": "2 हफ़्ते", "resultEn": "Skin starts looking brighter", "resultHi": "त्वचा चमकदार दिखने लगती है" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Dark spots noticeably lighter", "resultHi": "काले धब्बे काफ़ी हल्के" },
+      { "weeksEn": "12 weeks", "weeksHi": "12 हफ़्ते", "resultEn": "Significant brightening and even tone", "resultHi": "महत्वपूर्ण चमक और समान रंगत" }
+    ]
+  }
+]
