@@ -182,7 +182,6 @@ export default function ScanScreen() {
       Alert.alert(t('scan_cooldown_title'), t('scan_cooldown_body', { seconds: remaining }));
       return;
     }
-    lastScanTime.current = now;
     setCapturedUri(uri);
     setState('analyzing');
     logEvent(EVENTS.SCAN_PHOTO_CAPTURED);
@@ -195,9 +194,9 @@ export default function ScanScreen() {
       );
       if (!compressed.base64) throw new Error('base64 missing from manipulator');
 
-      // Gallery images (wasReady = false) require on-device face validation before Gemini.
+      // wasReady=true means the live camera frame processor already confirmed a face — skip ML Kit.
+      // wasReady=false (gallery, or camera tapped before face centered) requires on-device validation.
       // compressed.uri is an 800px file:// JPEG in app cache — MLInputImage can always read it.
-      // Camera images skip this: the live frame processor already confirmed a face (wasReady).
       if (!wasReady) {
         try {
           const faces = imageFaceDetector.detectFaces(compressed.uri);
@@ -205,17 +204,21 @@ export default function ScanScreen() {
             stopScanning();
             setCapturedUri(null);
             setState('choice');
-            Alert.alert('No face detected', 'Please choose a photo that clearly shows your face.');
+            logEvent(EVENTS.SCAN_FAILED, { error_message: 'no_face_detected' });
+            Alert.alert('No face detected', 'Please make sure your face is clearly visible in the photo.');
             return;
           }
         } catch (e: any) {
           stopScanning();
           setCapturedUri(null);
           setState('choice');
-          Alert.alert('Photo not supported', "Couldn't read this photo for face detection. Please try a different one.");
+          logEvent(EVENTS.SCAN_FAILED, { error_message: 'face_detection_error' });
+          Alert.alert('Photo not supported', "Couldn't process this photo. Please try again.");
           return;
         }
       }
+
+      lastScanTime.current = now;
 
       const result = await analyzeSkin(
         compressed.base64,
