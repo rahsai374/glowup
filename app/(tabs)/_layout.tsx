@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabsLayout() {
@@ -34,28 +34,48 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>🏠</Text>,
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: focused ? 22 : 20 }}>🏠</Text>
+              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="progress"
         options={{
           title: 'Progress',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>📊</Text>,
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: focused ? 22 : 20 }}>📊</Text>
+              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
-        name="tips"
+        name="product-check"
         options={{
-          title: 'Tips',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>💡</Text>,
+          title: 'Product',
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: focused ? 22 : 20 }}>🧪</Text>
+              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+            </View>
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ focused }) => <Text style={{ fontSize: 20 }}>👤</Text>,
+          tabBarIcon: ({ focused }) => (
+            <View style={{ alignItems: 'center' }}>
+              <Text style={{ fontSize: focused ? 22 : 20 }}>👤</Text>
+              {focused && <View style={{ width: 4, height: 4, borderRadius: 2, backgroundColor: '#E07856', marginTop: 1 }} />}
+            </View>
+          ),
         }}
       />
     </Tabs>
