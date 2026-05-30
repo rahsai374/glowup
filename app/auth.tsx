@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import rnAuth from '@react-native-firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
-import { db, doc, getDoc } from '@/lib/firebase';
+import firestore from '@react-native-firebase/firestore';
 import { hydrateFromFirestore } from '@/lib/firestore';
 import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
@@ -98,7 +98,7 @@ export default function AuthScreen() {
         .catch(() => {});
 
       try {
-        const snap = await getDoc(doc(db, 'users', uid));
+        const snap = await firestore().collection('users').doc(uid).get();
         if (snap.exists()) {
           logLogin('phone');
           await hydrateFromFirestore(uid);

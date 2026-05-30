@@ -1,5 +1,4 @@
-import { db, doc, setDoc, getDoc, updateDoc, serverTimestamp, collection, getDocs, query, orderBy, limit } from '@/lib/firebase';
-import { deleteDoc } from 'firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import { useUserStore, type UserProfile, type StreakData } from '@/stores/useUserStore';
 import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
@@ -7,7 +6,7 @@ import i18n from '@/i18n';
 export async function saveScan(uid: string, scan: ScanRecord): Promise<void> {
   try {
     const { imageUrl, ...data } = scan;
-    await setDoc(doc(db, 'users', uid, 'scans', scan.id), data);
+    await firestore().collection('users').doc(uid).collection('scans').doc(scan.id).set(data);
   } catch (e) {
     console.warn('[firestore] saveScan failed:', e);
   }
@@ -18,7 +17,7 @@ export async function saveProfile(
   profile: { name: string; phone: string; language: string; mainConcern: string; skinType: string; waterIntake: string; sunscreenHabit: string; ageRange: string }
 ): Promise<void> {
   try {
-    await setDoc(doc(db, 'users', uid), { ...profile, createdAt: serverTimestamp() });
+    await firestore().collection('users').doc(uid).set({ ...profile, createdAt: firestore.FieldValue.serverTimestamp() });
   } catch (e) {
     console.warn('[firestore] saveProfile failed:', e);
   }
@@ -26,7 +25,7 @@ export async function saveProfile(
 
 export async function updateProfileField(uid: string, partial: Record<string, unknown>): Promise<void> {
   try {
-    await updateDoc(doc(db, 'users', uid), partial);
+    await firestore().collection('users').doc(uid).update(partial);
   } catch (e) {
     console.warn('[firestore] updateProfileField failed:', e);
   }
@@ -34,25 +33,23 @@ export async function updateProfileField(uid: string, partial: Record<string, un
 
 export async function updateStreak(uid: string, streak: StreakData): Promise<void> {
   try {
-    await updateDoc(doc(db, 'users', uid), { streak });
+    await firestore().collection('users').doc(uid).update({ streak });
   } catch (e) {
     console.warn('[firestore] updateStreak failed:', e);
   }
 }
 
 export async function deleteAccount(uid: string): Promise<void> {
-  const scansRef = collection(db, 'users', uid, 'scans');
-  const scansSnap = await getDocs(scansRef);
-  const deletes = scansSnap.docs.map((d) => deleteDoc(d.ref));
-  await Promise.all(deletes);
-  await deleteDoc(doc(db, 'users', uid));
+  const scansSnap = await firestore().collection('users').doc(uid).collection('scans').get();
+  await Promise.all(scansSnap.docs.map((d) => d.ref.delete()));
+  await firestore().collection('users').doc(uid).delete();
 }
 
 export async function hydrateFromFirestore(uid: string): Promise<void> {
-  const snap = await getDoc(doc(db, 'users', uid));
+  const snap = await firestore().collection('users').doc(uid).get();
   if (!snap.exists()) return;
 
-  const data = snap.data();
+  const data = snap.data()!;
 
   const profile: UserProfile = {
     uid,
@@ -74,9 +71,11 @@ export async function hydrateFromFirestore(uid: string): Promise<void> {
 
   i18n.changeLanguage(profile.language);
 
-  const scansRef = collection(db, 'users', uid, 'scans');
-  const q = query(scansRef, orderBy('createdAt', 'desc'), limit(50));
-  const scansSnap = await getDocs(q);
+  const scansSnap = await firestore()
+    .collection('users').doc(uid).collection('scans')
+    .orderBy('createdAt', 'desc')
+    .limit(50)
+    .get();
 
   const scans: ScanRecord[] = scansSnap.docs.map((d) => d.data() as ScanRecord);
   useScanStore.getState().setHistory(scans);

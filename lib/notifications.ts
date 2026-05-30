@@ -3,7 +3,7 @@ import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { Router, type Href } from 'expo-router';
-import { db, doc, setDoc, serverTimestamp } from '@/lib/firebase';
+import firestore from '@react-native-firebase/firestore';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 
@@ -61,7 +61,10 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
 }
 
 export async function savePushToken(uid: string, token: string): Promise<void> {
-  await setDoc(doc(db, 'users', uid), { pushToken: token, pushTokenUpdatedAt: serverTimestamp() }, { merge: true });
+  await firestore().collection('users').doc(uid).set(
+    { pushToken: token, pushTokenUpdatedAt: firestore.FieldValue.serverTimestamp() },
+    { merge: true }
+  );
 }
 
 type StringHref = Extract<Href, string>;
