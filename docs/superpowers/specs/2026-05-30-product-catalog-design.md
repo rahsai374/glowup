@@ -16,15 +16,27 @@ Replace the "Coming Soon" Product Check placeholder with a functional product ca
 
 ## 2. Approach Decision
 
-**Chosen: Static JSON bundle + Fuse.js in-memory search**
+**Chosen: Firestore collection + bundled fallback + AsyncStorage cache + Fuse.js in-memory search**
 
 | Option | Verdict | Rationale |
 |---|---|---|
-| A) Static JSON in app bundle | **Selected** | 150-200 products ≈ 50-80KB. Offline-ready, zero Firestore reads, instant search. Updatable via EAS Update (OTA). |
-| B) Firestore collection | Rejected | Overkill at this scale. Burns reads, needs network, still needs client-side fuzzy search. |
-| C) Remote JSON (CDN) | Rejected | OTA updates already solve "update without rebuild". Extra fetch logic for no real gain. |
+| A) Static JSON only | Rejected | No ability to update products without OTA push or app rebuild. |
+| B) Firestore + local cache + bundled fallback | **Selected** | Update products anytime from Firebase console. Background refresh on app open. Offline-capable via cache. Bundled JSON as cold-start fallback. |
+| C) Remote JSON (CDN) | Rejected | Same network requirement as B but without Firestore's console UI, security rules, or query flexibility. |
 
-**Migration path:** When catalog exceeds ~500 products or needs admin editing, move data source to Firestore. The search/UI layer (Fuse.js, components) stays unchanged — only the data-loading hook changes.
+**Why Firestore works at this scale:**
+- 150 doc reads per app open. Spark free plan allows 50K reads/day.
+- Even 300 daily users = 45K reads/day — within free tier.
+- Background refresh keeps data fresh without blocking the UI.
+- Firebase console provides a no-code admin panel for editing products.
+
+**Data flow:**
+```
+App open → read AsyncStorage cache → render immediately (or bundled fallback if no cache)
+        → background: fetch Firestore `products` collection
+        → on success: update AsyncStorage cache + update in-memory state
+        → on failure: silently use cached/bundled data
+```
 
 ---
 
@@ -33,7 +45,7 @@ Replace the "Coming Soon" Product Check placeholder with a functional product ca
 ### 3.1 Product Interface
 
 ```typescript
-// data/products.ts
+// lib/productTypes.ts
 
 import { SkinType, Concern } from '@/lib/routineData';
 
@@ -117,7 +129,113 @@ export const CATEGORY_EMOJI: Record<ProductCategory, string> = {
 
 ---
 
-## 4. Fuzzy Search
+## 4. Firestore Schema & Data Sync
+
+### 4.1 Firestore Collection
+
+```
+products/{productId}          # top-level collection (not nested under users)
+  ├── name: string
+  ├── brand: string
+  ├── category: string
+  ├── skinTypes: string[]
+  ├── concerns: string[]
+  ├── price: number
+  ├── priceDisplay: string
+  ├── size: string
+  ├── description: string
+  ├── imageUrl: string | null
+  ├── tags: string[]
+  └── rating: number
+```
+
+**Top-level collection** (not under `users/`) — products are global, not per-user. Firestore security rules allow read-only access for authenticated users:
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /products/{productId} {
+      allow read: if request.auth != null;
+      allow write: if false;  // admin-only via Firebase console
+    }
+  }
+}
+```
+
+### 4.2 Seed Data Upload
+
+A one-time script uploads the initial ~150 products from `data/products-seed.json` to Firestore. This runs locally via `node scripts/seed-products.js` using Firebase Admin SDK (service account key, not committed to repo).
+
+```
+scripts/
+  seed-products.js        # reads products-seed.json → writes to Firestore
+data/
+  products-seed.json      # the compiled product list (also serves as bundled fallback)
+```
+
+### 4.3 Data Sync Hook
+
+```typescript
+// hooks/useProductStore.ts (Zustand store)
+
+interface ProductStore {
+  products: Product[];
+  isLoading: boolean;
+  lastSynced: number | null;
+  hydrate: () => Promise<void>;     // load from cache on mount
+  syncFromFirestore: () => Promise<void>;  // background refresh
+}
+```
+
+**Sync flow on app open:**
+
+```typescript
+// Called from _layout.tsx after auth resolves (alongside hydrateFromFirestore)
+
+async function hydrate() {
+  // 1. Try AsyncStorage cache first (instant, offline-safe)
+  const cached = await AsyncStorage.getItem('products_cache');
+  if (cached) {
+    set({ products: JSON.parse(cached), isLoading: false });
+  } else {
+    // 2. Fall back to bundled seed data (first-ever app open)
+    set({ products: BUNDLED_PRODUCTS, isLoading: false });
+  }
+}
+
+async function syncFromFirestore() {
+  // 3. Background fetch — non-blocking, runs after UI is rendered
+  try {
+    const snap = await getDocs(collection(db, 'products'));
+    const fresh = snap.docs.map(d => ({ id: d.id, ...d.data() })) as Product[];
+    set({ products: fresh, lastSynced: Date.now() });
+    await AsyncStorage.setItem('products_cache', JSON.stringify(fresh));
+  } catch (e) {
+    console.warn('[products] background sync failed, using cached data');
+  }
+}
+```
+
+**Key behaviors:**
+- **Non-blocking:** UI renders immediately from cache/bundle. Firestore fetch happens in background.
+- **Silent failure:** If background sync fails (offline, Firestore outage), user never notices — cached data stays.
+- **Cache invalidation:** On every successful sync, cache is fully replaced. No partial updates, no versioning complexity.
+- **No stale check throttle for MVP:** Syncs on every app open. At 150 docs this is fast (~200-400ms) and within free tier limits. Can add a "sync at most once per hour" check later if needed.
+
+### 4.4 Bundled Fallback
+
+`data/products-seed.json` is imported directly as the cold-start fallback. This ensures the app always has product data even on first install with no network:
+
+```typescript
+import BUNDLED_PRODUCTS from '@/data/products-seed.json';
+```
+
+This file is also the source for the Firestore seed script — single source of truth during initial setup. After seeding, Firestore becomes the authoritative source, and the bundle is only a fallback.
+
+---
+
+## 5. Fuzzy Search
 
 ### 4.1 Library
 
@@ -200,7 +318,7 @@ export function useProductSearch(products: Product[]) {
 
 ---
 
-## 5. Product Images
+## 6. Product Images
 
 ### 5.1 Source
 
@@ -255,7 +373,7 @@ function ProductImage({ product }: { product: Product }) {
 
 ---
 
-## 6. Screen Design — Product Catalog
+## 7. Screen Design — Product Catalog
 
 ### 6.1 Screen Structure
 
@@ -322,27 +440,32 @@ const [skinTypeFilter, setSkinTypeFilter] = useState<SkinType | null>(userSkinTy
 
 ---
 
-## 7. File Structure
+## 8. File Structure
 
 ```
+lib/
+  productTypes.ts        # Product/ProductCategory types + CATEGORY_EMOJI map
 data/
-  products.ts          # Product type definitions + CATEGORY_EMOJI map
-  products.json        # Seed data: ~150 product entries
+  products-seed.json     # Bundled fallback (~150 products) + Firestore seed source
+scripts/
+  seed-products.js       # One-time Firestore upload script (Firebase Admin SDK)
+stores/
+  useProductStore.ts     # Zustand store: products[], hydrate(), syncFromFirestore()
 hooks/
-  useProductSearch.ts  # Fuse.js search hook with filter state
+  useProductSearch.ts    # Fuse.js search hook with filter state
 app/
-  product-check.tsx    # Replaced: "Coming Soon" → full product catalog screen
+  product-check.tsx      # Replaced: "Coming Soon" → full product catalog screen
 ```
 
-**No new stores.** Product data is static (loaded from JSON import). Search/filter state is local to the screen via the `useProductSearch` hook. No Zustand store needed.
+**New Zustand store** (`useProductStore`) manages product data lifecycle: hydrate from AsyncStorage cache, background sync from Firestore, expose products array for the search hook.
 
 **No changes to routineData.ts.** The routine step `product` field stays independent. A future `productId` reference can link them later if needed.
 
 ---
 
-## 8. Seed Data Sourcing Plan
+## 9. Seed Data Sourcing Plan
 
-### 8.1 Product Count Targets
+### 9.1 Product Count Targets
 
 | Category | Count | Priority |
 |---|---|---|
@@ -360,7 +483,7 @@ app/
 | Eye Cream | 8 | Low |
 | **Total** | **~150** | |
 
-### 8.2 Brand Coverage
+### 9.2 Brand Coverage
 
 Budget-friendly brands popular in Indian market:
 
@@ -372,7 +495,7 @@ Budget-friendly brands popular in Indian market:
 
 **Ayurvedic:** Khadi Natural, Biotique, Forest Essentials (entry-level only), Kama Ayurveda (entry-level only)
 
-### 8.3 Price Range
+### 9.3 Price Range
 
 ₹50 – ₹800. Products above ₹800 excluded. Each product gets a price-tier tag in its `tags` array:
 - `budget` (₹50–₹200)
@@ -381,11 +504,11 @@ Budget-friendly brands popular in Indian market:
 
 These tags are searchable via Fuse.js (e.g. user types "budget" → matches all budget-tagged products). No separate price filter UI for MVP — tags + search cover this use case.
 
-### 8.4 Data Compilation Method
+### 9.4 Data Compilation Method
 
 Web search for "best budget [category] India [skin type]" across Amazon IN bestseller lists, Nykaa bestseller pages, and beauty review blogs. For each product: verify name, brand, current price range, skin type suitability, key concerns addressed, and grab Amazon CDN image URL.
 
-### 8.5 Quality Checks
+### 9.5 Quality Checks
 
 - Every product must have: name, brand, category, at least one skinType, price, description
 - Image URLs verified as loadable at compile time
@@ -394,13 +517,13 @@ Web search for "best budget [category] India [skin type]" across Amazon IN bests
 
 ---
 
-## 9. Integration Points
+## 10. Integration Points
 
-### 9.1 Navigation
+### 10.1 Navigation
 
 Product catalog is already routed at `/product-check`. No routing changes needed. Currently accessed from Home screen's product check card.
 
-### 9.2 Analytics
+### 10.2 Analytics
 
 Log events using existing analytics infrastructure:
 
@@ -411,33 +534,35 @@ Log events using existing analytics infrastructure:
 | `PRODUCT_FILTER_APPLIED` | Filter chip toggled, with filter type + value |
 | `PRODUCT_TAPPED` | Product card pressed, with product ID |
 
-### 9.3 i18n
+### 10.3 i18n
 
 Product names and descriptions stay in English for MVP (brand names are English, product names are English on packaging). The UI chrome (header, search placeholder, filter labels, empty state) gets `en` + `hi` translations added to the i18n namespace.
 
-### 9.4 Future: Routine Linking
+### 10.4 Future: Routine Linking
 
 Not in this scope. Future work could add a `productId: string` field to `RoutineStep.product` to cross-reference the catalog. The catalog would then power both the browse screen and routine product recommendations.
 
 ---
 
-## 10. Dependencies
+## 11. Dependencies
 
-| Package | Version | Purpose | Bundle impact |
+| Package | Version | Purpose | Status |
 |---|---|---|---|
-| `fuse.js` | ^7.0 | Fuzzy search | ~5KB gzipped |
+| `fuse.js` | ^7.0 | Fuzzy search | **New** (~5KB gzipped) |
+| `@react-native-async-storage/async-storage` | ^2.1.0 | Local product cache | Already installed |
+| `firebase/firestore` | — | Product collection reads | Already installed |
 
 No other new dependencies. Uses existing `react-native-reanimated`, `expo-image` (or RN `Image`), and design system components.
 
 ---
 
-## 11. Out of Scope
+## 12. Out of Scope
 
 - Product detail modal/screen (tap does nothing for MVP beyond analytics logging — detail screen is a fast follow)
 - "Buy now" / external links to Amazon/Nykaa (future feature)
 - User reviews or ratings input
 - Product comparison
-- Firestore-backed product catalog
-- Admin panel for product management
+- Admin panel for product management (use Firebase console directly)
 - Routine ↔ product cross-linking
 - Hindi product names/descriptions
+- Real-time Firestore listeners (snapshot-based sync) — background fetch on app open is sufficient
