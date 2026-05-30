@@ -11553,5 +11553,722 @@
         "resultHi": "कुल मिलाकर मुलायम, कोमल त्वचा"
       }
     ]
+  },
+  {
+    "id": "medimix-ayurvedic-face-wash",
+    "name": "Medimix Ayurvedic Face Wash",
+    "brand": "Medimix",
+    "category": "cleanser",
+    "concerns": [
+      "acne",
+      "pigmentation"
+    ],
+    "price": 99,
+    "priceDisplay": "₹99",
+    "size": "100ml",
+    "description": "Ayurvedic face wash with turmeric and argan oil for clear skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "ayurvedic",
+      "bestseller"
+    ],
+    "rating": 4,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 78
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 65
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 78
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Turmeric",
+        "nameHi": "हल्दी",
+        "benefitEn": "Antiseptic, brightens and clears blemishes",
+        "benefitHi": "एंटीसेप्टिक, दाग़ साफ़ करता है और चमक बढ़ाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Argan Oil",
+        "nameHi": "आर्गन ऑयल",
+        "benefitEn": "Nourishes without making skin greasy",
+        "benefitHi": "बिना चिपचिपाहट त्वचा को पोषण देता है",
+        "rating": "good"
+      },
+      {
+        "name": "Kumkumadi Oil",
+        "nameHi": "कुमकुमादि तेल",
+        "benefitEn": "Traditional Ayurvedic oil for radiance",
+        "benefitHi": "चमक के लिए पारंपरिक आयुर्वेदिक तेल",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Clearer, blemish-free skin",
+      "Natural glow from Ayurvedic ingredients",
+      "Reduced pimples and breakouts"
+    ],
+    "improvementsHi": [
+      "साफ़, दाग़-मुक्त त्वचा",
+      "आयुर्वेदिक सामग्री से प्राकृतिक चमक",
+      "कम मुंहासे और ब्रेकआउट"
+    ],
+    "warningsEn": [
+      "Strong herbal fragrance may not suit everyone"
+    ],
+    "warningsHi": [
+      "तेज़ हर्बल सुगंध सबको पसंद नहीं आ सकती"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels cleaner and fresher",
+        "resultHi": "त्वचा साफ़ और तरोताज़ा"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Fewer pimples, brighter complexion",
+        "resultHi": "कम मुंहासे, चमकदार रंगत"
+      }
+    ]
+  },
+  {
+    "id": "dove-beauty-moisture-face-wash",
+    "name": "Dove Beauty Moisture Face Wash",
+    "brand": "Dove",
+    "category": "cleanser",
+    "concerns": [
+      "dryness"
+    ],
+    "price": 215,
+    "priceDisplay": "₹215",
+    "size": "100g",
+    "description": "Gentle cream face wash with NutriumMoisture for soft skin",
+    "imageUrl": null,
+    "tags": [
+      "mid-range",
+      "bestseller"
+    ],
+    "rating": 4.3,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "caution",
+        "matchScore": 48
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 75
+      },
+      "dry": {
+        "suitability": "excellent",
+        "matchScore": 92
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 76
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "NutriumMoisture",
+        "nameHi": "न्यूट्रियमॉइस्चर",
+        "benefitEn": "Delivers moisture deep into skin while cleansing",
+        "benefitHi": "सफाई करते हुए त्वचा में गहरी नमी पहुंचाता है",
+        "rating": "good"
+      },
+      {
+        "name": "1/4 Moisturizing Cream",
+        "nameHi": "1/4 मॉइस्चराइज़िंग क्रीम",
+        "benefitEn": "Leaves skin soft, not tight after wash",
+        "benefitHi": "धोने के बाद त्वचा मुलायम, कसी हुई नहीं",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "No more tight, dry feeling after wash",
+      "Softer, smoother skin with every use",
+      "Gentle enough for sensitive skin"
+    ],
+    "improvementsHi": [
+      "धोने के बाद कसावट या रूखापन नहीं",
+      "हर बार इस्तेमाल से मुलायम, चिकनी त्वचा",
+      "संवेदनशील त्वचा के लिए भी सौम्य"
+    ],
+    "warningsEn": [
+      "May not deep-clean very oily skin effectively"
+    ],
+    "warningsHi": [
+      "बहुत तैलीय त्वचा की गहरी सफाई नहीं कर पाता"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels softer and more comfortable after wash",
+        "resultHi": "धोने के बाद त्वचा मुलायम और आरामदायक"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visibly smoother, well-moisturized skin",
+        "resultHi": "दिखने में मुलायम, अच्छी तरह नम त्वचा"
+      }
+    ]
+  },
+  {
+    "id": "lux-rose-glow-face-wash",
+    "name": "Lux Rose & Vitamin E Glow Face Wash",
+    "brand": "Lux",
+    "category": "cleanser",
+    "concerns": [
+      "dryness",
+      "pigmentation"
+    ],
+    "price": 115,
+    "priceDisplay": "₹115",
+    "size": "100g",
+    "description": "Rose and Vitamin E face wash for soft, glowing skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "popular"
+    ],
+    "rating": 3.9,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 76
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 75
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "French Rose Extract",
+        "nameHi": "फ़्रेंच गुलाब अर्क",
+        "benefitEn": "Soothes and adds natural radiance",
+        "benefitHi": "त्वचा शांत करता है और प्राकृतिक चमक देता है",
+        "rating": "good"
+      },
+      {
+        "name": "Vitamin E",
+        "nameHi": "विटामिन E",
+        "benefitEn": "Nourishes and protects skin",
+        "benefitHi": "त्वचा को पोषण और सुरक्षा देता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Soft, fragrant skin after every wash",
+      "Mild glow and radiance",
+      "Pleasant floral scent throughout the day"
+    ],
+    "improvementsHi": [
+      "हर बार धोने के बाद मुलायम, सुगंधित त्वचा",
+      "हल्की चमक और दमक",
+      "दिनभर सुखद फूलों की खुशबू"
+    ],
+    "warningsEn": [
+      "Contains fragrance — not ideal for very sensitive skin"
+    ],
+    "warningsHi": [
+      "सुगंध है — बहुत संवेदनशील त्वचा के लिए उचित नहीं"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels soft and fragrant",
+        "resultHi": "त्वचा मुलायम और सुगंधित"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Smoother skin with mild brightening",
+        "resultHi": "मुलायम त्वचा और हल्की चमक"
+      }
+    ]
+  },
+  {
+    "id": "lifebuoy-neem-face-wash",
+    "name": "Lifebuoy Neem & Tea Tree Oil Face Wash",
+    "brand": "Lifebuoy",
+    "category": "cleanser",
+    "concerns": [
+      "acne"
+    ],
+    "price": 99,
+    "priceDisplay": "₹99",
+    "size": "100g",
+    "description": "Germ-killing face wash with neem for pimple-free skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "bestseller"
+    ],
+    "rating": 3.8,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 86
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 74
+      },
+      "dry": {
+        "suitability": "caution",
+        "matchScore": 42
+      },
+      "normal": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 68
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Neem Extract",
+        "nameHi": "नीम अर्क",
+        "benefitEn": "Antibacterial, kills pimple-causing germs",
+        "benefitHi": "एंटीबैक्टीरियल, मुंहासे पैदा करने वाले कीटाणु मारता है",
+        "rating": "good"
+      },
+      {
+        "name": "Tea Tree Oil",
+        "nameHi": "टी ट्री ऑयल",
+        "benefitEn": "Natural antiseptic for blemish control",
+        "benefitHi": "दाग़ नियंत्रण के लिए प्राकृतिक एंटीसेप्टिक",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Reduced pimples and breakouts",
+      "Cleaner skin free from germs",
+      "Oil-free feeling after wash"
+    ],
+    "improvementsHi": [
+      "कम मुंहासे और ब्रेकआउट",
+      "कीटाणुओं से मुक्त साफ़ त्वचा",
+      "धोने के बाद तेल-मुक्त अनुभव"
+    ],
+    "warningsEn": [
+      "Can be drying for dry or sensitive skin",
+      "Contains SLS"
+    ],
+    "warningsHi": [
+      "रूखी या संवेदनशील त्वचा सुखा सकता है",
+      "SLS है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels deeply cleansed",
+        "resultHi": "त्वचा गहराई से साफ़ महसूस होती है"
+      },
+      {
+        "weeksEn": "3 weeks",
+        "weeksHi": "3 हफ़्ते",
+        "resultEn": "Fewer new pimples appearing",
+        "resultHi": "कम नए मुंहासे आते हैं"
+      }
+    ]
+  },
+  {
+    "id": "himalaya-aloe-vera-face-gel",
+    "name": "Himalaya Moisturizing Aloe Vera Face Gel",
+    "brand": "Himalaya",
+    "category": "moisturizer",
+    "concerns": [
+      "dryness",
+      "acne"
+    ],
+    "price": 160,
+    "priceDisplay": "₹160",
+    "size": "100ml",
+    "description": "Lightweight aloe gel moisturizer that hydrates without oiliness",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "bestseller",
+      "ayurvedic"
+    ],
+    "rating": 4.2,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 90
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 65
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 85
+      },
+      "all": {
+        "suitability": "excellent",
+        "matchScore": 82
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Aloe Vera",
+        "nameHi": "एलोवेरा",
+        "benefitEn": "Hydrates, soothes, and cools skin naturally",
+        "benefitHi": "प्राकृतिक रूप से त्वचा को नमी, शांति और ठंडक देता है",
+        "rating": "good"
+      },
+      {
+        "name": "Cucumber Extract",
+        "nameHi": "खीरा अर्क",
+        "benefitEn": "Refreshes and tones skin",
+        "benefitHi": "त्वचा को तरोताज़ा और टोन करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Hydrated skin without any greasiness",
+      "Soothed irritation and redness",
+      "Oil-free moisturization perfect for Indian summers",
+      "Good base for makeup"
+    ],
+    "improvementsHi": [
+      "बिना चिपचिपाहट हाइड्रेटेड त्वचा",
+      "जलन और लालिमा में राहत",
+      "भारतीय गर्मियों के लिए तेल-मुक्त मॉइस्चराइज़ेशन",
+      "मेकअप के लिए अच्छा बेस"
+    ],
+    "warningsEn": [
+      "May not be moisturizing enough for very dry skin in winter"
+    ],
+    "warningsHi": [
+      "सर्दियों में बहुत रूखी त्वचा के लिए पर्याप्त नमी नहीं दे सकता"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "Immediate",
+        "weeksHi": "तुरंत",
+        "resultEn": "Instant cooling hydration",
+        "resultHi": "तुरंत ठंडा हाइड्रेशन"
+      },
+      {
+        "weeksEn": "2 weeks",
+        "weeksHi": "2 हफ़्ते",
+        "resultEn": "Balanced oil-moisture levels, calmer skin",
+        "resultHi": "संतुलित तेल-नमी, शांत त्वचा"
+      }
+    ]
+  },
+  {
+    "id": "himalaya-tan-removal-face-wash",
+    "name": "Himalaya Tan Removal Orange Face Wash",
+    "brand": "Himalaya",
+    "category": "cleanser",
+    "concerns": [
+      "pigmentation",
+      "dark_spots"
+    ],
+    "price": 95,
+    "priceDisplay": "₹95",
+    "size": "100ml",
+    "description": "Orange peel face wash that removes tan and brightens skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "bestseller",
+      "ayurvedic"
+    ],
+    "rating": 4,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "good",
+        "matchScore": 78
+      },
+      "combination": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "dry": {
+        "suitability": "good",
+        "matchScore": 65
+      },
+      "normal": {
+        "suitability": "excellent",
+        "matchScore": 84
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 77
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Orange Peel",
+        "nameHi": "संतरे का छिलका",
+        "benefitEn": "Natural de-tanning and brightening agent",
+        "benefitHi": "प्राकृतिक डी-टैनिंग और ब्राइटनिंग एजेंट",
+        "rating": "good"
+      },
+      {
+        "name": "Honey",
+        "nameHi": "शहद",
+        "benefitEn": "Moisturizes and nourishes while cleansing",
+        "benefitHi": "सफाई करते हुए नमी और पोषण देता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Reduced sun tan and dullness",
+      "Brighter, more even complexion",
+      "Fresh citrus feeling after every wash"
+    ],
+    "improvementsHi": [
+      "सन टैन और बेजानपन में कमी",
+      "चमकदार, समान रंगत",
+      "हर बार धोने के बाद तरोताज़ा सिट्रस अनुभव"
+    ],
+    "warningsEn": [
+      "Contains citrus — may sting on broken or very sensitive skin"
+    ],
+    "warningsHi": [
+      "सिट्रस है — कटी या बहुत संवेदनशील त्वचा पर चुभ सकता है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Skin feels fresher and cleaner",
+        "resultHi": "त्वचा तरोताज़ा और साफ़"
+      },
+      {
+        "weeksEn": "4 weeks",
+        "weeksHi": "4 हफ़्ते",
+        "resultEn": "Visible tan reduction and brightening",
+        "resultHi": "टैन में कमी और चमक दिखने लगती है"
+      }
+    ]
+  },
+  {
+    "id": "himalaya-oil-clear-lemon-face-wash",
+    "name": "Himalaya Oil Clear Lemon Face Wash",
+    "brand": "Himalaya",
+    "category": "cleanser",
+    "concerns": [
+      "acne"
+    ],
+    "price": 85,
+    "priceDisplay": "₹85",
+    "size": "100ml",
+    "description": "Lemon and honey face wash for oil-free, fresh skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "bestseller",
+      "ayurvedic"
+    ],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 88
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 76
+      },
+      "dry": {
+        "suitability": "caution",
+        "matchScore": 45
+      },
+      "normal": {
+        "suitability": "good",
+        "matchScore": 72
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 70
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Lemon Extract",
+        "nameHi": "नींबू अर्क",
+        "benefitEn": "Controls oil and removes excess sebum",
+        "benefitHi": "तेल नियंत्रित करता है और अतिरिक्त सीबम हटाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Honey",
+        "nameHi": "शहद",
+        "benefitEn": "Prevents skin from drying out",
+        "benefitHi": "त्वचा को सूखने से रोकता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Oil-free skin throughout the day",
+      "Fresh, clean feeling after wash",
+      "Fewer pimples caused by excess oil"
+    ],
+    "improvementsHi": [
+      "दिनभर तेल-मुक्त त्वचा",
+      "धोने के बाद तरोताज़ा, साफ़ अनुभव",
+      "अतिरिक्त तेल से होने वाले मुंहासे कम"
+    ],
+    "warningsEn": [
+      "Can be drying for dry skin types"
+    ],
+    "warningsHi": [
+      "रूखी त्वचा के लिए रूखापन कर सकता है"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Noticeably less oily skin",
+        "resultHi": "काफ़ी कम तैलीय त्वचा"
+      },
+      {
+        "weeksEn": "3 weeks",
+        "weeksHi": "3 हफ़्ते",
+        "resultEn": "Reduced breakouts, cleaner pores",
+        "resultHi": "कम ब्रेकआउट, साफ़ रोमछिद्र"
+      }
+    ]
+  },
+  {
+    "id": "dettol-fresh-face-wash",
+    "name": "Dettol Fresh Antibacterial Face Wash",
+    "brand": "Dettol",
+    "category": "cleanser",
+    "concerns": [
+      "acne"
+    ],
+    "price": 115,
+    "priceDisplay": "₹115",
+    "size": "80g",
+    "description": "Antibacterial face wash that fights 99.9% germs for clean skin",
+    "imageUrl": null,
+    "tags": [
+      "budget",
+      "popular"
+    ],
+    "rating": 3.7,
+    "skinTypeMatch": {
+      "oily": {
+        "suitability": "excellent",
+        "matchScore": 82
+      },
+      "combination": {
+        "suitability": "good",
+        "matchScore": 70
+      },
+      "dry": {
+        "suitability": "caution",
+        "matchScore": 40
+      },
+      "normal": {
+        "suitability": "good",
+        "matchScore": 68
+      },
+      "all": {
+        "suitability": "good",
+        "matchScore": 65
+      }
+    },
+    "keyIngredients": [
+      {
+        "name": "Antibacterial Formula",
+        "nameHi": "एंटीबैक्टीरियल फॉर्मूला",
+        "benefitEn": "Kills 99.9% germs on skin surface",
+        "benefitHi": "99.9% कीटाणु मारता है",
+        "rating": "good"
+      },
+      {
+        "name": "Menthol",
+        "nameHi": "मेंथॉल",
+        "benefitEn": "Cooling, refreshing sensation",
+        "benefitHi": "ठंडक भरा, तरोताज़ा अनुभव",
+        "rating": "neutral"
+      }
+    ],
+    "improvementsEn": [
+      "Deeply cleansed, germ-free skin",
+      "Reduced acne from bacterial buildup",
+      "Fresh, cool feeling after wash"
+    ],
+    "improvementsHi": [
+      "गहराई से साफ़, कीटाणु-मुक्त त्वचा",
+      "बैक्टीरिया से होने वाले मुंहासे कम",
+      "धोने के बाद तरोताज़ा, ठंडा अनुभव"
+    ],
+    "warningsEn": [
+      "Strong formula — can strip moisture from dry/sensitive skin",
+      "Not for daily use on sensitive skin"
+    ],
+    "warningsHi": [
+      "तेज़ फॉर्मूला — रूखी/संवेदनशील त्वचा से नमी छीन सकता है",
+      "संवेदनशील त्वचा पर रोज़ इस्तेमाल न करें"
+    ],
+    "expectedTimeline": [
+      {
+        "weeksEn": "1 week",
+        "weeksHi": "1 हफ़्ता",
+        "resultEn": "Cleaner, fresher-feeling skin",
+        "resultHi": "साफ़, तरोताज़ा त्वचा"
+      },
+      {
+        "weeksEn": "3 weeks",
+        "weeksHi": "3 हफ़्ते",
+        "resultEn": "Fewer pimples from bacterial causes",
+        "resultHi": "बैक्टीरिया से होने वाले मुंहासे कम"
+      }
+    ]
   }
 ]
