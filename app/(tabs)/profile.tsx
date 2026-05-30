@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import Animated, { FadeInDown, FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
+import rnAuth from '@react-native-firebase/auth';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
-import { updateProfileField } from '@/lib/firestore';
+import { updateProfileField, deleteAccount } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import i18n from '@/i18n';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
+
+const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup-legal/';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -17,6 +21,9 @@ export default function ProfileScreen() {
   const updateUser = useUserStore((s) => s.updateUser);
   const setLanguage = useUserStore((s) => s.setLanguage);
   const history = useScanStore((s) => s.scanHistory);
+  const logout = useUserStore((s) => s.logout);
+  const clearScans = useScanStore((s) => s.setHistory);
+  const router = useRouter();
   const [name, setName] = useState(user?.name ?? '');
   const [saved, setSaved] = useState(false);
 
@@ -33,6 +40,52 @@ export default function ProfileScreen() {
     }
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
+  }
+
+  function handleLogout() {
+    Alert.alert(t('logout'), t('logout_confirm'), [
+      { text: t('cancel'), style: 'cancel' },
+      {
+        text: t('logout'),
+        style: 'destructive',
+        onPress: async () => {
+          try { await rnAuth().signOut(); } catch {}
+          logout();
+          clearScans([]);
+          router.replace('/splash');
+        },
+      },
+    ]);
+  }
+
+  function handleDeleteAccount() {
+    Alert.alert(t('delete_account'), t('delete_account_confirm'), [
+      { text: t('cancel'), style: 'cancel' },
+      {
+        text: t('delete'),
+        style: 'destructive',
+        onPress: () => {
+          Alert.alert(t('delete_account'), t('delete_account_final'), [
+            { text: t('cancel'), style: 'cancel' },
+            {
+              text: t('delete'),
+              style: 'destructive',
+              onPress: async () => {
+                try {
+                  const uid = user?.uid;
+                  if (uid) await deleteAccount(uid);
+                  const currentUser = rnAuth().currentUser;
+                  if (currentUser) await currentUser.delete();
+                } catch {}
+                logout();
+                clearScans([]);
+                router.replace('/splash');
+              },
+            },
+          ]);
+        },
+      },
+    ]);
   }
 
   function toggleLang(lang: 'en' | 'hi') {
@@ -218,6 +271,73 @@ export default function ProfileScreen() {
             </View>
           </Animated.View>
         )}
+
+        {/* Account actions */}
+        <Animated.View entering={FadeInDown.delay(320).springify()}>
+          <View style={{ marginTop: 20 }}>
+            <TouchableOpacity
+              onPress={handleLogout}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 16,
+                paddingVertical: 16,
+                paddingHorizontal: 20,
+                marginBottom: 12,
+                borderWidth: 1,
+                borderColor: 'rgba(224,120,86,0.08)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
+                {t('logout')}
+              </Text>
+              <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.3)' }}>{'>'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 16,
+                paddingVertical: 16,
+                paddingHorizontal: 20,
+                marginBottom: 12,
+                borderWidth: 1,
+                borderColor: 'rgba(224,120,86,0.08)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
+                {t('privacy_policy')}
+              </Text>
+              <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.3)' }}>{'>'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={handleDeleteAccount}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 16,
+                paddingVertical: 16,
+                paddingHorizontal: 20,
+                borderWidth: 1,
+                borderColor: 'rgba(220,38,38,0.1)',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#DC2626' }}>
+                {t('delete_account')}
+              </Text>
+              <Text style={{ fontSize: 16, color: 'rgba(220,38,38,0.3)' }}>{'>'}</Text>
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
       </ScrollView>
     </View>
   );

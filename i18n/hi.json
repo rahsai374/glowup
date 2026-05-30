@@ -138,5 +138,13 @@
   "nudge_center": "Center करो — एक भी detail miss नहीं करना",
   "nudge_steady": "Steady रहो — sharp shot, sharp skin insights",
   "nudge_ready": "Perfect glow angle — देखते हैं क्या glow हो रहा है ✨",
-  "nudge_no_face": "कहाँ गए? Glow zone में आओ"
+  "nudge_no_face": "कहाँ गए? Glow zone में आओ",
+  "logout": "Log Out",
+  "logout_confirm": "Log out करना है? Sure हो?",
+  "cancel": "Cancel",
+  "privacy_policy": "Privacy Policy",
+  "delete_account": "Account Delete करो",
+  "delete_account_confirm": "Account और सारा data permanently delete हो जाएगा। ये undo नहीं होगा।",
+  "delete_account_final": "Pakka sure हो? सारे scans, routines, और profile data permanently delete हो जाएंगे।",
+  "delete": "Delete करो"
 }
