@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Ionicons } from '@expo/vector-icons';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import BackButton from '@/components/BackButton';
 import { useNotificationStore, NotificationItem } from '@/stores/useNotificationStore';
 
 function timeAgo(isoDate: string): string {
@@ -72,7 +71,6 @@ function NotificationCard({ item, index }: { item: NotificationItem; index: numb
 }
 
 export default function NotificationsScreen() {
-  const router = useRouter();
   const insets = useSafeAreaInsets();
   const notifications = useNotificationStore((s) => s.notifications);
   const markAllRead = useNotificationStore((s) => s.markAllRead);
@@ -94,24 +92,7 @@ export default function NotificationsScreen() {
             gap: 12,
           }}
         >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              backgroundColor: 'white',
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: '#2D1810',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <Ionicons name="arrow-back" size={20} color="#2D1810" />
-          </TouchableOpacity>
+          <BackButton />
           <Text style={{ fontSize: 24, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>
             Notifications
           </Text>

@@ -29,7 +29,9 @@
       "predictiveBackGestureEnabled": false,
       "permissions": [
         "android.permission.CAMERA"
-      ]
+      ],
+      "targetSdkVersion": 36,
+      "compileSdkVersion": 36
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -55,10 +57,10 @@
       [
         "react-native-fbsdk-next",
         {
-          "appID": "TODO_FACEBOOK_APP_ID",
-          "clientToken": "TODO_FACEBOOK_CLIENT_TOKEN",
+          "appID": "1631246151315033",
+          "clientToken": "f8cf49e368b4582cc75f2c5e228e916e",
           "displayName": "GlowUp",
-          "scheme": "fbTODO_FACEBOOK_APP_ID",
+          "scheme": "fb1631246151315033",
           "advertiserIDCollectionEnabled": true,
           "autoLogAppEventsEnabled": true,
           "isAutoInitEnabled": true

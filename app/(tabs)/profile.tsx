@@ -7,13 +7,14 @@ import { useRouter } from 'expo-router';
 import rnAuth from '@react-native-firebase/auth';
 import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
-import { updateProfileField, deleteAccount } from '@/lib/firestore';
+import { updateProfileField } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import i18n from '@/i18n';
 import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
 
 const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup/privacy-policy.html';
+const DELETION_POLICY_URL = 'https://rahsai374.github.io/glowup/account-deletion.html';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -62,47 +63,7 @@ export default function ProfileScreen() {
   }
 
   function handleDeleteAccount() {
-    Alert.alert(t('delete_account'), t('delete_account_confirm'), [
-      { text: t('cancel'), style: 'cancel' },
-      {
-        text: t('delete'),
-        style: 'destructive',
-        onPress: () => {
-          Alert.alert(t('delete_account'), t('delete_account_final'), [
-            { text: t('cancel'), style: 'cancel' },
-            {
-              text: t('delete'),
-              style: 'destructive',
-              onPress: async () => {
-                try {
-                  // Delete Auth account first — if this fails (e.g. requires-recent-login),
-                  // Firestore data is untouched and the user can retry after re-auth.
-                  const currentUser = rnAuth().currentUser;
-                  if (currentUser) await currentUser.delete();
-                  const uid = user?.uid;
-                  if (uid) await deleteAccount(uid);
-                  logout();
-                  clearScans([]);
-                  router.replace('/splash');
-                } catch (e: any) {
-                  if (e?.code === 'auth/requires-recent-login') {
-                    Alert.alert(
-                      t('delete_account_error_title'),
-                      t('delete_account_error_reauth')
-                    );
-                  } else {
-                    Alert.alert(
-                      t('delete_account_error_title'),
-                      t('delete_account_error_generic')
-                    );
-                  }
-                }
-              },
-            },
-          ]);
-        },
-      },
-    ]);
+    Linking.openURL(DELETION_POLICY_URL);
   }
 
   function toggleLang(lang: 'en' | 'hi') {

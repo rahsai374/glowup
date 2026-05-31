@@ -125,7 +125,7 @@ export default function HomeScreen() {
 
   function onHeroPress() {
     if (heroState.kind === 'routine-in-progress' || heroState.kind === 'fresh-scan') {
-      router.push('/routine');
+      router.push('/(tabs)/routine');
     } else {
       router.push('/scan');
     }
@@ -143,7 +143,7 @@ export default function HomeScreen() {
           name={user?.name || 'Friend'}
           greeting={greetingText}
           onAvatarPress={() => router.push('/(tabs)/profile')}
-          onBellPress={() => router.push('/notifications' as any)}
+          onBellPress={() => router.push('/(tabs)/notifications' as any)}
         />
 
         {currentScore !== null && (
@@ -171,14 +171,14 @@ export default function HomeScreen() {
             label={t('check_product')}
             bg="#FFEFE3"
             borderColor="rgba(224,120,86,0.1)"
-            onPress={() => router.push('/product-check')}
+            onPress={() => router.push('/(tabs)/product-check')}
           />
           <QuickActionTile
             icon="🌿"
             label={t('my_routine')}
             bg="#FBF2E0"
             borderColor="rgba(212,165,116,0.2)"
-            onPress={() => router.push('/routine')}
+            onPress={() => router.push('/(tabs)/routine')}
           />
         </View>
 

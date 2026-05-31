@@ -11,7 +11,7 @@ AI-powered skin analysis app for Indian women. Take a selfie, get a personalised
 | Styling | NativeWind v4 (Tailwind for RN) |
 | Auth | Firebase Phone OTP (REST API) |
 | Database | Firestore |
-| AI | Gemini 2.0 Flash (multimodal) |
+| AI | Gemini 2.5 Flash (multimodal) |
 | State | Zustand |
 | i18n | i18next — `en` + `hi` |
 | Build | EAS Build + EAS Update |
@@ -78,7 +78,7 @@ app/
 
 lib/
   firebase.ts               # Firebase init + auth helpers
-  gemini.ts                 # Gemini 2.0 Flash scan call
+  gemini.ts                 # Gemini 2.5 Flash scan call
   routineEngine.ts          # Routine generation from scan result
 
 stores/
@@ -91,7 +91,7 @@ stores/
 
 1. Capture selfie or pick from gallery
 2. Compress image to < 300 KB
-3. Base64 encode + send to Gemini 2.0 Flash with Q1 (concern) + Q2 (skin type) context
+3. Base64 encode + send to Gemini 2.5 Flash with Q1 (concern) + Q2 (skin type) context
 4. Parse structured JSON response — overall score, 10 skin metrics, advice
 5. Save to Firestore `users/{uid}/scans/{scanId}`
 6. Show Results screen

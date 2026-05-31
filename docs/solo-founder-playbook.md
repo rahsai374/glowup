@@ -25,7 +25,7 @@ Everything below is conditional on these. If any one of them is wrong, half the 
 
 6. **Customer service is in Hindi (and later Tamil/Telugu/Marathi/Bengali) on WhatsApp, not English email.** This is non-negotiable for Bharat trust; the agents handle 80% of volume, founder reviews escalations.
 7. **AI agents handle:** support (WhatsApp triage + reply drafts), content (Hindi/regional captions, blog posts, YouTube Shorts scripts), creative (ad copy + image variants), analytics (daily funnel digest), intel (competitor/policy watch), CRM (segmented WhatsApp campaigns + reactivation), ops (changelogs, OKR review, weekly digests). Founder owns product, payments/legal/refund calls, partnerships, anything customer-trust-shaped.
-8. **Stack:** Expo SDK 54 + Firebase + Gemini 2.0 Flash + Razorpay (one-time orders + Subscriptions module in S3) + AiSensy WhatsApp Business API + Claude (via Anthropic API + agents) + GA4/Firebase Analytics + Meta App Events + Sheet-based intermediate storage where Firestore is overkill. All choices motivated below.
+8. **Stack:** Expo SDK 54 + Firebase + Gemini 2.5 Flash + Razorpay (one-time orders + Subscriptions module in S3) + AiSensy WhatsApp Business API + Claude (via Anthropic API + agents) + GA4/Firebase Analytics + Meta App Events + Sheet-based intermediate storage where Firestore is overkill. All choices motivated below.
 
 ---
 
@@ -86,7 +86,7 @@ The pattern: agents publish Sun night → Mon morning is read-and-decide → Tue
 |---|---|---|---|
 | **Firebase (Spark plan)** | Auth, Firestore, Storage, Crashlytics, Analytics | ₹0 → ~₹4K at S2 | Free until you cross 50K reads/day. At 10K MAU expect ₹3-5K/mo for Firestore + Storage. |
 | **Cloud Functions / Cloudflare Workers** | Gemini key proxy + Razorpay webhook → Meta CAPI relay | ₹0 (Workers free tier covers 100K req/day) | Workers > Functions for the latency + zero cold-start; both are cheap. |
-| **Gemini 2.0 Flash API** | Scan analysis (~₹0.16/scan per `payments-and-paywall-report.md`) | At 10K scans/mo: ~₹1,600 | The MVP cheat code. Don't over-optimise. |
+| **Gemini 2.5 Flash API** | Scan analysis (~₹0.16/scan per `payments-and-paywall-report.md`) | At 10K scans/mo: ~₹1,600 | The MVP cheat code. Don't over-optimise. |
 | **EAS (Expo) Starter plan** | Build, OTA updates, hosting | ₹1,600 ($19/mo) | $19/mo Starter is the right tier through 10K MAU. Free plan covers 15 builds; you'll exceed that during ASO iteration. ([Expo Pricing](https://expo.dev/pricing)) |
 | **Google Play Developer fee** | One-time | ₹2,100 ($25 one-time) | Mandatory. |
 | **Razorpay** | Payment gateway + Subscriptions module | 2% per UPI txn + 18% GST | At ₹5L GMV/mo expect ~₹12K in fees. Cards are 2% + 0.99% subscription fee + GST ≈ 3.5% all-in. ([Razorpay Pricing Breakdown](https://www.softwaresuggest.com/blog/razorpay-payment-gateway-charges/)) |

@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import BackButton from '@/components/BackButton';
 import { getRoutine } from '@/lib/routineEngine';
 import { RoutineStep } from '@/lib/routineData';
 import { logEvent, EVENTS } from '@/lib/analytics';
@@ -295,21 +296,7 @@ export default function RoutineScreen() {
           zIndex: 20,
         }}
       >
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 16,
-            padding: 10,
-            shadowColor: '#2D1810',
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.06,
-            shadowRadius: 12,
-            elevation: 3,
-          }}
-        >
-          <Text style={{ fontSize: 16 }}>←</Text>
-        </TouchableOpacity>
+        <BackButton />
       </View>
 
       {!routine ? (

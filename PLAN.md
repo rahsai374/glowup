@@ -16,7 +16,7 @@ Analyzes face photos using Gemini AI, returns skin health metrics, and recommend
 | Auth | Firebase Phone OTP | Standard for Indian users |
 | Database | Firestore | Free tier, real-time sync |
 | Storage | Firebase Storage | Scan photos |
-| AI | Gemini 2.0 Flash (client-side for MVP) | Cheapest multimodal, ~$0.002/scan |
+| AI | Gemini 2.5 Flash (client-side for MVP) | Cheapest multimodal, ~$0.002/scan |
 | State | Zustand | Lightweight, no boilerplate |
 | i18n | i18next | Hindi + English |
 | Charts | Victory Native | Progress screen score trends |
@@ -57,7 +57,7 @@ Splash → Language picker (Hi/En) → 3 onboarding slides
 Camera selfie or Gallery pick
   → Compress to < 300KB
   → Base64 encode
-  → Call Gemini 2.0 Flash with Q1 + Q2 as context
+  → Call Gemini 2.5 Flash with Q1 + Q2 as context
   → Parse structured JSON response
   → Save result to Firestore
   → Show Results screen
@@ -189,7 +189,7 @@ users/
 - [ ] Camera selfie capture (expo-camera)
 - [ ] Gallery picker (expo-image-picker)
 - [ ] Image compression (< 300KB)
-- [ ] Gemini 2.0 Flash integration
+- [ ] Gemini 2.5 Flash integration
 - [ ] Structured JSON parsing + error handling
 - [ ] Analyzing animation screen
 - [ ] Results screen (score meter, radar chart, 10 metrics)
@@ -220,7 +220,7 @@ users/
 
 | Service | Monthly Cost |
 |---|---|
-| Gemini 2.0 Flash (~4K scans) | ~$8–15 |
+| Gemini 2.5 Flash (~4K scans) | ~$8–15 |
 | Firebase Spark (free tier) | $0 |
 | EAS Build (free tier) | $0 |
 | **Total** | **< $20/month** |

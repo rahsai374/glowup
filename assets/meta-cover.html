@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 820px;
+    height: 312px;
+    overflow: hidden;
+    background: #FFF5EE;
+    position: relative;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .blob-1 {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,120,86,0.15) 0%, transparent 70%);
+    top: -100px;
+    right: -40px;
+    filter: blur(40px);
+  }
+
+  .blob-2 {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,165,116,0.18) 0%, transparent 70%);
+    bottom: -80px;
+    left: -60px;
+    filter: blur(40px);
+  }
+
+  .blob-3 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,120,86,0.10) 0%, transparent 70%);
+    bottom: -40px;
+    right: 200px;
+    filter: blur(30px);
+  }
+
+  .content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 60px;
+    gap: 50px;
+  }
+
+  .left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .logo-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .sparkle {
+    width: 32px;
+    height: 32px;
+    position: relative;
+  }
+
+  .sparkle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #D4A574;
+    clip-path: polygon(50% 0%, 61% 35%, 100% 50%, 61% 65%, 50% 100%, 39% 65%, 0% 50%, 39% 35%);
+  }
+
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #E07856;
+    letter-spacing: -0.5px;
+  }
+
+  .tagline {
+    font-family: 'Fraunces', serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #2D1810;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+  }
+
+  .subtitle {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: rgba(45,24,16,0.6);
+    line-height: 1.5;
+    max-width: 340px;
+  }
+
+  .pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-primary {
+    background: #E07856;
+    color: white;
+  }
+
+  .pill-outline {
+    background: transparent;
+    border: 1.5px solid rgba(224,120,86,0.3);
+    color: #2D1810;
+  }
+
+  .right {
+    position: relative;
+    width: 180px;
+    height: 240px;
+    flex-shrink: 0;
+  }
+
+  .phone {
+    width: 170px;
+    height: 240px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 12px 40px -8px rgba(45,24,16,0.12);
+    border: 2px solid rgba(224,120,86,0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 14px 12px;
+  }
+
+  .phone-header {
+    font-size: 8px;
+    font-weight: 600;
+    color: rgba(45,24,16,0.5);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .score-ring {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    margin-bottom: 10px;
+  }
+
+  .score-ring svg {
+    width: 80px;
+    height: 80px;
+    transform: rotate(-90deg);
+  }
+
+  .score-ring circle {
+    fill: none;
+    stroke-width: 6;
+  }
+
+  .score-ring .bg { stroke: #f0e6df; }
+  .score-ring .fg { stroke: #E07856; stroke-linecap: round; stroke-dasharray: 220; stroke-dashoffset: 48; }
+
+  .score-num {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2D1810;
+  }
+
+  .score-label {
+    font-size: 7px;
+    position: absolute;
+    top: 62%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(45,24,16,0.4);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .metric {
+    background: #FFF5EE;
+    border-radius: 8px;
+    padding: 6px 8px;
+  }
+
+  .metric-name {
+    font-size: 6.5px;
+    font-weight: 600;
+    color: rgba(45,24,16,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+  }
+
+  .metric-bar {
+    height: 3px;
+    border-radius: 2px;
+    background: #f0e6df;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: #E07856;
+  }
+
+  .phone-cta {
+    margin-top: 8px;
+    background: #E07856;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 0;
+    width: 100%;
+    font-size: 9px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.02em;
+  }
+
+  .divider-line {
+    position: absolute;
+    bottom: 30px;
+    left: 60px;
+    right: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(224,120,86,0.15), transparent);
+  }
+</style>
+</head>
+<body>
+  <div class="blob-1"></div>
+  <div class="blob-2"></div>
+  <div class="blob-3"></div>
+
+  <div class="content">
+    <div class="left">
+      <div class="logo-line">
+        <div class="sparkle"></div>
+        <span class="logo-text">GlowUp</span>
+      </div>
+      <div class="tagline">Glowing Skin<br>for Everyone</div>
+      <div class="subtitle">AI skin analysis in 60 seconds. Personalized routines with desi remedies & affordable products.</div>
+      <div class="pills">
+        <span class="pill pill-primary">AI Skin Scanner</span>
+        <span class="pill pill-outline">Hindi + English</span>
+        <span class="pill pill-outline">150+ Products</span>
+      </div>
+    </div>
+
+    <div class="right">
+      <div class="phone">
+        <div class="phone-header">Skin Analysis Result</div>
+        <div class="score-ring">
+          <svg viewBox="0 0 80 80">
+            <circle class="bg" cx="40" cy="40" r="35"/>
+            <circle class="fg" cx="40" cy="40" r="35"/>
+          </svg>
+          <span class="score-num">78</span>
+          <span class="score-label">Score</span>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-name">Hydration</div>
+            <div class="metric-bar"><div class="metric-bar-fill" style="width:72%"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-name">Radiance</div>
+            <div class="metric-bar"><div class="metric-bar-fill" style="width:80%"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-name">Dark Spots</div>
+            <div class="metric-bar"><div class="metric-bar-fill" style="width:65%"></div></div>
+          </div>
+          <div class="metric">
+            <div class="metric-name">Oiliness</div>
+            <div class="metric-bar"><div class="metric-bar-fill" style="width:55%"></div></div>
+          </div>
+        </div>
+        <div class="phone-cta">See My Routine →</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -23,7 +23,7 @@ eas submit                # Submit to stores
 
 ## Architecture
 
-**Stack:** Expo SDK 52 + TypeScript + Expo Router v3 (file-based nav) + NativeWind v4 + Zustand + Firebase + Gemini 2.0 Flash
+**Stack:** Expo SDK 52 + TypeScript + Expo Router v3 (file-based nav) + NativeWind v4 + Zustand + Firebase + Gemini 2.5 Flash
 
 **Routing:** Expo Router file-based. Actual structure:
 ```
@@ -39,7 +39,7 @@ app/
 
 **State:** Zustand stores — user profile, current scan result, language preference. Firebase Auth state drives the auth/tab route split.
 
-**AI scan flow:** Camera/gallery → compress to <300KB → base64 encode → Gemini 2.0 Flash multimodal call with Q1+Q2 skin context → parse structured JSON → save to Firestore `users/{uid}/scans/{scanId}`.
+**AI scan flow:** Camera/gallery → compress to <300KB → base64 encode → Gemini 2.5 Flash multimodal call with Q1+Q2 skin context → parse structured JSON → save to Firestore `users/{uid}/scans/{scanId}`.
 
 **i18n:** i18next with `en` and `hi` namespaces. Hindi uses Hind font (`font-hindi` NativeWind class). English headings use Fraunces serif (`font-serif`).
 
@@ -79,6 +79,16 @@ When asked about enhancements, next steps, or what to build next, surface these 
 - **Gemini API key migration:** Move client-side key to Cloud Functions or Cloudflare Workers before store submission (PLAN.md §API Key Security Plan).
 - **Push notifications:** Daily routine reminders (PLAN.md Phase 4).
 - **Analytics TODOs:** See `docs/superpowers/specs/` and memory for pending manual steps (FB SDK, GA4).
+
+## Key Library Capabilities
+
+Before suggesting a new package, check the installed package's full type exports (`node_modules/<pkg>/lib/**/*.d.ts`). Known non-obvious capabilities:
+
+- **`react-native-vision-camera-face-detector`**: ships TWO face detection surfaces — `useFaceDetectorOutput` (live camera frame processor, used in `app/scan.tsx`) AND `useImageFaceDetector` (static image face detection from a file URI). Same ML Kit binary, no extra install. Use `useImageFaceDetector({ performanceMode: 'fast' })` for gallery/file images.
+- **`@react-native-firebase/ml` v24**: empty stub — all vision/face detection APIs were removed. Do not use for face detection.
+- **`@react-native-firebase/firestore` v24**: `snap.exists()` is a **method**, not a property. `firestore.FieldValue.serverTimestamp()` for timestamps.
+- **Firebase auth**: uses `@react-native-firebase/auth` (native SDK). Firestore also uses native SDK (`@react-native-firebase/firestore`). The web `firebase/firestore` SDK is NOT used — it has no shared auth state with the native auth SDK.
+- **`firebase/storage` (web SDK)**: kept only for product catalog downloads from Firebase Storage — no auth needed for those reads.
 
 ## Design Reference
 
