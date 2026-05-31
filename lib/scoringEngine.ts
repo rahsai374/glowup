@@ -71,6 +71,7 @@ export function getPersonalizedScore(
 
   for (const concern of product.concerns) {
     const severity = getConcernSeverity(concern, scanResult.metrics);
+    if (severity === 0) continue; // unrecognized concern — no bonus, no match
     const bonus = severityToBonus(severity);
     totalBonus += bonus;
     concernMatches.push(concern);
