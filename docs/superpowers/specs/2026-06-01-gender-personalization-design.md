@@ -53,9 +53,9 @@ The existing final onboarding step (name input) becomes a combined name + gender
 
 | Key | English | Hindi |
 |-----|---------|-------|
-| `gender_helper` | "Adding gender helps us personalize your routines" | "जेंडर जोड़ने से हम आपकी रूटीन को personalize कर सकते हैं" |
-| `gender_male` | "Male" | "पुरुष" |
-| `gender_female` | "Female" | "महिला" |
+| `gender_helper` | "Adding gender helps us personalize your routines" | "Gender add करने से हम आपकी routines personalize कर सकते हैं" |
+| `gender_male` | "Male" | "Male" |
+| `gender_female` | "Female" | "Female" |
 | `gender_unspecified` | "Prefer not to say" | "बताना नहीं चाहते" |
 
 ## 3. Profile Avatar
