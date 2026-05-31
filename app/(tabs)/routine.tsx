@@ -1,10 +1,16 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
+import { useProductStore } from '@/stores/useProductStore';
+import { getPersonalizedScore } from '@/lib/scoringEngine';
+import { SUITABILITY_CONFIG, CATEGORY_EMOJI } from '@/lib/productTypes';
+import type { Product } from '@/lib/productTypes';
+import type { ScanResult } from '@/lib/gemini';
+import type { PersonalizedScore } from '@/lib/scoringEngine';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import BackButton from '@/components/BackButton';
 import { getRoutine } from '@/lib/routineEngine';
@@ -83,9 +89,14 @@ interface StepCardProps {
   index: number;
   expanded: boolean;
   onPress: () => void;
+  catalogProduct?: Product | null;
+  scanResult?: ScanResult | null;
+  hindi?: boolean;
+  onSeeMore?: (category: string) => void;
+  onProductTap?: (productId: string) => void;
 }
 
-function StepCard({ step, index, expanded, onPress }: StepCardProps) {
+function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
   return (
     <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
       <TouchableOpacity
@@ -181,80 +192,168 @@ function StepCard({ step, index, expanded, onPress }: StepCardProps) {
             </View>
 
             {/* Product block */}
-            <View
-              style={{
-                backgroundColor: '#FFF9F5',
-                borderRadius: 14,
-                padding: 14,
-                borderWidth: 1,
-                borderColor: 'rgba(212,165,116,0.2)',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: 'PlusJakartaSans_600SemiBold',
-                  color: '#2D1810',
-                  marginBottom: 8,
-                }}
-              >
-                🛍️ {step.product.name}
-              </Text>
+            {catalogProduct ? (
               <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 12,
+                  backgroundColor: '#FFF9F5',
+                  borderRadius: 14,
+                  padding: 14,
+                  borderWidth: 1,
+                  borderColor: 'rgba(212,165,116,0.2)',
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: 'rgba(45,24,16,0.5)',
-                    fontFamily: 'PlusJakartaSans_400Regular',
-                    flex: 1,
-                    marginRight: 8,
-                  }}
+                <TouchableOpacity
+                  onPress={() => onProductTap?.(step.productId!)}
+                  activeOpacity={0.85}
                 >
-                  {step.product.tag}
-                </Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <Text style={{ fontSize: 20 }}>
+                      {CATEGORY_EMOJI[catalogProduct.category] || '🛍️'}
+                    </Text>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: 'PlusJakartaSans_600SemiBold',
+                          color: '#2D1810',
+                        }}
+                        numberOfLines={1}
+                      >
+                        {catalogProduct.name}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          fontFamily: 'PlusJakartaSans_400Regular',
+                          color: 'rgba(45,24,16,0.5)',
+                        }}
+                      >
+                        {catalogProduct.brand} • {catalogProduct.priceDisplay}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Personalized score bar */}
+                  {scanResult && (() => {
+                    const score = getPersonalizedScore(catalogProduct, scanResult);
+                    const cfg = SUITABILITY_CONFIG[score.suitability];
+                    return (
+                      <View style={{ marginBottom: 10 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+                          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_600SemiBold', color: cfg.text }}>
+                            {hindi ? cfg.labelHi : cfg.labelEn}
+                          </Text>
+                          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}>
+                            {score.matchScore}/85
+                          </Text>
+                        </View>
+                        <View style={{ height: 6, backgroundColor: '#FFF5EE', borderRadius: 3, overflow: 'hidden' }}>
+                          <View
+                            style={{
+                              height: 6,
+                              backgroundColor: cfg.bg,
+                              borderRadius: 3,
+                              width: `${(score.matchScore / 85) * 100}%`,
+                            }}
+                          />
+                        </View>
+                      </View>
+                    );
+                  })()}
+                </TouchableOpacity>
+
+                {/* See more options link */}
+                <TouchableOpacity
+                  onPress={() => onSeeMore?.(catalogProduct.category)}
+                  activeOpacity={0.7}
+                  style={{ paddingTop: 8, borderTopWidth: 1, borderTopColor: 'rgba(212,165,116,0.15)' }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      fontFamily: 'PlusJakartaSans_600SemiBold',
+                      color: '#E07856',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {hindi ? 'और विकल्प देखें →' : 'See more options →'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              /* Fallback: existing inline product data */
+              <View
+                style={{
+                  backgroundColor: '#FFF9F5',
+                  borderRadius: 14,
+                  padding: 14,
+                  borderWidth: 1,
+                  borderColor: 'rgba(212,165,116,0.2)',
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 14,
-                    fontFamily: 'PlusJakartaSans_700Bold',
-                    color: '#E07856',
+                    fontFamily: 'PlusJakartaSans_600SemiBold',
+                    color: '#2D1810',
+                    marginBottom: 8,
                   }}
                 >
-                  {step.product.price}
+                  🛍️ {step.product.name}
                 </Text>
-              </View>
-
-              {/* Amazon button — dummy for now */}
-              <TouchableOpacity
-                onPress={() => {
-                  logEvent(EVENTS.PRODUCT_LINK_TAPPED, { product_name: step.product.name });
-                  console.log('[TODO] Open Amazon link for:', step.product.name);
-                }}
-                activeOpacity={0.85}
-                style={{
-                  backgroundColor: '#FF9900',
-                  borderRadius: 12,
-                  paddingVertical: 10,
-                  alignItems: 'center',
-                }}
-              >
-                <Text
+                <View
                   style={{
-                    fontSize: 13,
-                    fontFamily: 'PlusJakartaSans_700Bold',
-                    color: 'white',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 12,
                   }}
                 >
-                  Buy on Amazon →
-                </Text>
-              </TouchableOpacity>
-            </View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: 'rgba(45,24,16,0.5)',
+                      fontFamily: 'PlusJakartaSans_400Regular',
+                      flex: 1,
+                      marginRight: 8,
+                    }}
+                  >
+                    {step.product.tag}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'PlusJakartaSans_700Bold',
+                      color: '#E07856',
+                    }}
+                  >
+                    {step.product.price}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    logEvent(EVENTS.PRODUCT_LINK_TAPPED, { product_name: step.product.name });
+                  }}
+                  activeOpacity={0.85}
+                  style={{
+                    backgroundColor: '#FF9900',
+                    borderRadius: 12,
+                    paddingVertical: 10,
+                    alignItems: 'center',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      fontFamily: 'PlusJakartaSans_700Bold',
+                      color: 'white',
+                    }}
+                  >
+                    Buy on Amazon →
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </Animated.View>
         )}
       </TouchableOpacity>
@@ -269,8 +368,34 @@ export default function RoutineScreen() {
   const [expanded, setExpanded] = useState<number | null>(0);
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const hindi = i18n.language === 'hi';
   const currentScan = useScanStore(s => s.currentScan);
+  const products = useProductStore((s) => s.products);
+
+  const productMap = useMemo(() => {
+    const map = new Map<string, Product>();
+    for (const p of products) {
+      map.set(p.id, p);
+    }
+    return map;
+  }, [products]);
+
+  const handleSeeMore = useCallback((category: string) => {
+    logEvent(EVENTS.PRODUCT_CHECK_OPENED, { source: 'routine_see_more', category });
+    router.push({
+      pathname: '/(tabs)/product-check',
+      params: { category, concern: currentScan?.top_concern },
+    });
+  }, [router, currentScan]);
+
+  const handleProductTap = useCallback((productId: string) => {
+    logEvent(EVENTS.PRODUCT_SELECTED, { product_id: productId, source: 'routine' });
+    router.push({
+      pathname: '/(tabs)/product-check',
+      params: { productId },
+    });
+  }, [router]);
 
   const routine = useMemo(() => {
     if (!currentScan) return null;
@@ -405,6 +530,11 @@ export default function RoutineScreen() {
                   });
                 }
               }}
+              catalogProduct={step.productId ? productMap.get(step.productId) ?? null : null}
+              scanResult={currentScan}
+              hindi={hindi}
+              onSeeMore={handleSeeMore}
+              onProductTap={handleProductTap}
             />
           ))}
         </ScrollView>
