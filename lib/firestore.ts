@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import { useUserStore, type UserProfile, type StreakData } from '@/stores/useUserStore';
+import { useUserStore, type UserProfile, type StreakData, type Gender } from '@/stores/useUserStore';
 import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
 
@@ -14,7 +14,7 @@ export async function saveScan(uid: string, scan: ScanRecord): Promise<void> {
 
 export async function saveProfile(
   uid: string,
-  profile: { name: string; phone: string; language: string; mainConcern: string; skinType: string; waterIntake: string; sunscreenHabit: string; ageRange: string }
+  profile: { name: string; phone: string; language: string; mainConcern: string; skinType: string; waterIntake: string; sunscreenHabit: string; ageRange: string; gender: string }
 ): Promise<void> {
   try {
     await firestore().collection('users').doc(uid).set({ ...profile, createdAt: firestore.FieldValue.serverTimestamp() });
@@ -61,6 +61,7 @@ export async function hydrateFromFirestore(uid: string): Promise<void> {
     waterIntake: data.waterIntake ?? '',
     sunscreenHabit: data.sunscreenHabit ?? '',
     ageRange: data.ageRange ?? '',
+    gender: (data.gender as Gender) ?? 'unspecified',
   };
 
   useUserStore.getState().setUser(profile);
