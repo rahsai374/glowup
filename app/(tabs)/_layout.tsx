@@ -67,6 +67,10 @@ export default function TabsLayout() {
           tabBarIcon: ({ focused }) => <TabIcon emoji="👤" focused={focused} />,
         }}
       />
+      <Tabs.Screen name="results" options={{ href: null, headerShown: false }} />
+      <Tabs.Screen name="routine" options={{ href: null, headerShown: false }} />
+      <Tabs.Screen name="share" options={{ href: null, headerShown: false }} />
+      <Tabs.Screen name="notifications" options={{ href: null, headerShown: false }} />
     </Tabs>
   );
 }

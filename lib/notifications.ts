@@ -75,9 +75,8 @@ const VALID_ROUTES: readonly StringHref[] = [
   '/(tabs)/product-check',
   '/(tabs)/profile',
   '/scan',
-  '/results',
-  '/routine',
-  '/product-check',
+  '/(tabs)/results',
+  '/(tabs)/routine',
   // '/notifications', -- excluded until .expo/types/router.d.ts regenerates after expo start
 ] as const;
 

@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useMemo } from 'react';
 
 const SCAN_COOLDOWN_MS = 30_000;
 import { View, Text, TouchableOpacity, Dimensions, Alert, ImageBackground, Platform, Linking } from 'react-native';
+import BackButton from '@/components/BackButton';
 import { useCameraPermissions } from 'expo-camera';
 import { useFaceDetectorOutput, useImageFaceDetector } from 'react-native-vision-camera-face-detector';
 import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-native-vision-camera';
@@ -245,7 +246,7 @@ export default function ScanScreen() {
       });
       stopScanning();
       // TODO: Insert paywall gate here before navigating to results
-      router.replace('/results');
+      router.replace('/(tabs)/results');
     } catch (e: any) {
       stopScanning();
       logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });
@@ -380,12 +381,9 @@ export default function ScanScreen() {
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
       <View style={{ position: 'absolute', top: -60, right: -60, width: 288, height: 288, borderRadius: 144, backgroundColor: 'rgba(224,120,86,0.13)' }} pointerEvents="none" />
 
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={{ position: 'absolute', top: 56, left: 24, zIndex: 20, backgroundColor: 'white', borderRadius: 20, padding: 10, shadowColor: '#2D1810', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 12, elevation: 4 }}
-      >
-        <Text style={{ fontSize: 16 }}>←</Text>
-      </TouchableOpacity>
+      <View style={{ position: 'absolute', top: 56, left: 24, zIndex: 20 }}>
+        <BackButton />
+      </View>
 
       <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 120, zIndex: 10 }}>
         <Animated.Text

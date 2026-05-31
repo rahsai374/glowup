@@ -4,6 +4,7 @@ import Animated, { FadeInDown, FadeIn, withRepeat, withTiming, useAnimatedStyle,
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import BackButton from '@/components/BackButton';
 import { useProductStore } from '@/stores/useProductStore';
 import { useProductSearch } from '@/hooks/useProductSearch';
 import { useUserStore } from '@/stores/useUserStore';
@@ -99,24 +100,7 @@ export default function ProductCheckTab() {
         }}
       >
         {step !== 'search' && (
-          <TouchableOpacity
-            onPress={handleReset}
-            style={{
-              width: 40,
-              height: 40,
-              backgroundColor: 'white',
-              borderRadius: 20,
-              alignItems: 'center',
-              justifyContent: 'center',
-              shadowColor: '#2D1810',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.06,
-              shadowRadius: 8,
-              elevation: 2,
-            }}
-          >
-            <Text style={{ fontSize: 18, color: '#2D1810' }}>←</Text>
-          </TouchableOpacity>
+          <BackButton onPress={handleReset} />
         )}
         <Text
           style={{

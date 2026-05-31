@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import MetricBar from '@/components/MetricBar';
+import BackButton from '@/components/BackButton';
 import { logEvent, EVENTS } from '@/lib/analytics';
 
 const METRIC_LABELS: Record<string, string> = {
@@ -73,12 +74,9 @@ export default function ResultsScreen() {
         >
           <View style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(224,120,86,0.08)' }} pointerEvents="none" />
 
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={{ alignSelf: 'flex-start', marginBottom: 16, backgroundColor: '#FFF5EE', borderRadius: 16, padding: 10 }}
-          >
-            <Text style={{ fontSize: 16 }}>←</Text>
-          </TouchableOpacity>
+          <View style={{ alignSelf: 'flex-start', marginBottom: 16 }}>
+            <BackButton />
+          </View>
 
           <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 20 }}>
             {t('results_title')}
@@ -156,7 +154,7 @@ export default function ResultsScreen() {
 
           {/* CTAs */}
           <TouchableOpacity
-            onPress={() => router.push('/routine')}
+            onPress={() => router.push('/(tabs)/routine')}
             style={{ backgroundColor: '#E07856', borderRadius: 20, paddingVertical: 16, alignItems: 'center', marginBottom: 12 }}
           >
             <Text style={{ color: 'white', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
@@ -164,7 +162,7 @@ export default function ResultsScreen() {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => router.push('/share')}
+            onPress={() => router.push('/(tabs)/share')}
             style={{ borderRadius: 20, paddingVertical: 16, alignItems: 'center', borderWidth: 1.5, borderColor: '#E07856' }}
           >
             <Text style={{ color: '#E07856', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>

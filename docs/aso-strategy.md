@@ -12,7 +12,7 @@
 
 Five moves this week, in order:
 
-1. **Rebrand the Play listing title from "GlowUp" to "GlowUp: AI Skin Care Routine".** Today the app ships as bare `"name": "GlowUp"` in `app.json` line 3 — that surrenders 24 of the 30 highest-weight ranking characters Google gives you. Adding the category descriptor is a single-line code change and a single Play Console field edit; it is the largest single ASO uplift available before any keyword research.
+1. **Set the Play listing title to "GlowUp: Your Skin Care Partner" in Play Console.** The store listing title and the on-device app name are independent — `app.json` `"name": "GlowUp"` controls what shows on the home screen (where long names get truncated to ~12 chars), while the Play Console title field controls store search ranking. Keep `app.json` as `"GlowUp"` for a clean home screen, and set the keyword-rich `GlowUp: Your Skin Care Partner` (30/30 chars) in Play Console only. This is the largest single ASO uplift available before any keyword research.
 2. **Write a 4,000-character `hi-IN` Play long description in Devanagari-first Hindi (with Hinglish loan-words where Bobble AI data says natural users actually type them).** The Play long description is the only field on either store that gets full keyword-density indexing, and `hi-IN` is the field with by far the weakest competition because Nykaa, Mamaearth, Plum, Foxtale, and Clinikally all ship English-only listings. This is the single biggest unfair-advantage slot in the entire ASO stack.
 3. **Stop using "GlowUp" as the in-listing brand promise in Hindi.** Add a Devanagari secondary brand line ("निखार" or "रूप") inside the short description, feature graphic, and screenshot captions. The wordmark stays "GlowUp" for legal/install-funnel continuity, but a Tier 2/3 woman scrolling Play search needs a Hindi cue inside the first 80 characters to read this as "for me." Current `hi.json` line 2 still ships `"app_name": "GlowUp"` — fix at the listing layer first; in-app rename is downstream.
 4. **Ship Play first; defer App Store Connect submission to month 4+.** The audience-fit doc and solo-founder-playbook §2 already commit to Android-first because the Tier 2/3 Indian woman is on Play, not iOS. The Apple side of this document still matters — it's the playbook for the eventual iOS launch and the document the founder uses to brief a future contractor — but no calendar time should be spent on Apple metadata in the first 90 days. The single exception: secure the `glowup` slug on App Store Connect now (free, 10 minutes) so a squatter can't grab it.
@@ -97,13 +97,13 @@ Every quote below is pulled from the repo as it stands on 29 May 2026.
 
 ### 2.1 App name / Title
 
-**Current:** `app.json` line 3: `"name": "GlowUp"` (6 chars). This is what gets used by Expo to populate both the Play Console default title and the App Store Connect "Name" field unless overridden.
+**Current:** `app.json` line 3: `"name": "GlowUp"` (6 chars). This controls the on-device home screen name (where Android launchers truncate at ~12-13 chars). The Play Console title and App Store Connect name are set independently in their respective consoles — they do NOT need to match `app.json`.
 
 **Score: 2/10.** The hardest fail in the audit. Title is the single highest-weight indexed field on both stores. GlowUp is using 6 of 30 chars and surrendering the other 24. The keyword "skin" — the single most important word in this category — is nowhere in the title. So is "AI", "routine", "scanner", "face", "care", "Hindi", "ubtan", "glow tips" — everything.
 
 **Cross-check the listing-feel reality:** a Tier 2/3 woman in Lucknow Plays-Stores "skin care app". She sees a list of results. Every competitor has a category descriptor next to their name — "Nykaa - Beauty Shopping App", "Mamaearth: Skin Care, Hair Care", "Foxtale Skincare Shop", "Plum: Beauty Shop", "Clinikally: Skin & Hair Care". GlowUp shows up as just "GlowUp" with a sparkle icon. Even if the keyword match got her there, "GlowUp" alone reads as a fitness/wellness app to a non-English-fluent eye. Conversion suffers before the user even reads the screenshot.
 
-**Fixed (English):** `GlowUp: AI Skin Care Routine` (28 chars, verified). Adds "AI", "skin care", "routine" — the three highest-value English keywords in the category. Stays under 30. Keeps brand position first.
+**Fixed (English):** `GlowUp: Your Skin Care Partner` (30 chars, verified). Adds "skin care" and "partner" — positions the app as a personal companion, not just a tool. Uses all 30 chars. Keeps brand position first.
 
 **Alternative English options:**
 - `GlowUp - AI Skin Care & Routine` (31 — too long, cut)
@@ -112,7 +112,7 @@ Every quote below is pulled from the repo as it stands on 29 May 2026.
 
 **Fixed (Hindi, hi-IN locale):** `GlowUp: AI स्किन केयर ऐप` — counting graphemes conservatively at ~26 chars (Play tolerates this; Apple gives 30 graphemes for Hindi). Combines the English wordmark (kept for install-funnel continuity since paid ads will use it) with Devanagari category descriptor. Adds Devanagari surface for `hi-IN` search queries which English-only listings cannot rank for.
 
-**Recommendation:** ship `GlowUp: AI Skin Care Routine` to `en-IN` and `en-US`, `GlowUp: AI स्किन केयर ऐप` to `hi-IN`. Edit `app.json` line 3 to the English version and set the Hindi one in Play Console > Store Presence > Main store listing > Hindi (India). This week.
+**Recommendation:** Set `GlowUp: Your Skin Care Partner` as the Play Console title for `en-IN` and `en-US`, and `GlowUp: AI स्किन केयर ऐप` for `hi-IN` (Play Console > Store Presence > Main store listing > Hindi (India)). **Do NOT change `app.json` `"name"`** — keep it as `"GlowUp"` so the home screen icon label stays clean and untrimmed. The store listing title and on-device name are independent fields. This week.
 
 ### 2.2 Subtitle (Apple) / Short description (Play)
 
@@ -472,7 +472,7 @@ Goal: start where GlowUp can rank, build install velocity, graduate. Mirror Puls
 
 | Option | Title | Chars | Tradeoffs |
 |---|---|---|---|
-| A (recommended, en-US + en-IN) | `GlowUp: AI Skin Care Routine` | 28 | Highest-value English keywords. Loses "scanner" / "face". |
+| A (recommended, en-US + en-IN) | `GlowUp: Your Skin Care Partner` | 30 | Personal "partner" positioning + "skin care" keyword. Uses full 30 chars. |
 | B | `GlowUp: Skin AI Scanner & Care` | 30 | Leads with "Skin AI Scanner" (matches tool-based searches). Loses "routine". |
 | C | `GlowUp: AI Face Scan + Routine` | 30 | Leads with "face scan" (matches Cal-AI-style searches). Slightly less category-broad. |
 | D (recommended, hi-IN) | `GlowUp: AI स्किन केयर ऐप` | ~24 graphemes (under Apple's 30 limit) | Devanagari surface for Hindi search; keeps "GlowUp" wordmark for install funnel continuity. |
@@ -492,7 +492,7 @@ Goal: start where GlowUp can rank, build install velocity, graduate. Mirror Puls
 ```
 pimple,dark,spot,tan,face,scanner,analyzer,ubtan,niacinamide,salicylic,vitamin,glow,desi,test,pore
 ```
-98 chars verified. Note: `routine` is deliberately NOT in the keyword field — it's already in the Title (`GlowUp: AI Skin Care Routine`) and Apple gives zero weight to cross-field repetition. The freed character budget goes to `pore` (Phase 2 concern term — "open pores" is a medium-tail keyword GlowUp will graduate to). Combinations this unlocks with Title + Subtitle (`AI Selfie Scan: Acne to Glow`):
+98 chars verified. Note: `skin` and `care` are deliberately NOT in the keyword field — they're already in the Title (`GlowUp: Your Skin Care Partner`) and Apple gives zero weight to cross-field repetition. The freed character budget goes to `pore` (Phase 2 concern term — "open pores" is a medium-tail keyword GlowUp will graduate to). Combinations this unlocks with Title + Subtitle (`AI Selfie Scan: Acne to Glow`):
 
 | Keyword Field word | Combines with | Search phrases unlocked | Indicative vol |
 |---|---|---|---|
@@ -573,12 +573,12 @@ Strategic note: Apple description is NOT indexed for keyword search, but it IS t
 #### App title (30 chars)
 
 Same three options as Apple, same recommendation:
-- A (recommended, en-IN + en-US): `GlowUp: AI Skin Care Routine` (28 chars)
+- A (recommended, en-IN + en-US): `GlowUp: Your Skin Care Partner` (30 chars)
 - B: `GlowUp: Skin AI Scanner & Care` (30)
 - C: `GlowUp: AI Face Scan + Routine` (30)
 - D (recommended, hi-IN): `GlowUp: AI स्किन केयर ऐप`
 
-Edit `app.json` line 3 to ship the en-IN/en-US version as the default app `name`. Set the hi-IN override in Play Console > Main store listing > Hindi (India). Apple is independent — set in App Store Connect after Play ships.
+**Do NOT edit `app.json` `"name"`** — keep it as `"GlowUp"` for a clean home screen label (Android truncates at ~12-13 chars; `GlowUp: AI S…` looks broken). Set the keyword-rich titles directly in Play Console (en-IN, en-US) and the hi-IN override in Play Console > Main store listing > Hindi (India). Apple is independent — set in App Store Connect after Play ships.
 
 #### Short description (80 chars max)
 
@@ -967,7 +967,7 @@ Tied to the solo-founder-playbook stage gates (S0 = pre-launch prep, S1 = Phase 
 ### Week 1 — Foundation (S0 wrap)
 | Task | Owner | Est time | Est cost |
 |---|---|---|---|
-| Edit `app.json` line 3 to `"name": "GlowUp: AI Skin Care Routine"` | FOUNDER | 5 min | ₹0 |
+| Set Play Console title to `GlowUp: Your Skin Care Partner` (keep `app.json` as `"GlowUp"`) | FOUNDER | 5 min | ₹0 |
 | Register Play Developer Account under `GlowUp Beauty` | FOUNDER | 30 min + 3 day verification | ₹2,100 |
 | Register Apple Developer Program (just to claim slug, even if iOS launch is deferred) | FOUNDER | 30 min + 24-48h verification | ₹8,000 |
 | Brief Hindi copywriter on long description (target 3,500 chars Devanagari + Hinglish) | FOUNDER → freelancer | 1 hour brief + 3 days writer | ₹5,000–10,000 |

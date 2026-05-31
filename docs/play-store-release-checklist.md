@@ -4,17 +4,17 @@
 **Audit date:** 2026-05-28 · **Last updated:** 2026-05-28
 **Sources:** Automated security review, code quality review, Play Store config audit
 
-### Progress: 17 / 52 done
+### Progress: 22 / 52 done
 
 | Priority | Total | Done | Remaining |
 |----------|-------|------|-----------|
-| **P0** | 15 | 7 | 8 |
-| **P1** | 11 | 7 | 4 |
+| **P0** | 15 | 10 | 5 |
+| **P1** | 11 | 9 | 2 |
 | **P2** | 7 | 0 | 7 |
 | **P3** | 5 | 3 | 2 |
 | **Console** | 9 | 0 | 9 |
 | **Config** | 5 | 0 | 5 |
-| **Total** | **52** | **17** | **35** |
+| **Total** | **52** | **22** | **30** |
 
 ---
 
@@ -38,12 +38,12 @@ These MUST be resolved before uploading to Play Store. The app will be rejected 
 
 ### Play Store Policy & Config
 
-- [ ] **Verify `targetSdkVersion` >= 35** — Since Aug 2025, Play Store requires API 35 (Android 15) for new apps. Expo SDK 52 defaults to 34. Check `android/app/build.gradle` and override in `app.json` if needed via `expo.android.compileSdkVersion` / build properties.
-- [ ] **Configure Play Integrity API for Firebase Auth** — Phone OTP via `@react-native-firebase/auth` requires Play Integrity attestation in production (SafetyNet is deprecated). Enable in Firebase Console > App Check AND Play Console > App Integrity. Without this, phone OTP returns `AUTH_ERROR` for store-signed builds even though it works in dev.
+- [x] **Verify `targetSdkVersion` >= 35** — Set `targetSdkVersion: 36` and `compileSdkVersion: 36` in `app.json` android config.
+- [ ] **Configure Play Integrity API for Firebase Auth** — Phone OTP via `@react-native-firebase/auth` requires Play Integrity attestation in production (SafetyNet is deprecated). Steps: (1) Firebase Console → App Check → Register Android app with Play Integrity provider, (2) Authentication → Settings → App Check → Enforce ON, (3) Play Console → App signing → copy SHA-256 fingerprint, (4) Firebase Console → Project Settings → Add SHA-256 fingerprint + debug keystore SHA-256, (5) `npx expo install @react-native-firebase/app-check` + initialize in `app/_layout.tsx` before auth calls, (6) Add plugin to `app.json`, (7) Deploy app update BEFORE enforcing App Check (or auth breaks). Requires EAS rebuild (native module).
 - [ ] **Enable AI content disclosure** — Play policy (effective 2024) requires apps using generative AI to disclose this in the store listing. Toggle "AI-generated content" in Play Console. GlowUp uses Gemini for skin analysis.
-- [ ] **Add "not medical advice" disclaimer** — "Skin age," "skin health," and "routine recommendations" can trip Play's Health/Medical apps policy. Add a visible disclaimer in the app (e.g., results screen) and disclose accordingly in the store listing.
+- [x] **Add "not medical advice" disclaimer** — Disclaimer exists in `app/results.tsx` line 175-180 with `not_medical` i18n key in both en and hi: "AI estimate only — not medical advice."
 - [x] **Remove `RECORD_AUDIO` permission** — Removed from `app.json`. (`app.json`)
-- [ ] **Add account deletion flow** — Play Store requires apps with accounts to provide account deletion. No logout/delete button exists in the UI. Add to Profile screen, and ensure it calls `rnAuth().signOut()` + clears AsyncStorage.
+- [x] **Add account deletion flow** — Delete account button in `app/(tabs)/profile.tsx` with `rnAuth().signOut()` and deletion policy URL.
 
 ### Final Gate
 
@@ -64,10 +64,10 @@ Won't block submission but will cause bad user experience, crashes, or security 
 
 ### UX Gaps
 
-- [ ] **Add StatusBar configuration** — No `<StatusBar>` component rendered. Status bar text is invisible on dark backgrounds (splash, share, camera screens). (`app/_layout.tsx`)
+- [x] **Add StatusBar configuration** — `expo-status-bar` imported and `<StatusBar style="dark" />` rendered in `app/_layout.tsx`.
 - [x] **Handle camera permission denial with UI feedback** — Shows "Open Settings" alert when `canAskAgain === false`. (`app/scan.tsx`)
 - [x] **Country code now editable** — Defaults to `+91`, user can edit inline. India-only launch documented in CLAUDE.md. (`app/auth.tsx`)
-- [ ] **Add client-side rate limiting on scan requests** — No throttle on `analyzeSkin()`. Users can trigger unlimited scans. Add a 30-second cooldown. (`lib/gemini.ts`, `app/scan.tsx`)
+- [x] **Add client-side rate limiting on scan requests** — 30-second cooldown implemented via `SCAN_COOLDOWN_MS` in `app/scan.tsx`.
 
 ### Security Hardening
 
@@ -141,15 +141,10 @@ Items entered directly in Play Console, not in the codebase:
 **Must fix before submission (P0 remaining):**
 - Gemini API key → Cloud Functions proxy
 - Data Safety form in Play Console
-- Verify `targetSdkVersion` >= 35
 - Configure Play Integrity API for Firebase Auth
 - Enable AI content disclosure in Play Console
-- Add "not medical advice" in-app disclaimer
-- Add account deletion flow to Profile screen
 - Production AAB build + device end-to-end test
 
 **Recommended before public launch (P1 remaining):**
-- StatusBar configuration
-- Client-side scan rate limiting
 - Gemini response runtime validation (Zod)
 - Crash reporting (Sentry or Crashlytics)

@@ -225,7 +225,7 @@ Critical framing decision: **don't call it "streak"** in the Hindi UI. Use "**21
 
 The chart is more important than the absolute scores. A user who sees a flat line will quit; a user who sees a +4 jump will re-scan more often. Lean into the delta visuals.
 
-**C5. AI-generated daily tip card.** Powered by Gemini 2.0 Flash, regenerated nightly per user, in vernacular. Render as a card on the Home tab below the routine card. Templated prompt to Gemini (cost ~₹0.05/user/night at 10K MAU ≈ ₹500/mo, well within the `solo-founder-playbook.md` §1.3 budget):
+**C5. AI-generated daily tip card.** Powered by Gemini 2.5 Flash, regenerated nightly per user, in vernacular. Render as a card on the Home tab below the routine card. Templated prompt to Gemini (cost ~₹0.05/user/night at 10K MAU ≈ ₹500/mo, well within the `solo-founder-playbook.md` §1.3 budget):
 
 ```
 You are GlowUp's daily skin coach. Today's tip for this user, in {language}.

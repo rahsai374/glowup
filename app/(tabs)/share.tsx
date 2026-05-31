@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import { useUserStore } from '@/stores/useUserStore';
 import ScoreCircle from '@/components/ScoreCircle';
+import BackButton from '@/components/BackButton';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { StatusBar } from 'expo-status-bar';
 
@@ -45,12 +46,9 @@ export default function ShareScreen() {
   return (
     <View style={{ flex: 1, backgroundColor: '#1A1A1A' }}>
       <StatusBar style="light" />
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={{ position: 'absolute', top: insets.top + 16, left: 24, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 20, padding: 10, zIndex: 20 }}
-      >
-        <Text style={{ color: 'white', fontSize: 16 }}>←</Text>
-      </TouchableOpacity>
+      <View style={{ position: 'absolute', top: insets.top + 16, left: 24, zIndex: 20 }}>
+        <BackButton variant="dark" />
+      </View>
 
       <Text style={{ color: 'white', fontSize: 18, fontFamily: 'Fraunces_700Bold', textAlign: 'center', marginTop: insets.top + 16, marginBottom: 32 }}>
         {t('share_title')}

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1080">
+<title>GlowUp Social Post</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1080px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .canvas {
+    width: 1080px;
+    height: 1080px;
+    background: #FFF5EE;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  /* Ambient blur blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    opacity: 0.35;
+  }
+  .blob-1 {
+    width: 400px; height: 400px;
+    background: #E07856;
+    top: -100px; right: -80px;
+    opacity: 0.15;
+  }
+  .blob-2 {
+    width: 350px; height: 350px;
+    background: #D4A574;
+    bottom: 80px; left: -100px;
+    opacity: 0.18;
+  }
+  .blob-3 {
+    width: 250px; height: 250px;
+    background: #E07856;
+    top: 400px; right: -60px;
+    opacity: 0.1;
+  }
+
+  /* Logo */
+  .logo {
+    position: absolute;
+    top: 40px;
+    left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+  }
+  .logo-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #E07856;
+    letter-spacing: -0.5px;
+  }
+  .sparkle {
+    width: 28px;
+    height: 28px;
+    position: relative;
+    margin-left: 2px;
+  }
+  .sparkle svg { width: 28px; height: 28px; }
+
+  /* Phone mockup */
+  .phone-wrapper {
+    margin-top: 100px;
+    position: relative;
+    z-index: 5;
+  }
+  .phone {
+    width: 340px;
+    height: 520px;
+    background: #1a1a1a;
+    border-radius: 44px;
+    padding: 12px;
+    box-shadow:
+      0 30px 60px rgba(45, 24, 16, 0.15),
+      0 10px 20px rgba(45, 24, 16, 0.1),
+      inset 0 0 0 2px rgba(255,255,255,0.08);
+    position: relative;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #FFF5EE;
+    border-radius: 34px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 20px 20px;
+    position: relative;
+  }
+  .phone-notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 16px 16px;
+    z-index: 2;
+  }
+
+  /* Score card inside phone */
+  .score-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 24px 20px 20px;
+    width: 100%;
+    margin-top: 24px;
+    box-shadow: 0 4px 20px rgba(45, 24, 16, 0.06);
+  }
+  .score-header {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #2D1810;
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+
+  /* Circular progress ring */
+  .score-ring-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .score-ring {
+    width: 110px;
+    height: 110px;
+    position: relative;
+  }
+  .score-ring svg {
+    transform: rotate(-90deg);
+  }
+  .score-ring-bg {
+    fill: none;
+    stroke: #f0e6df;
+    stroke-width: 8;
+  }
+  .score-ring-fill {
+    fill: none;
+    stroke: #E07856;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 295;
+    stroke-dashoffset: 65;
+  }
+  .score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: #E07856;
+    line-height: 1;
+  }
+  .score-label {
+    position: absolute;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 600;
+    color: #9a8578;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Metric boxes */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .metric-box {
+    background: #FFF9F5;
+    border-radius: 14px;
+    padding: 12px 14px;
+  }
+  .metric-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: #9a8578;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+  .metric-bar-track {
+    width: 100%;
+    height: 5px;
+    background: #f0e6df;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .metric-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: #E07856;
+  }
+  .metric-bar-fill.good { background: #6db86b; }
+  .metric-bar-fill.mid { background: #D4A574; }
+
+  /* CTA button */
+  .cta-btn {
+    width: 100%;
+    background: #E07856;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* Headline below phone */
+  .headline {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 44px;
+    color: #2D1810;
+    text-align: center;
+    margin-top: 36px;
+    z-index: 5;
+    line-height: 1.15;
+    letter-spacing: -0.5px;
+  }
+
+  /* Pills */
+  .pills {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
+    z-index: 5;
+  }
+  .pill {
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .pill-filled {
+    background: #E07856;
+    color: #fff;
+  }
+  .pill-outlined {
+    background: transparent;
+    border: 2px solid #E07856;
+    color: #E07856;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <!-- Ambient blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <!-- Logo -->
+  <div class="logo">
+    <span class="logo-text">GlowUp</span>
+    <span class="sparkle">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 0 L18 12 L16 8 L14 12 Z" fill="#D4A574"/>
+        <path d="M16 32 L18 20 L16 24 L14 20 Z" fill="#D4A574"/>
+        <path d="M0 16 L12 14 L8 16 L12 18 Z" fill="#D4A574"/>
+        <path d="M32 16 L20 14 L24 16 L20 18 Z" fill="#D4A574"/>
+      </svg>
+    </span>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="phone-wrapper">
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="score-card">
+          <div class="score-header">Your Skin Score</div>
+
+          <div class="score-ring-wrapper">
+            <div class="score-ring">
+              <svg width="110" height="110" viewBox="0 0 110 110">
+                <circle class="score-ring-bg" cx="55" cy="55" r="47"/>
+                <circle class="score-ring-fill" cx="55" cy="55" r="47"/>
+              </svg>
+              <span class="score-value">78</span>
+              <span class="score-label">/ 100</span>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-name">Hydration</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill good" style="width:72%"></div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Radiance</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill" style="width:65%"></div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Dark Spots</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill mid" style="width:40%"></div></div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-name">Oiliness</div>
+              <div class="metric-bar-track"><div class="metric-bar-fill mid" style="width:55%"></div></div>
+            </div>
+          </div>
+
+          <div class="cta-btn">See My Routine →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Headline -->
+  <div class="headline">Your Skin Care Partner</div>
+
+  <!-- Feature pills -->
+  <div class="pills">
+    <div class="pill pill-filled">AI Skin Scanner</div>
+    <div class="pill pill-outlined">Hindi + English</div>
+    <div class="pill pill-outlined">150+ Products</div>
+  </div>
+</div>
+</body>
+</html>
