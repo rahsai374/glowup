@@ -7,7 +7,8 @@ import { useRouter } from 'expo-router';
 import rnAuth from '@react-native-firebase/auth';
 import { useUserStore, type Gender } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
-import { updateProfileField } from '@/lib/firestore';
+import { updateProfileField, saveRoutine } from '@/lib/firestore';
+import { getRoutine } from '@/lib/routineEngine';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import ProfileAvatar from '@/components/ProfileAvatar';
 import GenderSelector from '@/components/GenderSelector';
@@ -180,6 +181,14 @@ export default function ProfileScreen() {
                 logEvent(EVENTS.PROFILE_UPDATED, { field: 'gender' });
                 if (user?.uid) {
                   updateProfileField(user.uid, { gender: g }).catch(() => {});
+                  const routine = getRoutine(user.skinType, user.mainConcern, g);
+                  saveRoutine(
+                    user.uid,
+                    routine.morning,
+                    routine.night,
+                    routine.weekly,
+                    { skinType: user.skinType, topConcern: user.mainConcern, gender: g },
+                  ).catch(() => {});
                 }
               }}
             />
