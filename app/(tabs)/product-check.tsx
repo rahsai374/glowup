@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import Animated, { FadeInDown, FadeIn, withRepeat, withTiming, useAnimatedStyle, useSharedValue, Easing } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,6 +38,11 @@ export default function ProductCheckTab() {
   const [step, setStep] = useState<Step>('search');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  const personalizedScore = useMemo(
+    () => selectedProduct ? getPersonalizedScore(selectedProduct, currentScan) : null,
+    [selectedProduct, currentScan]
+  );
+
   useFocusEffect(
     useCallback(() => {
       // Empty deps — fires only on actual focus/blur, not on step state changes.
@@ -59,16 +64,16 @@ export default function ProductCheckTab() {
     setStep('analyzing');
     setTimeout(() => {
       setStep('results');
-      const personalized = getPersonalizedScore(product, currentScan);
+      const score = getPersonalizedScore(product, currentScan);
       logEvent(EVENTS.PRODUCT_VERDICT_VIEWED, {
         product_id: product.id,
         product_name: product.name,
         brand: product.brand,
         category: product.category,
-        suitability: personalized.suitability,
-        match_score: personalized.matchScore,
+        suitability: score.suitability,
+        match_score: score.matchScore,
         skin_type: userSkinType,
-        concern_matches: personalized.concernMatches.join(','),
+        concern_matches: score.concernMatches.join(','),
         personalized: !!currentScan,
       });
     }, 2200);
@@ -137,10 +142,10 @@ export default function ProductCheckTab() {
         <AnalyzingStep product={selectedProduct} hindi={hindi} />
       )}
 
-      {step === 'results' && selectedProduct && (
+      {step === 'results' && selectedProduct && personalizedScore && (
         <ResultsStep
           product={selectedProduct}
-          personalizedScore={getPersonalizedScore(selectedProduct, currentScan)}
+          personalizedScore={personalizedScore}
           isPersonalized={!!currentScan}
           userSkinType={userSkinType}
           hindi={hindi}
