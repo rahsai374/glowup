@@ -3,9 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-nativ
 import { useRouter } from 'expo-router';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore, type Gender } from '@/stores/useUserStore';
 import { saveProfile } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import GenderSelector from '@/components/GenderSelector';
 import { logEvent, setUserProperties, EVENTS } from '@/lib/analytics';
 
 const QUESTIONS = [
@@ -71,6 +72,7 @@ export default function QuestionsScreen() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [nameInput, setNameInput] = useState('');
+  const [gender, setGender] = useState<Gender | ''>('');
   const router = useRouter();
   const { t } = useTranslation();
   const updateUser = useUserStore((s) => s.updateUser);
@@ -97,6 +99,7 @@ export default function QuestionsScreen() {
       waterIntake: answers.q3 ?? '',
       sunscreenHabit: answers.q4 ?? '',
       ageRange: answers.q5 ?? '',
+      gender: (gender || 'unspecified') as Gender,
     };
     updateUser(profile);
     logEvent(EVENTS.ONBOARDING_Q_COMPLETED, {
@@ -189,6 +192,9 @@ export default function QuestionsScreen() {
                 borderColor: nameInput.trim() ? '#E07856' : 'rgba(224,120,86,0.12)',
               }}
             />
+            <View style={{ marginTop: 24 }}>
+              <GenderSelector value={gender} onChange={setGender} />
+            </View>
           </Animated.View>
         ) : (
           q!.options.map((opt, i) => (
