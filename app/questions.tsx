@@ -162,7 +162,7 @@ export default function QuestionsScreen() {
           entering={FadeInRight.springify()}
           style={{ fontSize: 24, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 28, lineHeight: 32 }}
         >
-          {isNameStep ? t('q6_title') : t(q!.titleKey)}
+          {isNameStep ? t('q7_title') : t(q!.titleKey)}
         </Animated.Text>
       </View>
 
@@ -176,7 +176,7 @@ export default function QuestionsScreen() {
             <TextInput
               value={nameInput}
               onChangeText={(v) => setNameInput(v.replace(/[\x00-\x1F\x7F]/g, ''))}
-              placeholder={t('q6_placeholder')}
+              placeholder={t('q7_placeholder')}
               maxLength={50}
               autoFocus
               style={{

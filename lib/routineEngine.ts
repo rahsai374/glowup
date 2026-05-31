@@ -14,9 +14,14 @@ export interface RoutineByTime {
   weekly: RoutineStep[];
 }
 
-export function getRoutine(skinType: string, topConcern: string): RoutineByTime {
+export function getRoutine(
+  skinType: string,
+  topConcern: string,
+  gender?: string,
+): RoutineByTime {
   const concern = validateConcern(topConcern);
   const st = skinType as SkinType;
+  const isMale = gender === 'male';
 
   const matchesStep = (step: RoutineStep): boolean => {
     const skinMatch =
@@ -26,33 +31,43 @@ export function getRoutine(skinType: string, topConcern: string): RoutineByTime 
     return skinMatch && concernMatch;
   };
 
-  const sorted = STEP_POOL.filter(matchesStep).sort(
-    (a, b) => a.priority - b.priority
+  let sorted = STEP_POOL.filter(matchesStep).sort(
+    (a, b) => a.priority - b.priority,
   );
 
-  const morning = sorted.filter(s => s.timeOfDay === 'morning');
-  const night   = sorted.filter(s => s.timeOfDay === 'night');
-  const weekly  = sorted.filter(s => s.timeOfDay === 'weekly');
+  // Males get a simplified routine: drop priority-2 steps (toning,
+  // spot treatments, concern-specific masks). Keeps cleanse (p1),
+  // moisturise/nourish (p3), sunscreen (p4), exfoliate (p1).
+  if (isMale) {
+    sorted = sorted.filter((s) => s.priority !== 2);
+  }
 
-  // Backfill: if any slot has fewer than 2 steps, add 'all'-concern base steps
+  const morning = sorted.filter((s) => s.timeOfDay === 'morning');
+  const night = sorted.filter((s) => s.timeOfDay === 'night');
+  const weekly = sorted.filter((s) => s.timeOfDay === 'weekly');
+
+  // Backfill: ensure each slot has a minimum number of steps.
+  // Males need only 1 step per slot; others need at least 2.
+  const minSteps = isMale ? 1 : 2;
   const backfill = (
     slot: RoutineStep[],
-    time: 'morning' | 'night' | 'weekly'
+    time: 'morning' | 'night' | 'weekly',
   ): RoutineStep[] => {
-    if (slot.length >= 2) return slot;
+    if (slot.length >= minSteps) return slot;
     const extras = STEP_POOL.filter(
-      s =>
+      (s) =>
         s.timeOfDay === time &&
+        (!isMale || s.priority !== 2) &&
         (s.skinTypes.includes(st) || s.skinTypes.includes('all')) &&
         s.concerns.includes('all') &&
-        !slot.some(existing => existing.id === s.id)
+        !slot.some((existing) => existing.id === s.id),
     );
     return [...slot, ...extras].sort((a, b) => a.priority - b.priority);
   };
 
   return {
     morning: backfill(morning, 'morning'),
-    night:   backfill(night, 'night'),
-    weekly:  backfill(weekly, 'weekly'),
+    night: backfill(night, 'night'),
+    weekly: backfill(weekly, 'weekly'),
   };
 }

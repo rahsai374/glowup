@@ -5,6 +5,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
+import { useUserStore } from '@/stores/useUserStore';
 import { useProductStore } from '@/stores/useProductStore';
 import { getPersonalizedScore, MAX_SCORE } from '@/lib/scoringEngine';
 import type { PersonalizedScore } from '@/lib/scoringEngine';
@@ -381,6 +382,7 @@ export default function RoutineScreen() {
   const { t, i18n } = useTranslation();
   const hindi = i18n.language === 'hi';
   const currentScan = useScanStore(s => s.currentScan);
+  const gender = useUserStore((s) => s.user?.gender);
   const products = useProductStore((s) => s.products);
 
   const productMap = useMemo(() => {
@@ -409,8 +411,8 @@ export default function RoutineScreen() {
 
   const routine = useMemo(() => {
     if (!currentScan) return null;
-    return getRoutine(currentScan.skin_type, currentScan.top_concern);
-  }, [currentScan]);
+    return getRoutine(currentScan.skin_type, currentScan.top_concern, gender);
+  }, [currentScan, gender]);
 
   const tabSteps = routine ? routine[tab] : [];
 
