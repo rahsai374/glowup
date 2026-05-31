@@ -91,6 +91,7 @@ export default function AuthScreen() {
         waterIntake: '',
         sunscreenHabit: '',
         ageRange: '',
+        gender: 'unspecified',
       });
 
       registerForPushNotificationsAsync()

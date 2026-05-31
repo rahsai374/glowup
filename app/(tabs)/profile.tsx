@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import Animated, { FadeInDown, FadeIn, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import rnAuth from '@react-native-firebase/auth';
-import { useUserStore } from '@/stores/useUserStore';
+import { useUserStore, type Gender } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { updateProfileField } from '@/lib/firestore';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import ProfileAvatar from '@/components/ProfileAvatar';
+import GenderSelector from '@/components/GenderSelector';
 import i18n from '@/i18n';
 import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
@@ -106,18 +108,8 @@ export default function ProfileScreen() {
               elevation: 3,
             }}
           >
-            <View
-              style={{
-                width: 72,
-                height: 72,
-                borderRadius: 36,
-                backgroundColor: 'rgba(224,120,86,0.1)',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 12,
-              }}
-            >
-              <Text style={{ fontSize: 36 }}>👩🏽</Text>
+            <View style={{ marginBottom: 12 }}>
+              <ProfileAvatar gender={user?.gender ?? 'unspecified'} size={72} />
             </View>
             <Text style={{ fontSize: 20, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>
               {user?.name || 'Your Name'}
@@ -178,8 +170,24 @@ export default function ProfileScreen() {
           </View>
         </Animated.View>
 
-        {/* Language toggle */}
+        {/* Gender selector */}
         <Animated.View entering={FadeInDown.delay(160).springify()}>
+          <View style={{ marginBottom: 20 }}>
+            <GenderSelector
+              value={user?.gender ?? ''}
+              onChange={(g: Gender) => {
+                updateUser({ gender: g });
+                logEvent(EVENTS.PROFILE_UPDATED, { field: 'gender' });
+                if (user?.uid) {
+                  updateProfileField(user.uid, { gender: g }).catch(() => {});
+                }
+              }}
+            />
+          </View>
+        </Animated.View>
+
+        {/* Language toggle */}
+        <Animated.View entering={FadeInDown.delay(240).springify()}>
           <View style={{ marginBottom: 20 }}>
             <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810', marginBottom: 8 }}>
               {t('language')}
@@ -223,7 +231,7 @@ export default function ProfileScreen() {
 
         {/* Skin details */}
         {user?.skinType && (
-          <Animated.View entering={FadeInDown.delay(240).springify()}>
+          <Animated.View entering={FadeInDown.delay(320).springify()}>
             <View
               style={{
                 backgroundColor: 'white',
@@ -251,7 +259,7 @@ export default function ProfileScreen() {
         )}
 
         {/* Account actions */}
-        <Animated.View entering={FadeInDown.delay(320).springify()}>
+        <Animated.View entering={FadeInDown.delay(400).springify()}>
           <View style={{ marginTop: 20 }}>
             <TouchableOpacity
               onPress={handleLogout}
