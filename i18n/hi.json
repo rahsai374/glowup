@@ -144,7 +144,7 @@
   "cancel": "रहने दो",
   "privacy_policy": "Privacy Policy",
   "delete_account": "Account Delete करो",
-  "delete_account_confirm": "क्या delete होगा:\n\n• Profile, naam & phone number\n• सारे skin scans & scores\n• Personalized routine\n\n30 दिनों में data permanently remove हो जाएगा। ये undo नहीं होगा।",
+  "delete_account_confirm": "क्या delete होगा:\n\n• Profile, नाम & phone number\n• सारे skin scans & scores\n• Personalized routine\n\n30 दिनों में data permanently remove हो जाएगा। ये undo नहीं होगा।",
   "delete_account_final": "पक्का sure हो? ये permanent है, वापस नहीं होगा।",
   "delete_account_error_title": "Delete नहीं हुआ",
   "delete_account_error_reauth": "Security के लिए — पहले log out करो, फिर log in करो, फिर delete कोशिश करो।",
