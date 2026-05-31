@@ -10,7 +10,8 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import rnAuth from '@react-native-firebase/auth';
-import { hydrateFromFirestore } from '@/lib/firestore';
+import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
+import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { useProductStore } from '@/stores/useProductStore';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
@@ -42,6 +43,8 @@ export default function SplashScreen() {
     registerForPushNotificationsAsync()
       .then((token) => { if (token) savePushToken(currentUser.uid, token); })
       .catch(() => {});
+
+    saveDeviceInfo(currentUser.uid, getDeviceMetadata()).catch(() => {});
 
     Promise.all([minSplash, Promise.race([hydrate, hardTimeout])]).then(() => {
       router.replace('/(tabs)');
