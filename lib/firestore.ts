@@ -2,6 +2,8 @@ import firestore from '@react-native-firebase/firestore';
 import { useUserStore, type UserProfile, type StreakData, type Gender } from '@/stores/useUserStore';
 import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
+import { type DeviceMetadata } from '@/lib/deviceInfo';
+import { type RoutineStep } from '@/lib/routineData';
 
 export async function saveScan(uid: string, scan: ScanRecord): Promise<void> {
   try {
@@ -36,6 +38,49 @@ export async function updateStreak(uid: string, streak: StreakData): Promise<voi
     await firestore().collection('users').doc(uid).update({ streak });
   } catch (e) {
     console.warn('[firestore] updateStreak failed:', e);
+  }
+}
+
+export async function saveDeviceInfo(uid: string, device: DeviceMetadata): Promise<void> {
+  try {
+    await firestore().collection('users').doc(uid).set(
+      { device, deviceUpdatedAt: firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+  } catch (e) {
+    console.warn('[firestore] saveDeviceInfo failed:', e);
+  }
+}
+
+export async function saveOnboardingCompleted(uid: string): Promise<void> {
+  try {
+    await firestore().collection('users').doc(uid).set(
+      { onboardingCompletedAt: firestore.FieldValue.serverTimestamp() },
+      { merge: true }
+    );
+  } catch (e) {
+    console.warn('[firestore] saveOnboardingCompleted failed:', e);
+  }
+}
+
+export async function saveRoutine(
+  uid: string,
+  morning: RoutineStep[],
+  night: RoutineStep[],
+  weekly: RoutineStep[],
+  inputs: { skinType: string; topConcern: string; gender: string },
+): Promise<void> {
+  try {
+    const data = {
+      morning: morning.map((s) => ({ id: s.id, title: s.title })),
+      night: night.map((s) => ({ id: s.id, title: s.title })),
+      weekly: weekly.map((s) => ({ id: s.id, title: s.title })),
+      generatedAt: firestore.FieldValue.serverTimestamp(),
+      inputs,
+    };
+    await firestore().collection('users').doc(uid).collection('routine').doc('current').set(data);
+  } catch (e) {
+    console.warn('[firestore] saveRoutine failed:', e);
   }
 }
 
