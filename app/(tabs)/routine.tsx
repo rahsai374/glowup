@@ -6,11 +6,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
 import { useProductStore } from '@/stores/useProductStore';
-import { getPersonalizedScore } from '@/lib/scoringEngine';
+import { getPersonalizedScore, MAX_SCORE } from '@/lib/scoringEngine';
+import type { PersonalizedScore } from '@/lib/scoringEngine';
 import { SUITABILITY_CONFIG, CATEGORY_EMOJI } from '@/lib/productTypes';
 import type { Product } from '@/lib/productTypes';
 import type { ScanResult } from '@/lib/gemini';
-import type { PersonalizedScore } from '@/lib/scoringEngine';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import BackButton from '@/components/BackButton';
 import { getRoutine } from '@/lib/routineEngine';
@@ -82,6 +82,34 @@ function NoScanEmptyState() {
   );
 }
 
+// ─── Score bar ───────────────────────────────────────────────────────────────
+
+function ScoreBar({ score, hindi }: { score: PersonalizedScore; hindi?: boolean }) {
+  const cfg = SUITABILITY_CONFIG[score.suitability];
+  return (
+    <View style={{ marginBottom: 10 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+        <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_600SemiBold', color: cfg.text }}>
+          {hindi ? cfg.labelHi : cfg.labelEn}
+        </Text>
+        <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}>
+          {score.matchScore}/{MAX_SCORE}
+        </Text>
+      </View>
+      <View style={{ height: 6, backgroundColor: '#FFF5EE', borderRadius: 3, overflow: 'hidden' }}>
+        <View
+          style={{
+            height: 6,
+            backgroundColor: cfg.bg,
+            borderRadius: 3,
+            width: `${(score.matchScore / MAX_SCORE) * 100}%`,
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
 // ─── Step card ────────────────────────────────────────────────────────────────
 
 interface StepCardProps {
@@ -97,6 +125,11 @@ interface StepCardProps {
 }
 
 function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
+  const personalizedScore = useMemo(
+    () => catalogProduct && scanResult ? getPersonalizedScore(catalogProduct, scanResult) : null,
+    [catalogProduct, scanResult],
+  );
+
   return (
     <Animated.View entering={FadeInDown.delay(index * 80).springify()}>
       <TouchableOpacity
@@ -203,7 +236,7 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => onProductTap?.(step.productId!)}
+                  onPress={() => step.productId && onProductTap?.(step.productId)}
                   activeOpacity={0.85}
                 >
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 8 }}>
@@ -234,32 +267,9 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
                   </View>
 
                   {/* Personalized score bar */}
-                  {scanResult && (() => {
-                    const score = getPersonalizedScore(catalogProduct, scanResult);
-                    const cfg = SUITABILITY_CONFIG[score.suitability];
-                    return (
-                      <View style={{ marginBottom: 10 }}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_600SemiBold', color: cfg.text }}>
-                            {hindi ? cfg.labelHi : cfg.labelEn}
-                          </Text>
-                          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#2D1810' }}>
-                            {score.matchScore}/85
-                          </Text>
-                        </View>
-                        <View style={{ height: 6, backgroundColor: '#FFF5EE', borderRadius: 3, overflow: 'hidden' }}>
-                          <View
-                            style={{
-                              height: 6,
-                              backgroundColor: cfg.bg,
-                              borderRadius: 3,
-                              width: `${(score.matchScore / 85) * 100}%`,
-                            }}
-                          />
-                        </View>
-                      </View>
-                    );
-                  })()}
+                  {personalizedScore && (
+                    <ScoreBar score={personalizedScore} hindi={hindi} />
+                  )}
                 </TouchableOpacity>
 
                 {/* See more options link */}

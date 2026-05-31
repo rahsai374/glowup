@@ -2,7 +2,7 @@ import type { Product, ProductSuitability } from './productTypes';
 import type { ScanResult } from './gemini';
 
 const DAMPING_FACTOR = 0.75;
-const MAX_SCORE = 85;
+export const MAX_SCORE = 85;
 const MAX_CONCERN_BONUS = 15;
 
 export interface PersonalizedScore {
