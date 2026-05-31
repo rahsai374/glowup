@@ -85,8 +85,8 @@ export default function HomeScreen() {
   const lastConcern = scanHistory[0]?.top_concern ?? null;
 
   const userRoutine = useMemo(
-    () => getRoutine(user?.skinType ?? 'all', user?.mainConcern ?? 'all'),
-    [user?.skinType, user?.mainConcern]
+    () => getRoutine(user?.skinType ?? 'all', user?.mainConcern ?? 'all', user?.gender),
+    [user?.skinType, user?.mainConcern, user?.gender]
   );
   const amStepIds = useMemo(() => userRoutine.morning.map((s) => s.id), [userRoutine]);
   const pmStepIds = useMemo(() => userRoutine.night.map((s) => s.id), [userRoutine]);

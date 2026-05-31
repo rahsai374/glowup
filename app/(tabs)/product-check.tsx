@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
 import Animated, { FadeInDown, FadeIn, withRepeat, withTiming, useAnimatedStyle, useSharedValue, Easing } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,6 +8,8 @@ import BackButton from '@/components/BackButton';
 import { useProductStore } from '@/stores/useProductStore';
 import { useProductSearch } from '@/hooks/useProductSearch';
 import { useUserStore } from '@/stores/useUserStore';
+import { getPersonalizedScore, PersonalizedScore } from '@/lib/scoringEngine';
+import { useScanStore } from '@/stores/useScanStore';
 import {
   Product,
   CATEGORY_EMOJI,
@@ -29,11 +31,17 @@ export default function ProductCheckTab() {
   const products = useProductStore((s) => s.products);
   const user = useUserStore((s) => s.user);
   const userSkinType = (user?.skinType as SkinType) || 'all';
+  const currentScan = useScanStore((s) => s.currentScan);
 
   const { query, setQuery, results, grouped, popular } = useProductSearch(products);
 
   const [step, setStep] = useState<Step>('search');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const personalizedScore = useMemo(
+    () => selectedProduct ? getPersonalizedScore(selectedProduct, currentScan) : null,
+    [selectedProduct, currentScan]
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -56,18 +64,20 @@ export default function ProductCheckTab() {
     setStep('analyzing');
     setTimeout(() => {
       setStep('results');
-      const match = product.skinTypeMatch[userSkinType] || product.skinTypeMatch['all'];
+      const score = getPersonalizedScore(product, currentScan);
       logEvent(EVENTS.PRODUCT_VERDICT_VIEWED, {
         product_id: product.id,
         product_name: product.name,
         brand: product.brand,
         category: product.category,
-        suitability: match.suitability,
-        match_score: match.matchScore,
+        suitability: score.suitability,
+        match_score: score.matchScore,
         skin_type: userSkinType,
+        concern_matches: score.concernMatches.join(','),
+        personalized: !!currentScan,
       });
     }, 2200);
-  }, [userSkinType]);
+  }, [userSkinType, currentScan]);
 
   const handleReset = useCallback(() => {
     logEvent(EVENTS.PRODUCT_CHECK_ANOTHER);
@@ -132,9 +142,11 @@ export default function ProductCheckTab() {
         <AnalyzingStep product={selectedProduct} hindi={hindi} />
       )}
 
-      {step === 'results' && selectedProduct && (
+      {step === 'results' && selectedProduct && personalizedScore && (
         <ResultsStep
           product={selectedProduct}
+          personalizedScore={personalizedScore}
+          isPersonalized={!!currentScan}
           userSkinType={userSkinType}
           hindi={hindi}
           onReset={handleReset}
@@ -321,12 +333,19 @@ function AnalyzingStep({ product, hindi }: { product: Product; hindi: boolean })
   );
 }
 
-function ResultsStep({ product, userSkinType, hindi, onReset, bottomPadding }: { product: Product; userSkinType: string; hindi: boolean; onReset: () => void; bottomPadding: number }) {
-  const match = product.skinTypeMatch[userSkinType] || product.skinTypeMatch['all'];
-  const config = SUITABILITY_CONFIG[match.suitability];
+function ResultsStep({ product, personalizedScore, isPersonalized, userSkinType, hindi, onReset, bottomPadding }: {
+  product: Product;
+  personalizedScore: PersonalizedScore;
+  isPersonalized: boolean;
+  userSkinType: string;
+  hindi: boolean;
+  onReset: () => void;
+  bottomPadding: number;
+}) {
+  const config = SUITABILITY_CONFIG[personalizedScore.suitability];
   const emoji = CATEGORY_EMOJI[product.category] || '🧴';
   const scoreWidth = useSharedValue(0);
-  useEffect(() => { scoreWidth.value = withTiming(match.matchScore, { duration: 1000, easing: Easing.out(Easing.cubic) }); }, [match.matchScore, scoreWidth]);
+  useEffect(() => { scoreWidth.value = withTiming(personalizedScore.matchScore, { duration: 1000, easing: Easing.out(Easing.cubic) }); }, [personalizedScore.matchScore, scoreWidth]);
   const barStyle = useAnimatedStyle(() => ({ width: `${scoreWidth.value}%` }));
   const improvements = hindi ? product.improvementsHi : product.improvementsEn;
   const warnings = hindi ? product.warningsHi : product.warningsEn;
@@ -349,7 +368,7 @@ function ResultsStep({ product, userSkinType, hindi, onReset, bottomPadding }: {
           </View>
           <View style={{ backgroundColor: config.light, borderTopWidth: 1, borderBottomWidth: 1, borderColor: config.border, paddingHorizontal: 20, paddingVertical: 16, flexDirection: 'row', alignItems: 'center', gap: 14 }}>
             <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: config.bg, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ fontSize: 20, color: 'white' }}>{match.suitability === 'excellent' || match.suitability === 'good' ? '✓' : match.suitability === 'caution' ? '⚠' : '✕'}</Text>
+              <Text style={{ fontSize: 20, color: 'white' }}>{personalizedScore.suitability === 'excellent' || personalizedScore.suitability === 'good' ? '✓' : personalizedScore.suitability === 'caution' ? '⚠' : '✕'}</Text>
             </View>
             <View>
               <Text style={{ fontFamily: hindi ? 'Hind_700Bold' : 'PlusJakartaSans_700Bold', fontSize: 15, color: config.text }}>{suitLabel}</Text>
@@ -364,7 +383,7 @@ function ResultsStep({ product, userSkinType, hindi, onReset, bottomPadding }: {
                 {hindi ? 'मैच स्कोर' : 'MATCH SCORE'}
               </Text>
               <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 26, color: '#2D1810' }}>{match.matchScore}</Text>
+                <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 26, color: '#2D1810' }}>{personalizedScore.matchScore}</Text>
                 <Text style={{ fontSize: 13, color: 'rgba(45,24,16,0.35)' }}>/100</Text>
               </View>
             </View>

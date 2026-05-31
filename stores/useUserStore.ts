@@ -3,6 +3,8 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { updateStreak as syncStreak } from '@/lib/firestore';
 
+export type Gender = 'male' | 'female' | 'unspecified';
+
 export interface UserProfile {
   uid: string;
   name: string;
@@ -13,6 +15,7 @@ export interface UserProfile {
   waterIntake: string;
   sunscreenHabit: string;
   ageRange: string;
+  gender: Gender;
 }
 
 export interface StreakData {

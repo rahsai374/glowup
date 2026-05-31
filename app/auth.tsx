@@ -7,7 +7,8 @@ import rnAuth from '@react-native-firebase/auth';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
 import firestore from '@react-native-firebase/firestore';
-import { hydrateFromFirestore } from '@/lib/firestore';
+import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
+import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
@@ -91,11 +92,14 @@ export default function AuthScreen() {
         waterIntake: '',
         sunscreenHabit: '',
         ageRange: '',
+        gender: 'unspecified',
       });
 
       registerForPushNotificationsAsync()
         .then((token) => { if (token) savePushToken(uid, token); })
         .catch(() => {});
+
+      saveDeviceInfo(uid, getDeviceMetadata()).catch(() => {});
 
       try {
         const snap = await firestore().collection('users').doc(uid).get();

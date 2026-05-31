@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next';
 import type { Gender } from '@/stores/useUserStore';
 
 const OPTIONS: { value: Gender; labelKey: string }[] = [
-  { value: 'male', labelKey: 'gender_male' },
-  { value: 'female', labelKey: 'gender_female' },
-  { value: 'unspecified', labelKey: 'gender_unspecified' },
+  { value: 'male', labelKey: 'q6_male' },
+  { value: 'female', labelKey: 'q6_female' },
 ];
 
 interface Props {
@@ -63,7 +62,7 @@ export default function GenderSelector({ value, onChange }: Props) {
           marginBottom: 10,
         }}
       >
-        {t('gender_helper')}
+        {t('q6_helper')}
       </Text>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         {OPTIONS.map((opt) => (

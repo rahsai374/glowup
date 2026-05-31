@@ -16,7 +16,7 @@ export default function LanguageScreen() {
     i18n.changeLanguage(lang);
     logEvent(EVENTS.LANGUAGE_SELECTED, { language: lang });
     setUserProperty('language', lang);
-    router.push('/onboarding');
+    router.replace('/onboarding');
   }
 
   return (
