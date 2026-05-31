@@ -4,7 +4,8 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInRight } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { useUserStore, type Gender } from '@/stores/useUserStore';
-import { saveProfile } from '@/lib/firestore';
+import { saveProfile, saveOnboardingCompleted, saveRoutine } from '@/lib/firestore';
+import { getRoutine } from '@/lib/routineEngine';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import GenderSelector from '@/components/GenderSelector';
 import { logEvent, setUserProperties, EVENTS } from '@/lib/analytics';
@@ -119,6 +120,17 @@ export default function QuestionsScreen() {
         phone: user.phone,
         language: user.language,
       }).catch(() => {});
+
+      saveOnboardingCompleted(user.uid).catch(() => {});
+
+      const routine = getRoutine(profile.skinType, profile.mainConcern, profile.gender);
+      saveRoutine(
+        user.uid,
+        routine.morning,
+        routine.night,
+        routine.weekly,
+        { skinType: profile.skinType, topConcern: profile.mainConcern, gender: profile.gender },
+      ).catch(() => {});
     }
 
     router.replace('/(tabs)');
