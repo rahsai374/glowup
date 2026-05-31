@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -126,6 +126,18 @@ interface StepCardProps {
 }
 
 function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
+  const [remedyIndex, setRemedyIndex] = useState(() => {
+    const now = new Date();
+    const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+    return (dayOfYear + index) % step.remedies.length;
+  });
+  const currentRemedy = step.remedies[remedyIndex];
+  const hasMultipleRemedies = step.remedies.length > 1;
+
+  const handleSwapRemedy = useCallback(() => {
+    setRemedyIndex((prev) => (prev + 1) % step.remedies.length);
+  }, [step.remedies.length]);
+
   const personalizedScore = useMemo(
     () => catalogProduct && scanResult ? getPersonalizedScore(catalogProduct, scanResult) : null,
     [catalogProduct, scanResult],
@@ -203,16 +215,38 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
                 borderColor: 'rgba(80,160,80,0.15)',
               }}
             >
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontFamily: 'PlusJakartaSans_700Bold',
-                  color: '#2D6A2D',
-                  marginBottom: 6,
-                }}
-              >
-                🏠 {step.remedy.label}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'PlusJakartaSans_700Bold',
+                    color: '#2D6A2D',
+                    flex: 1,
+                  }}
+                >
+                  🏠 {currentRemedy.label}
+                </Text>
+                {hasMultipleRemedies && (
+                  <Pressable
+                    onPress={handleSwapRemedy}
+                    hitSlop={8}
+                    style={{
+                      paddingHorizontal: 8,
+                      paddingVertical: 4,
+                      backgroundColor: 'rgba(80,160,80,0.1)',
+                      borderRadius: 8,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: 4,
+                    }}
+                  >
+                    <Text style={{ fontSize: 11, color: '#2D6A2D', fontFamily: 'PlusJakartaSans_500Medium' }}>
+                      Try another
+                    </Text>
+                    <Text style={{ fontSize: 12 }}>🔄</Text>
+                  </Pressable>
+                )}
+              </View>
               <Text
                 style={{
                   fontSize: 13,
@@ -221,7 +255,19 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
                   lineHeight: 20,
                 }}
               >
-                {step.remedy.how}
+                {currentRemedy.how}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: 'PlusJakartaSans_400Regular',
+                  fontStyle: 'italic',
+                  color: 'rgba(45,106,45,0.7)',
+                  lineHeight: 18,
+                  marginTop: 6,
+                }}
+              >
+                💡 {currentRemedy.why}
               </Text>
             </View>
 
