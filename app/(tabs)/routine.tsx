@@ -14,7 +14,7 @@ import type { Product } from '@/lib/productTypes';
 import type { ScanResult } from '@/lib/gemini';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import BackButton from '@/components/BackButton';
-import { getRoutine, getTodayRemedy } from '@/lib/routineEngine';
+import { getRoutine } from '@/lib/routineEngine';
 import { RoutineStep } from '@/lib/routineData';
 import { logEvent, EVENTS } from '@/lib/analytics';
 
