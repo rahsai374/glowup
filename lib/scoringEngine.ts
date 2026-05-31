@@ -1,9 +1,10 @@
 import type { Product, ProductSuitability } from './productTypes';
 import type { ScanResult } from './gemini';
 
-const DAMPING_FACTOR = 0.75;
-export const MAX_SCORE = 85;
-const MAX_CONCERN_BONUS = 15;
+const IRRELEVANCE_PENALTY = 0.7;
+const PRE_SCAN_DAMPING = 0.85;
+export const MAX_SCORE = 100;
+const MAX_CONCERN_BONUS = 10;
 
 export interface PersonalizedScore {
   matchScore: number;
@@ -37,10 +38,14 @@ function severityToBonus(severity: number): number {
   return 1;
 }
 
+function isRelevant(suitability: ProductSuitability): boolean {
+  return suitability === 'excellent' || suitability === 'good';
+}
+
 function scoreToSuitability(score: number): ProductSuitability {
-  if (score >= 70) return 'excellent';
-  if (score >= 55) return 'good';
-  if (score >= 35) return 'caution';
+  if (score >= 80) return 'excellent';
+  if (score >= 65) return 'good';
+  if (score >= 45) return 'caution';
   return 'avoid';
 }
 
@@ -49,10 +54,12 @@ export function getPersonalizedScore(
   scanResult: ScanResult | null
 ): PersonalizedScore {
   if (!scanResult) {
-    const bestScore = Math.max(
-      ...Object.values(product.skinTypeMatch).map((m) => m.matchScore)
+    const bestMatch = Object.values(product.skinTypeMatch).reduce((a, b) =>
+      a.matchScore > b.matchScore ? a : b
     );
-    const baseScore = Math.round(bestScore * DAMPING_FACTOR);
+    const baseScore = isRelevant(bestMatch.suitability)
+      ? Math.round(bestMatch.matchScore * PRE_SCAN_DAMPING)
+      : Math.round(bestMatch.matchScore * IRRELEVANCE_PENALTY);
     const clamped = Math.max(0, Math.min(MAX_SCORE, baseScore));
     return {
       matchScore: clamped,
@@ -64,14 +71,16 @@ export function getPersonalizedScore(
   const skinType = scanResult.skin_type;
   const staticMatch =
     product.skinTypeMatch[skinType] ?? product.skinTypeMatch['all'];
-  const baseScore = Math.round(staticMatch.matchScore * DAMPING_FACTOR);
+  const baseScore = isRelevant(staticMatch.suitability)
+    ? staticMatch.matchScore
+    : Math.round(staticMatch.matchScore * IRRELEVANCE_PENALTY);
 
   const concernMatches: string[] = [];
   let totalBonus = 0;
 
   for (const concern of product.concerns) {
     const severity = getConcernSeverity(concern, scanResult.metrics);
-    if (severity === 0) continue; // unrecognized concern — no bonus, no match
+    if (severity === 0) continue;
     const bonus = severityToBonus(severity);
     totalBonus += bonus;
     concernMatches.push(concern);
