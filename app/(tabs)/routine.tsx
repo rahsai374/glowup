@@ -126,12 +126,11 @@ interface StepCardProps {
 }
 
 function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
-  const defaultRemedyIndex = useMemo(() => {
-    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
+  const [remedyIndex, setRemedyIndex] = useState(() => {
+    const now = new Date();
+    const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
     return (dayOfYear + index) % step.remedies.length;
-  }, [step, index]);
-
-  const [remedyIndex, setRemedyIndex] = useState(defaultRemedyIndex);
+  });
   const currentRemedy = step.remedies[remedyIndex];
   const hasMultipleRemedies = step.remedies.length > 1;
 

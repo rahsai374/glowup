@@ -1,17 +1,4 @@
-import { STEP_POOL, RoutineStep, Remedy, SkinType, Concern } from './routineData';
-
-function getDayOfYear(): number {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
-  return Math.floor(diff / (1000 * 60 * 60 * 24));
-}
-
-export function getTodayRemedy(step: RoutineStep, stepIndex: number): Remedy {
-  if (step.remedies.length === 1) return step.remedies[0];
-  const dayOfYear = getDayOfYear();
-  return step.remedies[(dayOfYear + stepIndex) % step.remedies.length];
-}
+import { STEP_POOL, RoutineStep, SkinType, Concern } from './routineData';
 
 const VALID_CONCERNS: Concern[] = [
   'acne', 'dark_spots', 'pigmentation', 'dryness', 'anti_aging',
