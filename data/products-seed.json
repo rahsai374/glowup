@@ -13624,5 +13624,732 @@
         "resultHi": "दिखने में भरी हुई, स्वस्थ त्वचा"
       }
     ]
+  },
+  {
+    "id": "himalaya-gentle-moisturizing-face-wash",
+    "name": "Himalaya Gentle Moisturizing Face Wash",
+    "brand": "Himalaya",
+    "category": "cleanser",
+    "concerns": ["dryness"],
+    "price": 85,
+    "priceDisplay": "₹85",
+    "size": "150ml",
+    "description": "Gentle moisturizing face wash with aloe vera and cucumber for dry and normal skin",
+    "imageUrl": null,
+    "tags": ["budget"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "caution", "matchScore": 35 },
+      "combination": { "suitability": "good", "matchScore": 65 },
+      "dry": { "suitability": "excellent", "matchScore": 78 },
+      "normal": { "suitability": "good", "matchScore": 72 },
+      "all": { "suitability": "good", "matchScore": 65 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Aloe Vera",
+        "nameHi": "एलोवेरा",
+        "benefitEn": "Soothes and hydrates dry skin without stripping moisture",
+        "benefitHi": "रूखी त्वचा को शांत करता है और नमी बनाए रखता है",
+        "rating": "good"
+      },
+      {
+        "name": "Cucumber Extract",
+        "nameHi": "खीरे का अर्क",
+        "benefitEn": "Cooling, refreshing, reduces dryness and irritation",
+        "benefitHi": "ठंडक देता है, रूखापन और जलन कम करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Skin feels soft and hydrated after washing",
+      "Reduced tightness after cleansing",
+      "Gentle enough for daily use"
+    ],
+    "improvementsHi": [
+      "धोने के बाद त्वचा मुलायम और नम लगती है",
+      "सफाई के बाद कसाव कम होता है",
+      "रोज़ाना उपयोग के लिए पर्याप्त सौम्य"
+    ],
+    "warningsEn": [
+      "May not be sufficient for very oily skin",
+      "Use with a separate cleanser if skin is prone to acne"
+    ],
+    "warningsHi": [
+      "बहुत तैलीय त्वचा के लिए पर्याप्त नहीं हो सकता",
+      "मुंहासे-प्रवण त्वचा के लिए अलग क्लीनज़र के साथ उपयोग करें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels less tight and dry after washing", "resultHi": "धोने के बाद त्वचा कम कसी और रूखी लगती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Noticeably softer and more comfortable skin", "resultHi": "त्वचा काफी मुलायम और आरामदायक महसूस होती है" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Consistently hydrated and balanced skin texture", "resultHi": "लगातार नम और संतुलित त्वचा बनावट" }
+    ]
+  },
+  {
+    "id": "himalaya-aloe-vera-gel",
+    "name": "Himalaya Aloe Vera Gel",
+    "brand": "Himalaya",
+    "category": "moisturizer",
+    "concerns": ["acne", "dryness"],
+    "price": 120,
+    "priceDisplay": "₹120",
+    "size": "100ml",
+    "description": "Pure aloe vera gel that hydrates and soothes all skin types, suitable for acne and dryness",
+    "imageUrl": null,
+    "tags": ["budget", "bestseller"],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 76 },
+      "combination": { "suitability": "good", "matchScore": 72 },
+      "dry": { "suitability": "good", "matchScore": 68 },
+      "normal": { "suitability": "excellent", "matchScore": 74 },
+      "all": { "suitability": "good", "matchScore": 72 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Aloe Vera Gel",
+        "nameHi": "एलोवेरा जेल",
+        "benefitEn": "Hydrates, soothes inflammation, promotes healing",
+        "benefitHi": "नमी देता है, सूजन शांत करता है, त्वचा की मरम्मत में मदद करता है",
+        "rating": "good"
+      },
+      {
+        "name": "Natural Humectants",
+        "nameHi": "प्राकृतिक Humectants",
+        "benefitEn": "Draws moisture into skin, lightweight hydration",
+        "benefitHi": "त्वचा में नमी खींचता है, हल्की जलयोजन",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Skin feels cool and soothed",
+      "Reduced redness and irritation",
+      "Lightweight hydration suitable for all skin types"
+    ],
+    "improvementsHi": [
+      "त्वचा ठंडी और शांत महसूस होती है",
+      "लालिमा और जलन कम होती है",
+      "सभी त्वचा प्रकारों के लिए हल्की नमी"
+    ],
+    "warningsEn": [
+      "May not be sufficient moisturizer for very dry skin in winter",
+      "Check for aloe sensitivity before full-face use"
+    ],
+    "warningsHi": [
+      "सर्दियों में बहुत रूखी त्वचा के लिए पर्याप्त मॉइस्चराइज़र नहीं हो सकता",
+      "पूरे चेहरे पर लगाने से पहले एलोवेरा संवेदनशीलता जांचें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Instant cooling and soothing effect on skin", "resultHi": "त्वचा पर तुरंत ठंडक और शांति का असर" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Reduced redness, calmer and more balanced skin", "resultHi": "कम लालिमा, शांत और अधिक संतुलित त्वचा" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Visibly clearer, hydrated skin with fewer breakouts", "resultHi": "दिखने में साफ़, नम त्वचा और कम मुंहासे" }
+    ]
+  },
+  {
+    "id": "himalaya-light-moisturizer",
+    "name": "Himalaya Light Moisturizing Gel Cream",
+    "brand": "Himalaya",
+    "category": "moisturizer",
+    "concerns": ["dryness"],
+    "price": 135,
+    "priceDisplay": "₹135",
+    "size": "50g",
+    "description": "Lightweight gel-cream moisturizer ideal for oily and combination skin types",
+    "imageUrl": null,
+    "tags": ["budget"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 78 },
+      "combination": { "suitability": "excellent", "matchScore": 75 },
+      "dry": { "suitability": "caution", "matchScore": 40 },
+      "normal": { "suitability": "good", "matchScore": 65 },
+      "all": { "suitability": "good", "matchScore": 65 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Lightweight Gel Base",
+        "nameHi": "हल्का जेल बेस",
+        "benefitEn": "Non-greasy hydration, absorbs quickly without clogging pores",
+        "benefitHi": "बिना चिकनाई के नमी, रोमछिद्र बंद किए बिना जल्दी समाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Botanical Extracts",
+        "nameHi": "वनस्पति अर्क",
+        "benefitEn": "Soothing and nourishing plant-based ingredients",
+        "benefitHi": "शांत करने वाले और पोषण देने वाले पौधे-आधारित तत्व",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Skin feels hydrated without any greasiness",
+      "Mattified appearance for oily skin",
+      "Comfortable all-day moisture"
+    ],
+    "improvementsHi": [
+      "त्वचा बिना चिकनाई के नम महसूस होती है",
+      "तैलीय त्वचा के लिए मैट लुक",
+      "पूरे दिन आरामदायक नमी"
+    ],
+    "warningsEn": [
+      "Not hydrating enough for dry or very dry skin",
+      "May need a heavier moisturizer in dry weather"
+    ],
+    "warningsHi": [
+      "रूखी या बहुत रूखी त्वचा के लिए पर्याप्त नम नहीं",
+      "शुष्क मौसम में अधिक भारी मॉइस्चराइज़र की ज़रूरत हो सकती है"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels balanced and less oily throughout the day", "resultHi": "त्वचा पूरे दिन संतुलित और कम तैलीय महसूस होती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Consistently matte and hydrated complexion", "resultHi": "लगातार मैट और नम रंगत" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Well-regulated skin moisture and shine control", "resultHi": "त्वचा की नमी और चमक नियंत्रित" }
+    ]
+  },
+  {
+    "id": "biotique-bio-honey-nourishing-cream",
+    "name": "Biotique Bio Honey Cream",
+    "brand": "Biotique",
+    "category": "moisturizer",
+    "concerns": ["dryness"],
+    "price": 175,
+    "priceDisplay": "₹175",
+    "size": "50g",
+    "description": "Honey-based nourishing cream for dry and normal skin with ayurvedic ingredients",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 3.9,
+    "skinTypeMatch": {
+      "oily": { "suitability": "caution", "matchScore": 30 },
+      "combination": { "suitability": "caution", "matchScore": 42 },
+      "dry": { "suitability": "excellent", "matchScore": 76 },
+      "normal": { "suitability": "good", "matchScore": 70 },
+      "all": { "suitability": "good", "matchScore": 60 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Honey",
+        "nameHi": "शहद",
+        "benefitEn": "Natural humectant, deeply nourishes and softens dry skin",
+        "benefitHi": "प्राकृतिक Humectant, रूखी त्वचा को गहराई से पोषण और मुलायम करता है",
+        "rating": "good"
+      },
+      {
+        "name": "Ayurvedic Herbs",
+        "nameHi": "आयुर्वेदिक जड़ी-बूटियाँ",
+        "benefitEn": "Traditional botanical blend for skin nourishment and balance",
+        "benefitHi": "त्वचा के पोषण और संतुलन के लिए पारंपरिक वनस्पति मिश्रण",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Deep nourishment for dry and flaky skin",
+      "Softer and smoother skin texture",
+      "Reduced dryness and tightness"
+    ],
+    "improvementsHi": [
+      "रूखी और परतदार त्वचा का गहरा पोषण",
+      "मुलायम और चिकनी त्वचा की बनावट",
+      "रूखापन और कसाव में कमी"
+    ],
+    "warningsEn": [
+      "Too heavy for oily or combination skin — may cause breakouts",
+      "Apply sparingly in humid weather"
+    ],
+    "warningsHi": [
+      "तैलीय या मिश्रित त्वचा के लिए बहुत भारी — मुंहासे हो सकते हैं",
+      "नमी वाले मौसम में कम मात्रा में लगाएं"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels deeply nourished and less tight", "resultHi": "त्वचा गहराई से पोषित और कम कसी महसूस होती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Noticeably softer, smoother skin texture", "resultHi": "त्वचा की बनावट काफी मुलायम और चिकनी" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Reduced dry patches and consistently supple skin", "resultHi": "रूखे धब्बे कम और लगातार कोमल त्वचा" }
+    ]
+  },
+  {
+    "id": "biotique-bio-sandalwood-spf50-sunscreen",
+    "name": "Biotique Bio Sandalwood SPF 50+ Sunscreen",
+    "brand": "Biotique",
+    "category": "sunscreen",
+    "concerns": ["pigmentation"],
+    "price": 230,
+    "priceDisplay": "₹230",
+    "size": "50g",
+    "description": "High SPF sunscreen with sandalwood extract for UV protection and even skin tone",
+    "imageUrl": null,
+    "tags": ["ayurvedic"],
+    "rating": 3.8,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 65 },
+      "combination": { "suitability": "good", "matchScore": 68 },
+      "dry": { "suitability": "good", "matchScore": 64 },
+      "normal": { "suitability": "good", "matchScore": 70 },
+      "all": { "suitability": "good", "matchScore": 66 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Sandalwood Extract",
+        "nameHi": "चंदन अर्क",
+        "benefitEn": "Soothes skin, reduces pigmentation, provides a cooling effect",
+        "benefitHi": "त्वचा शांत करता है, पिगमेंटेशन कम करता है, ठंडक देता है",
+        "rating": "good"
+      },
+      {
+        "name": "SPF 50+ UV Filters",
+        "nameHi": "SPF 50+ UV फ़िल्टर",
+        "benefitEn": "Broad-spectrum protection against UVA and UVB rays",
+        "benefitHi": "UVA और UVB किरणों से व्यापक सुरक्षा",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Protection from sun damage and tan",
+      "Gradual improvement in skin tone evenness",
+      "Reduced risk of pigmentation with daily use"
+    ],
+    "improvementsHi": [
+      "धूप से नुकसान और टैन से सुरक्षा",
+      "त्वचा की रंगत में धीरे-धीरे सुधार",
+      "रोज़ाना उपयोग से पिगमेंटेशन का जोखिम कम"
+    ],
+    "warningsEn": [
+      "Can feel slightly heavy — blend well before applying",
+      "Reapply every 2 hours outdoors for full protection"
+    ],
+    "warningsHi": [
+      "थोड़ा भारी लग सकता है — लगाने से पहले अच्छी तरह मिलाएं",
+      "बाहर हर 2 घंटे में दोबारा लगाएं पूरी सुरक्षा के लिए"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Immediate sun protection and reduced tanning", "resultHi": "तुरंत सूरज से सुरक्षा और टैनिंग में कमी" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Skin tone starts appearing more even and bright", "resultHi": "त्वचा की रंगत अधिक समान और चमकदार दिखने लगती है" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Noticeably reduced pigmentation with consistent use", "resultHi": "लगातार उपयोग से पिगमेंटेशन में उल्लेखनीय कमी" }
+    ]
+  },
+  {
+    "id": "khadi-neem-tulsi-face-wash",
+    "name": "Khadi Natural Neem & Tulsi Face Wash",
+    "brand": "Khadi Natural",
+    "category": "cleanser",
+    "concerns": ["acne"],
+    "price": 145,
+    "priceDisplay": "₹145",
+    "size": "210ml",
+    "description": "Herbal face wash with neem and tulsi for acne-prone oily and combination skin",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 78 },
+      "combination": { "suitability": "good", "matchScore": 72 },
+      "dry": { "suitability": "caution", "matchScore": 38 },
+      "normal": { "suitability": "good", "matchScore": 62 },
+      "all": { "suitability": "good", "matchScore": 62 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Neem Extract",
+        "nameHi": "नीम अर्क",
+        "benefitEn": "Antibacterial, fights acne-causing bacteria and reduces breakouts",
+        "benefitHi": "एंटीबैक्टीरियल, मुंहासे पैदा करने वाले बैक्टीरिया से लड़ता है",
+        "rating": "good"
+      },
+      {
+        "name": "Tulsi (Holy Basil)",
+        "nameHi": "तुलसी",
+        "benefitEn": "Antiseptic and purifying, reduces acne and skin infections",
+        "benefitHi": "एंटीसेप्टिक और शुद्ध करने वाली, मुंहासे और त्वचा संक्रमण कम करती है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Fewer acne breakouts and pimples",
+      "Cleaner and purified skin",
+      "Reduced excess oil and shine"
+    ],
+    "improvementsHi": [
+      "कम मुंहासे और दाने",
+      "साफ़ और शुद्ध त्वचा",
+      "कम अतिरिक्त तेल और चमक"
+    ],
+    "warningsEn": [
+      "Can be drying for dry or sensitive skin types",
+      "Avoid contact with eyes"
+    ],
+    "warningsHi": [
+      "रूखी या संवेदनशील त्वचा के लिए रूखापन कर सकता है",
+      "आँखों से संपर्क से बचें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels cleaner and less oily after washing", "resultHi": "धोने के बाद त्वचा साफ़ और कम तैलीय लगती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Visible reduction in pimples and breakouts", "resultHi": "मुंहासों और दानों में दिखने वाली कमी" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Clearer, purified skin with fewer acne occurrences", "resultHi": "कम मुंहासों के साथ साफ़, शुद्ध त्वचा" }
+    ]
+  },
+  {
+    "id": "biotique-bio-almond-oil",
+    "name": "Biotique Bio Almond Oil",
+    "brand": "Biotique",
+    "category": "face_oil",
+    "concerns": ["dryness", "anti_aging"],
+    "price": 190,
+    "priceDisplay": "₹190",
+    "size": "120ml",
+    "description": "Nourishing almond face oil for dry and normal skin to combat dryness and signs of aging",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 4.1,
+    "skinTypeMatch": {
+      "oily": { "suitability": "avoid", "matchScore": 25 },
+      "combination": { "suitability": "caution", "matchScore": 42 },
+      "dry": { "suitability": "excellent", "matchScore": 80 },
+      "normal": { "suitability": "good", "matchScore": 68 },
+      "all": { "suitability": "good", "matchScore": 55 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Sweet Almond Oil",
+        "nameHi": "मीठे बादाम का तेल",
+        "benefitEn": "Rich in Vitamin E and fatty acids, deeply nourishes and softens skin",
+        "benefitHi": "विटामिन E और फैटी एसिड से भरपूर, त्वचा को गहराई से पोषण और मुलायम करता है",
+        "rating": "good"
+      },
+      {
+        "name": "Ayurvedic Herbs",
+        "nameHi": "आयुर्वेदिक जड़ी-बूटियाँ",
+        "benefitEn": "Traditional botanical blend for anti-aging and skin rejuvenation",
+        "benefitHi": "एंटी-एजिंग और त्वचा नवीनीकरण के लिए पारंपरिक वनस्पति मिश्रण",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Deep nourishment and moisture for very dry skin",
+      "Smoother, more supple skin texture",
+      "Reduced fine lines and dull appearance"
+    ],
+    "improvementsHi": [
+      "बहुत रूखी त्वचा का गहरा पोषण और नमी",
+      "चिकनी, अधिक कोमल त्वचा की बनावट",
+      "महीन रेखाएं और बेजान त्वचा में कमी"
+    ],
+    "warningsEn": [
+      "Not suitable for oily skin — will increase shininess and breakouts",
+      "Use sparingly at night for best results"
+    ],
+    "warningsHi": [
+      "तैलीय त्वचा के लिए उपयुक्त नहीं — चमक और मुंहासे बढ़ा सकता है",
+      "सर्वोत्तम परिणाम के लिए रात में कम मात्रा में उपयोग करें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels deeply nourished and softer overnight", "resultHi": "रात भर में त्वचा गहराई से पोषित और मुलायम महसूस होती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Visibly smoother texture and reduced dry patches", "resultHi": "दिखने में चिकनी बनावट और रूखे धब्बे कम" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Supple, youthful-looking skin with improved elasticity", "resultHi": "कोमल, जवान दिखने वाली त्वचा और बेहतर लचीलापन" }
+    ]
+  },
+  {
+    "id": "himalaya-tan-removal-walnut-scrub",
+    "name": "Himalaya Tan Removal Orange Peel & Walnut Scrub",
+    "brand": "Himalaya",
+    "category": "exfoliator",
+    "concerns": ["pigmentation", "dark_spots"],
+    "price": 90,
+    "priceDisplay": "₹90",
+    "size": "100g",
+    "description": "Gentle scrub with walnut granules and orange peel for tan removal and brighter skin",
+    "imageUrl": null,
+    "tags": ["budget"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 70 },
+      "combination": { "suitability": "good", "matchScore": 68 },
+      "dry": { "suitability": "caution", "matchScore": 38 },
+      "normal": { "suitability": "good", "matchScore": 66 },
+      "all": { "suitability": "good", "matchScore": 60 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Walnut Shell Powder",
+        "nameHi": "अखरोट के छिलके का पाउडर",
+        "benefitEn": "Physical exfoliant that removes dead skin cells and tan",
+        "benefitHi": "फिज़िकल एक्सफोलिएंट जो मृत त्वचा कोशिकाओं और टैन को हटाता है",
+        "rating": "good"
+      },
+      {
+        "name": "Orange Peel Extract",
+        "nameHi": "संतरे के छिलके का अर्क",
+        "benefitEn": "Vitamin C-rich, brightens skin tone and reduces tan",
+        "benefitHi": "विटामिन C से भरपूर, त्वचा की रंगत निखारता है और टैन कम करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Visibly reduced tan and brighter skin",
+      "Smoother skin texture after exfoliation",
+      "Improved skin radiance and glow"
+    ],
+    "improvementsHi": [
+      "टैन में दिखने वाली कमी और चमकदार त्वचा",
+      "एक्सफोलिएशन के बाद चिकनी त्वचा बनावट",
+      "बेहतर त्वचा की चमक और निखार"
+    ],
+    "warningsEn": [
+      "Avoid on sensitive or broken skin",
+      "Use only 2-3 times per week — over-scrubbing can irritate"
+    ],
+    "warningsHi": [
+      "संवेदनशील या क्षतिग्रस्त त्वचा पर न लगाएं",
+      "केवल सप्ताह में 2-3 बार उपयोग करें — अधिक स्क्रबिंग से जलन हो सकती है"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels smoother and slightly brighter", "resultHi": "त्वचा चिकनी और थोड़ी चमकदार महसूस होती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Noticeable reduction in tan and uneven skin tone", "resultHi": "टैन और असमान त्वचा रंगत में उल्लेखनीय कमी" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Significantly brighter, more even complexion", "resultHi": "काफी चमकदार, अधिक समान रंगत" }
+    ]
+  },
+  {
+    "id": "biotique-bio-papaya-revitalising-scrub",
+    "name": "Biotique Bio Papaya Revitalising Tan-Removal Scrub",
+    "brand": "Biotique",
+    "category": "exfoliator",
+    "concerns": ["pigmentation", "dark_spots"],
+    "price": 175,
+    "priceDisplay": "₹175",
+    "size": "75g",
+    "description": "Enzyme-based gentle exfoliator with papaya enzymes for tan removal and skin renewal",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 68 },
+      "combination": { "suitability": "good", "matchScore": 66 },
+      "dry": { "suitability": "good", "matchScore": 58 },
+      "normal": { "suitability": "good", "matchScore": 68 },
+      "all": { "suitability": "good", "matchScore": 64 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Papaya Enzymes",
+        "nameHi": "पपीते के एंज़ाइम",
+        "benefitEn": "Natural exfoliating enzymes that dissolve dead skin and brighten tone",
+        "benefitHi": "प्राकृतिक एक्सफोलिएटिंग एंज़ाइम जो मृत त्वचा को घोलते और रंगत निखारते हैं",
+        "rating": "good"
+      },
+      {
+        "name": "Ayurvedic Herbs",
+        "nameHi": "आयुर्वेदिक जड़ी-बूटियाँ",
+        "benefitEn": "Revitalising botanical blend for skin renewal and radiance",
+        "benefitHi": "त्वचा नवीनीकरण और चमक के लिए पुनर्जीवक वनस्पति मिश्रण",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Gentle exfoliation suitable for most skin types",
+      "Reduced tan and improved skin radiance",
+      "Softer, more renewed skin texture"
+    ],
+    "improvementsHi": [
+      "अधिकांश त्वचा प्रकारों के लिए सौम्य एक्सफोलिएशन",
+      "टैन में कमी और बेहतर त्वचा की चमक",
+      "मुलायम, अधिक नवीनीकृत त्वचा बनावट"
+    ],
+    "warningsEn": [
+      "Do a patch test if sensitive to papaya or latex",
+      "Use 2-3 times per week maximum"
+    ],
+    "warningsHi": [
+      "पपीते या लेटेक्स के प्रति संवेदनशील हों तो पैच टेस्ट करें",
+      "अधिकतम सप्ताह में 2-3 बार उपयोग करें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin appears smoother and has a fresh glow", "resultHi": "त्वचा चिकनी दिखती है और ताज़ी चमक आती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Reduced tan lines and more even skin tone", "resultHi": "टैन लाइनें कम और अधिक समान त्वचा रंगत" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Visibly revitalised, brighter complexion", "resultHi": "दिखने में जीवंत, चमकदार रंगत" }
+    ]
+  },
+  {
+    "id": "biotique-winter-green-anti-acne-cream",
+    "name": "Biotique Winter Green Spot Correcting Anti-Acne Cream",
+    "brand": "Biotique",
+    "category": "spot_treatment",
+    "concerns": ["acne"],
+    "price": 170,
+    "priceDisplay": "₹170",
+    "size": "15g",
+    "description": "Targeted acne spot treatment with wintergreen extract for oily and combination skin",
+    "imageUrl": null,
+    "tags": ["budget", "ayurvedic"],
+    "rating": 3.9,
+    "skinTypeMatch": {
+      "oily": { "suitability": "excellent", "matchScore": 76 },
+      "combination": { "suitability": "good", "matchScore": 70 },
+      "dry": { "suitability": "caution", "matchScore": 35 },
+      "normal": { "suitability": "good", "matchScore": 58 },
+      "all": { "suitability": "good", "matchScore": 58 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Wintergreen Extract",
+        "nameHi": "विंटरग्रीन अर्क",
+        "benefitEn": "Contains salicylate, anti-inflammatory, unclogs pores and reduces acne",
+        "benefitHi": "सैलिसिलेट युक्त, एंटी-इंफ्लेमेटरी, रोमछिद्र खोलता है और मुंहासे कम करता है",
+        "rating": "good"
+      },
+      {
+        "name": "Ayurvedic Herbs",
+        "nameHi": "आयुर्वेदिक जड़ी-बूटियाँ",
+        "benefitEn": "Antibacterial and purifying herbs targeting acne at the source",
+        "benefitHi": "मुंहासे की जड़ पर निशाना साधने वाली एंटीबैक्टीरियल और शुद्ध करने वाली जड़ी-बूटियाँ",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Faster healing of existing pimples",
+      "Reduced redness and swelling around spots",
+      "Prevention of new acne forming in treated areas"
+    ],
+    "improvementsHi": [
+      "मौजूदा मुंहासों का तेज़ी से ठीक होना",
+      "दानों के आसपास लालिमा और सूजन कम",
+      "उपचारित क्षेत्रों में नए मुंहासे बनने से रोकना"
+    ],
+    "warningsEn": [
+      "For spot use only — do not apply all over face",
+      "May cause dryness or irritation on sensitive or dry skin"
+    ],
+    "warningsHi": [
+      "केवल दाने पर लगाएं — पूरे चेहरे पर न लगाएं",
+      "संवेदनशील या रूखी त्वचा पर रूखापन या जलन हो सकती है"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Active pimples appear smaller and less red", "resultHi": "सक्रिय मुंहासे छोटे और कम लाल दिखते हैं" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Faster pimple healing and fewer new breakouts", "resultHi": "मुंहासे जल्दी ठीक होते हैं और कम नए दाने निकलते हैं" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Significantly reduced acne frequency and severity", "resultHi": "मुंहासों की आवृत्ति और गंभीरता में उल्लेखनीय कमी" }
+    ]
+  },
+  {
+    "id": "himalaya-clear-complexion-day-cream",
+    "name": "Himalaya Clear Complexion Brightening Day Cream",
+    "brand": "Himalaya",
+    "category": "moisturizer",
+    "concerns": ["pigmentation", "dark_spots"],
+    "price": 155,
+    "priceDisplay": "₹155",
+    "size": "50g",
+    "description": "Brightening day cream that addresses pigmentation and dark spots for all skin types",
+    "imageUrl": null,
+    "tags": ["budget"],
+    "rating": 3.9,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 62 },
+      "combination": { "suitability": "good", "matchScore": 66 },
+      "dry": { "suitability": "good", "matchScore": 64 },
+      "normal": { "suitability": "good", "matchScore": 68 },
+      "all": { "suitability": "good", "matchScore": 65 }
+    },
+    "keyIngredients": [
+      {
+        "name": "White Dammer Extract",
+        "nameHi": "व्हाइट डैमर अर्क",
+        "benefitEn": "Skin brightening agent that reduces pigmentation and dark spots",
+        "benefitHi": "त्वचा चमकाने वाला एजेंट जो पिगमेंटेशन और काले धब्बे कम करता है",
+        "rating": "good"
+      },
+      {
+        "name": "Licorice Extract",
+        "nameHi": "मुलेठी अर्क",
+        "benefitEn": "Reduces melanin production and evens out skin tone",
+        "benefitHi": "मेलेनिन उत्पादन कम करता है और त्वचा की रंगत एकसमान करता है",
+        "rating": "good"
+      }
+    ],
+    "improvementsEn": [
+      "Brighter and more even skin tone",
+      "Faded dark spots and pigmentation marks",
+      "Daily moisturization with brightening benefit"
+    ],
+    "improvementsHi": [
+      "चमकदार और अधिक समान त्वचा रंगत",
+      "काले धब्बे और पिगमेंटेशन के निशान हल्के",
+      "चमकदार लाभ के साथ रोज़ाना नमी"
+    ],
+    "warningsEn": [
+      "Results are gradual — use consistently for best outcomes",
+      "Pair with a good SPF sunscreen for faster results"
+    ],
+    "warningsHi": [
+      "परिणाम धीरे-धीरे आते हैं — सर्वोत्तम परिणाम के लिए नियमित रूप से उपयोग करें",
+      "तेज़ परिणाम के लिए अच्छे SPF सनस्क्रीन के साथ उपयोग करें"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels moisturized and appears slightly brighter", "resultHi": "त्वचा नम महसूस होती है और थोड़ी चमकदार दिखती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Visible improvement in skin brightness and tone", "resultHi": "त्वचा की चमक और रंगत में दिखने वाला सुधार" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Noticeably reduced dark spots and more radiant complexion", "resultHi": "काले धब्बे काफी कम और अधिक चमकदार रंगत" }
+    ]
+  },
+  {
+    "id": "biotique-bio-dandelion-serum",
+    "name": "Biotique Bio Dandelion Youth Anti-Ageing Serum",
+    "brand": "Biotique",
+    "category": "serum",
+    "concerns": ["anti_aging"],
+    "price": 265,
+    "priceDisplay": "₹265",
+    "size": "40ml",
+    "description": "Anti-ageing serum with dandelion extract to combat fine lines and restore youthful skin",
+    "imageUrl": null,
+    "tags": ["ayurvedic"],
+    "rating": 4.0,
+    "skinTypeMatch": {
+      "oily": { "suitability": "good", "matchScore": 60 },
+      "combination": { "suitability": "good", "matchScore": 64 },
+      "dry": { "suitability": "good", "matchScore": 68 },
+      "normal": { "suitability": "good", "matchScore": 66 },
+      "all": { "suitability": "good", "matchScore": 64 }
+    },
+    "keyIngredients": [
+      {
+        "name": "Dandelion Extract",
+        "nameHi": "डैंडेलियन अर्क",
+        "benefitEn": "Rich in antioxidants, fights free radicals and signs of premature aging",
+        "benefitHi": "एंटीऑक्सीडेंट से भरपूर, मुक्त कणों और समय से पहले उम्र बढ़ने के संकेतों से लड़ता है",
+        "rating": "good"
+      },
+      {
+        "name": "Ayurvedic Youth Herbs",
+        "nameHi": "आयुर्वेदिक युवा जड़ी-बूटियाँ",
+        "benefitEn": "Traditional anti-ageing botanicals that improve skin elasticity and firmness",
+        "benefitHi": "पारंपरिक एंटी-एजिंग वनस्पतियाँ जो त्वचा की लचीलापन और दृढ़ता बेहतर करती हैं",
+        "rating": "good"
+      },
+      {
+        "name": "Serum Base",
+        "nameHi": "सीरम बेस",
+        "benefitEn": "Lightweight, fast-absorbing formula for deep active delivery",
+        "benefitHi": "हल्का, जल्दी समाने वाला फ़ॉर्मूला जो गहराई तक सक्रिय तत्व पहुँचाता है",
+        "rating": "neutral"
+      }
+    ],
+    "improvementsEn": [
+      "Reduced appearance of fine lines and wrinkles",
+      "Improved skin firmness and elasticity",
+      "Brighter, more youthful-looking complexion"
+    ],
+    "improvementsHi": [
+      "महीन रेखाओं और झुर्रियों में कमी",
+      "बेहतर त्वचा की दृढ़ता और लचीलापन",
+      "चमकदार, अधिक जवान दिखने वाली रंगत"
+    ],
+    "warningsEn": [
+      "Results take time — use consistently for at least 6 weeks",
+      "Always follow with SPF during daytime use"
+    ],
+    "warningsHi": [
+      "परिणाम समय लेते हैं — कम से कम 6 हफ़्ते नियमित रूप से उपयोग करें",
+      "दिन में उपयोग के बाद हमेशा SPF लगाएं"
+    ],
+    "expectedTimeline": [
+      { "weeksEn": "1 week", "weeksHi": "1 हफ़्ता", "resultEn": "Skin feels hydrated and more supple after application", "resultHi": "लगाने के बाद त्वचा नम और अधिक कोमल महसूस होती है" },
+      { "weeksEn": "3 weeks", "weeksHi": "3 हफ़्ते", "resultEn": "Subtle improvement in skin texture and radiance", "resultHi": "त्वचा की बनावट और चमक में हल्का सुधार" },
+      { "weeksEn": "6 weeks", "weeksHi": "6 हफ़्ते", "resultEn": "Visibly reduced fine lines and firmer-looking skin", "resultHi": "महीन रेखाएं दिखने में कम और त्वचा अधिक दृढ़ दिखती है" }
+    ]
   }
 ]
