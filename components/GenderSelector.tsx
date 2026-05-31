@@ -7,7 +7,6 @@ import type { Gender } from '@/stores/useUserStore';
 const OPTIONS: { value: Gender; labelKey: string }[] = [
   { value: 'male', labelKey: 'q6_male' },
   { value: 'female', labelKey: 'q6_female' },
-  { value: 'unspecified', labelKey: 'q6_unspecified' },
 ];
 
 interface Props {
