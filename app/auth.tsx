@@ -191,6 +191,8 @@ export default function AuthScreen() {
                   onChangeText={(v) => handleOtpChange(v, i)}
                   onKeyPress={(e) => handleOtpKeyPress(e, i)}
                   keyboardType="number-pad"
+                  autoComplete="sms-otp"
+                  textContentType="oneTimeCode"
                   style={{ flex: 1, height: 60, borderRadius: 14, borderWidth: 2, borderColor: digit ? '#E07856' : 'rgba(224,120,86,0.2)', backgroundColor: 'white', textAlign: 'center', fontSize: 22, color: '#2D1810', fontFamily: 'PlusJakartaSans_700Bold' }}
                 />
               ))}
