@@ -246,7 +246,7 @@ export default function ScanScreen() {
       });
       stopScanning();
       // TODO: Insert paywall gate here before navigating to results
-      router.replace('/(tabs)/results');
+      router.replace({ pathname: '/(tabs)/results', params: { scanId: '' } } as any);
     } catch (e: any) {
       stopScanning();
       logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });

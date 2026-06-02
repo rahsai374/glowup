@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -27,10 +27,17 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
   const translateY = useSharedValue(sheetHeight);
   const router = useRouter();
   const { t } = useTranslation();
+  const [lastScan, setLastScan] = useState<ScanRecord | null>(null);
+
+  useEffect(() => {
+    if (scan) setLastScan(scan);
+  }, [scan]);
+
+  const displayScan = scan ?? lastScan;
 
   useEffect(() => {
     translateY.value = withSpring(isOpen ? 0 : sheetHeight, SPRING_CONFIG);
-  }, [isOpen]);
+  }, [isOpen, sheetHeight]);
 
   const panGesture = Gesture.Pan()
     .onUpdate((e) => {
@@ -56,16 +63,16 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
   }));
 
   const handleSeeFullAnalysis = () => {
-    if (!scan) return;
+    if (!displayScan) return;
     logEvent(EVENTS.SCAN_HISTORY_FULL_ANALYSIS, {
-      scan_id: scan.id,
-      overall_score: scan.overall_score,
+      scan_id: displayScan.id,
+      overall_score: displayScan.overall_score,
     });
     onClose();
-    router.push({ pathname: '/(tabs)/results', params: { scanId: scan.id } } as any);
+    router.push({ pathname: '/(tabs)/results', params: { scanId: displayScan.id } } as any);
   };
 
-  if (!scan && !isOpen) return null;
+  if (!displayScan && !isOpen) return null;
 
   return (
     <View
@@ -109,10 +116,10 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
             />
           </View>
 
-          {scan && (
+          {displayScan && (
             <View style={{ flex: 1, paddingHorizontal: 24, alignItems: 'center' }}>
               {/* Score */}
-              <ScoreCircle score={scan.overall_score} size={96} />
+              <ScoreCircle score={displayScan.overall_score} size={96} />
 
               {/* Date */}
               <Text
@@ -123,7 +130,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                   marginTop: 8,
                 }}
               >
-                {new Date(scan.createdAt).toLocaleDateString()}
+                {new Date(displayScan.createdAt).toLocaleDateString()}
               </Text>
 
               {/* Skin age + type */}
@@ -138,7 +145,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                   }}
                 >
                   <Text style={{ fontSize: 18, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>
-                    {scan.skin_age}
+                    {displayScan.skin_age}
                   </Text>
                   <Text
                     style={{
@@ -167,7 +174,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                       textTransform: 'capitalize',
                     }}
                   >
-                    {scan.skin_type}
+                    {displayScan.skin_type}
                   </Text>
                   <Text
                     style={{
@@ -210,7 +217,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                       color: '#2D1810',
                     }}
                   >
-                    {scan.top_concern}
+                    {displayScan.top_concern}
                   </Text>
                 </View>
                 <View
@@ -240,7 +247,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                       color: '#2D1810',
                     }}
                   >
-                    {scan.top_win}
+                    {displayScan.top_win}
                   </Text>
                 </View>
               </View>
@@ -266,7 +273,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
                   }}
                   numberOfLines={3}
                 >
-                  {scan.advice}
+                  {displayScan.advice}
                 </Text>
               </View>
 

@@ -40,7 +40,7 @@ export default function ResultsScreen() {
 
   useEffect(() => {
     if (!scan) {
-      router.replace('/(tabs)');
+      if (!scanId) router.replace('/(tabs)');
       return;
     }
     if (!loggedRef.current) {
@@ -51,7 +51,7 @@ export default function ResultsScreen() {
         is_historical: isHistorical,
       });
     }
-  }, [scan]);
+  }, [scan, scanId]);
 
   if (!scan) return null;
 
