@@ -1,18 +1,28 @@
-import React, { useEffect, useCallback } from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useFocusEffect } from '@react-navigation/native';
-import { useScanStore } from '@/stores/useScanStore';
+import { useScanStore, ScanRecord } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import AmbientBlobs from '@/components/AmbientBlobs';
+import ScanDetailSheet from '@/components/ScanDetailSheet';
 import { logEvent, EVENTS } from '@/lib/analytics';
 
 export default function ProgressScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const history = useScanStore((s) => s.scanHistory);
+  const [selectedScan, setSelectedScan] = useState<ScanRecord | null>(null);
+
+  const handleScanTap = (scan: ScanRecord, index: number) => {
+    logEvent(EVENTS.SCAN_HISTORY_CARD_TAPPED, {
+      scan_index: index,
+      overall_score: scan.overall_score,
+    });
+    setSelectedScan(scan);
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -76,8 +86,10 @@ export default function ProgressScreen() {
               </Text>
               <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
                 {history.map((scan, i) => (
-                  <View
+                  <TouchableOpacity
                     key={scan.id}
+                    onPress={() => handleScanTap(scan, i)}
+                    activeOpacity={0.7}
                     style={{
                       backgroundColor: '#FFF5EE',
                       borderRadius: 12,
@@ -92,48 +104,58 @@ export default function ProgressScreen() {
                     <Text style={{ fontSize: 10, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular' }}>
                       Scan {i + 1}
                     </Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             </View>
 
             {history.map((scan, i) => (
-              <Animated.View
+              <TouchableOpacity
                 key={scan.id}
-                entering={FadeInDown.delay(i * 100).springify()}
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 20,
-                  padding: 16,
-                  marginBottom: 12,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 16,
-                  borderWidth: 1,
-                  borderColor: 'rgba(224,120,86,0.08)',
-                }}
+                onPress={() => handleScanTap(scan, i)}
+                activeOpacity={0.7}
               >
-                <ScoreCircle score={scan.overall_score} size={64} />
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 12, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular', marginBottom: 4 }}>
-                    {new Date(scan.createdAt).toLocaleDateString()}
-                  </Text>
-                  <View style={{ backgroundColor: '#FEE2E2', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start', marginBottom: 4 }}>
-                    <Text style={{ fontSize: 11, color: '#F87171', fontFamily: 'PlusJakartaSans_500Medium' }}>
-                      {scan.top_concern}
+                <Animated.View
+                  entering={FadeInDown.delay(i * 100).springify()}
+                  style={{
+                    backgroundColor: 'white',
+                    borderRadius: 20,
+                    padding: 16,
+                    marginBottom: 12,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    gap: 16,
+                    borderWidth: 1,
+                    borderColor: 'rgba(224,120,86,0.08)',
+                  }}
+                >
+                  <ScoreCircle score={scan.overall_score} size={64} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={{ fontSize: 12, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular', marginBottom: 4 }}>
+                      {new Date(scan.createdAt).toLocaleDateString()}
                     </Text>
+                    <View style={{ backgroundColor: '#FEE2E2', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start', marginBottom: 4 }}>
+                      <Text style={{ fontSize: 11, color: '#F87171', fontFamily: 'PlusJakartaSans_500Medium' }}>
+                        {scan.top_concern}
+                      </Text>
+                    </View>
+                    <View style={{ backgroundColor: '#DCFCE7', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' }}>
+                      <Text style={{ fontSize: 11, color: '#4ADE80', fontFamily: 'PlusJakartaSans_500Medium' }}>
+                        {scan.top_win}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={{ backgroundColor: '#DCFCE7', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' }}>
-                    <Text style={{ fontSize: 11, color: '#4ADE80', fontFamily: 'PlusJakartaSans_500Medium' }}>
-                      {scan.top_win}
-                    </Text>
-                  </View>
-                </View>
-              </Animated.View>
+                </Animated.View>
+              </TouchableOpacity>
             ))}
           </>
         )}
       </ScrollView>
+      <ScanDetailSheet
+        scan={selectedScan}
+        isOpen={!!selectedScan}
+        onClose={() => setSelectedScan(null)}
+      />
     </View>
   );
 }

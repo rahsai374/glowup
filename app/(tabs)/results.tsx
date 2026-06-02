@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -27,12 +27,20 @@ export default function ResultsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const scan = useScanStore((s) => s.currentScan);
+  const { scanId } = useLocalSearchParams<{ scanId?: string }>();
+  const currentScan = useScanStore((s) => s.currentScan);
+  const scanHistory = useScanStore((s) => s.scanHistory);
   const loggedRef = useRef(false);
+
+  const historicalScan = scanId
+    ? scanHistory.find((s) => s.id === scanId)
+    : undefined;
+  const scan = historicalScan ?? currentScan;
+  const isHistorical = !!historicalScan;
 
   useEffect(() => {
     if (!scan) {
-      router.replace('/(tabs)');
+      if (!scanId) router.replace('/(tabs)');
       return;
     }
     if (!loggedRef.current) {
@@ -40,9 +48,10 @@ export default function ResultsScreen() {
       logEvent(EVENTS.RESULTS_VIEWED, {
         overall_score: scan.overall_score,
         skin_type: scan.skin_type,
+        is_historical: isHistorical,
       });
     }
-  }, [scan]);
+  }, [scan, scanId]);
 
   if (!scan) return null;
 
@@ -78,9 +87,15 @@ export default function ResultsScreen() {
             <BackButton />
           </View>
 
-          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: 20 }}>
+          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: isHistorical ? 6 : 20 }}>
             {t('results_title')}
           </Text>
+
+          {isHistorical && (
+            <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_500Medium', color: 'rgba(45,24,16,0.5)', marginBottom: 14 }}>
+              {t('historical_scan_label', { date: new Date(scan.createdAt).toLocaleDateString() })}
+            </Text>
+          )}
 
           <ScoreCircle score={scan.overall_score} size={160} />
 
@@ -140,35 +155,39 @@ export default function ResultsScreen() {
             </View>
           </Animated.View>
 
-          {/* Dark CTA */}
-          <Animated.View entering={FadeInDown.delay(440).springify()}>
-            <View style={{ backgroundColor: '#2D1810', borderRadius: 24, padding: 24, marginBottom: 20 }}>
-              <Text style={{ fontSize: 10, fontFamily: 'PlusJakartaSans_700Bold', color: '#D4A574', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
-                ✨ {t('customized_regimen')}
-              </Text>
-              <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(255,255,255,0.7)', lineHeight: 20 }}>
-                {t('regimen_body')}
-              </Text>
-            </View>
-          </Animated.View>
+          {!isHistorical && (
+            <>
+              {/* Dark CTA */}
+              <Animated.View entering={FadeInDown.delay(440).springify()}>
+                <View style={{ backgroundColor: '#2D1810', borderRadius: 24, padding: 24, marginBottom: 20 }}>
+                  <Text style={{ fontSize: 10, fontFamily: 'PlusJakartaSans_700Bold', color: '#D4A574', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 8 }}>
+                    ✨ {t('customized_regimen')}
+                  </Text>
+                  <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(255,255,255,0.7)', lineHeight: 20 }}>
+                    {t('regimen_body')}
+                  </Text>
+                </View>
+              </Animated.View>
 
-          {/* CTAs */}
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/routine')}
-            style={{ backgroundColor: '#E07856', borderRadius: 20, paddingVertical: 16, alignItems: 'center', marginBottom: 12 }}
-          >
-            <Text style={{ color: 'white', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
-              {t('see_routine')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => router.push('/(tabs)/share')}
-            style={{ borderRadius: 20, paddingVertical: 16, alignItems: 'center', borderWidth: 1.5, borderColor: '#E07856' }}
-          >
-            <Text style={{ color: '#E07856', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
-              {t('share_score')}
-            </Text>
-          </TouchableOpacity>
+              {/* CTAs */}
+              <TouchableOpacity
+                onPress={() => router.push('/(tabs)/routine')}
+                style={{ backgroundColor: '#E07856', borderRadius: 20, paddingVertical: 16, alignItems: 'center', marginBottom: 12 }}
+              >
+                <Text style={{ color: 'white', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
+                  {t('see_routine')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => router.push('/(tabs)/share')}
+                style={{ borderRadius: 20, paddingVertical: 16, alignItems: 'center', borderWidth: 1.5, borderColor: '#E07856' }}
+              >
+                <Text style={{ color: '#E07856', fontSize: 16, fontFamily: 'PlusJakartaSans_700Bold' }}>
+                  {t('share_score')}
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
 
           <View style={{ backgroundColor: 'rgba(224,120,86,0.07)', borderRadius: 16, padding: 14, marginTop: 16, flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
             <Text style={{ fontSize: 14 }}>⚕️</Text>
