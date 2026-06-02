@@ -161,5 +161,7 @@
   "scan_cooldown_body": "{{seconds}} सेकंड बाद scan कर सकते हैं",
   "notifications_title": "सूचनाएँ",
   "notifications_empty": "अभी कोई notification नहीं",
-  "notifications_empty_body": "Tips, reminders, और skin updates की जानकारी यहाँ मिलेगी।"
+  "notifications_empty_body": "Tips, reminders, और skin updates की जानकारी यहाँ मिलेगी।",
+  "see_full_analysis": "पूरा Analysis देखो",
+  "historical_scan_label": "{{date}} का Scan"
 }

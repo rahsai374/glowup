@@ -42,6 +42,10 @@ export const EVENTS = {
   ROUTINE_TAB_SWITCHED: 'routine_tab_switched',
   ROUTINE_STEP_EXPANDED: 'routine_step_expanded',
 
+  // Scan history
+  SCAN_HISTORY_CARD_TAPPED: 'scan_history_card_tapped',
+  SCAN_HISTORY_FULL_ANALYSIS: 'scan_history_full_analysis',
+
   // Push notifications
   PUSH_OPTIN_PROMPT: 'push_optin_prompt',
   PUSH_OPTIN_RESPONSE: 'push_optin_response',

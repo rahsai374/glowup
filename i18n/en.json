@@ -161,5 +161,7 @@
   "scan_cooldown_body": "You can scan again in {{seconds}} second",
   "notifications_title": "Notifications",
   "notifications_empty": "No notifications yet",
-  "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here."
+  "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here.",
+  "see_full_analysis": "See Full Analysis",
+  "historical_scan_label": "Scan from {{date}}"
 }
