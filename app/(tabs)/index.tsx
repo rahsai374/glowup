@@ -142,6 +142,7 @@ export default function HomeScreen() {
         <HomeHeader
           name={user?.name || 'Friend'}
           greeting={greetingText}
+          gender={user?.gender ?? 'unspecified'}
           onAvatarPress={() => router.push('/(tabs)/profile')}
           onBellPress={() => router.push('/(tabs)/notifications' as any)}
         />
