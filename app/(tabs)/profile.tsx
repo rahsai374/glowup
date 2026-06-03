@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import rnAuth from '@react-native-firebase/auth';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { useUserStore, type Gender } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { updateProfileField, saveRoutine } from '@/lib/firestore';
@@ -16,8 +17,8 @@ import i18n from '@/i18n';
 import { useFocusEffect } from '@react-navigation/native';
 import { logEvent, setUserProperty, EVENTS } from '@/lib/analytics';
 
-const PRIVACY_POLICY_URL = 'https://rahsai374.github.io/glowup/privacy-policy.html';
-const DELETION_POLICY_URL = 'https://rahsai374.github.io/glowup/account-deletion.html';
+const PRIVACY_POLICY_URL = 'https://glowup-website-one.vercel.app/privacy';
+const DELETION_POLICY_URL = 'https://glowup-website-one.vercel.app/privacy#data-deletion';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -287,6 +288,23 @@ export default function ProfileScreen() {
             >
               <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
                 {t('logout')}
+              </Text>
+            </TouchableOpacity>
+
+            {/* TODO: Remove after verifying Crashlytics */}
+            <TouchableOpacity
+              onPress={() => crashlytics().crash()}
+              style={{
+                backgroundColor: '#FF3B30',
+                borderRadius: 16,
+                paddingVertical: 16,
+                paddingHorizontal: 20,
+                marginBottom: 12,
+                alignItems: 'center',
+              }}
+            >
+              <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
+                Test Crash (Remove Later)
               </Text>
               <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.3)' }}>{'>'}</Text>
             </TouchableOpacity>
