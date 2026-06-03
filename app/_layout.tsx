@@ -6,9 +6,11 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as Notifications from 'expo-notifications';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { setupAndroidChannel, handleNotificationTap } from '@/lib/notifications';
 import { useNotificationStore } from '@/stores/useNotificationStore';
-import { logEvent, EVENTS } from '@/lib/analytics';
+import { logEvent, EVENTS, posthog } from '@/lib/analytics';
+import { PostHogProvider } from 'posthog-react-native';
 import {
   Fraunces_700Bold,
   Fraunces_700Bold_Italic,
@@ -34,6 +36,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: { error: Error; retry: () => void }) {
+  useEffect(() => {
+    crashlytics().recordError(error);
+  }, [error]);
+
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
       <Text style={{ fontSize: 40, marginBottom: 16 }}>😥</Text>
@@ -70,6 +76,10 @@ export default function RootLayout() {
     if (fontsLoaded || fontsError) SplashScreen.hideAsync();
   }, [fontsLoaded, fontsError]);
 
+
+  useEffect(() => {
+    crashlytics().setCrashlyticsCollectionEnabled(true);
+  }, []);
 
   useEffect(() => {
     setupAndroidChannel();
@@ -123,9 +133,11 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontsError) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
-    </GestureHandlerRootView>
+    <PostHogProvider client={posthog} autocapture={{ captureScreens: true }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="dark" />
+        <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />
+      </GestureHandlerRootView>
+    </PostHogProvider>
   );
 }

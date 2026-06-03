@@ -18,19 +18,29 @@
       "infoPlist": {
         "UIBackgroundModes": [
           "remote-notification"
+        ],
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
         ]
       }
     },
     "android": {
       "googleServicesFile": "./google-services.json",
-      "package": "com.glowup.app",
+      "package": "com.glowup.skincare",
       "adaptiveIcon": {
         "backgroundColor": "#E07856",
         "foregroundImage": "./assets/icon.png"
       },
       "predictiveBackGestureEnabled": false,
       "permissions": [
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.INTERNET",
+        "com.google.android.gms.permission.AD_ID"
       ],
       "targetSdkVersion": 36,
       "compileSdkVersion": 36
@@ -42,6 +52,7 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
+      "@react-native-firebase/crashlytics",
       "expo-router",
       "expo-font",
       [
@@ -75,7 +86,8 @@
           "icon": "./assets/notification-icon.png",
           "color": "#E07856"
         }
-      ]
+      ],
+      "@react-native-firebase/crashlytics"
     ],
     "experiments": {
       "typedRoutes": true
@@ -86,6 +98,12 @@
         "projectId": "a0e9d65c-8301-4920-81a9-cf34245c854b"
       }
     },
-    "owner": "rahsai374"
+    "owner": "rahsai374",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a0e9d65c-8301-4920-81a9-cf34245c854b"
+    }
   }
 }
