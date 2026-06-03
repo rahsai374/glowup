@@ -1,5 +1,14 @@
-import analytics from '@react-native-firebase/analytics';
 import { AppEventsLogger } from 'react-native-fbsdk-next';
+import PostHog from 'posthog-react-native';
+import { Mixpanel } from 'mixpanel-react-native';
+
+export const posthog = new PostHog('phc_kNMobEnPZYUTjeTjAyNGfu3DuPWEZRtVXy4sSsddJndH', {
+  host: 'https://us.i.posthog.com',
+});
+
+const mixpanelToken = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN;
+export const mixpanel = mixpanelToken ? new Mixpanel(mixpanelToken, true) : null;
+mixpanel?.init();
 
 export const EVENTS = {
   APP_OPENED: 'app_opened',
@@ -58,19 +67,25 @@ export async function logEvent(
   params?: Record<string, string | number | boolean>,
 ): Promise<void> {
   try {
-    await analytics().logEvent(name, params);
+    AppEventsLogger.logEvent(name, params as Record<string, string | number>);
   } catch {}
   try {
-    AppEventsLogger.logEvent(name, params as Record<string, string | number>);
+    posthog.capture(name, params);
+  } catch {}
+  try {
+    mixpanel?.track(name, params);
   } catch {}
 }
 
 export async function setUserId(uid: string): Promise<void> {
   try {
-    await analytics().setUserId(uid);
+    AppEventsLogger.setUserID(uid);
   } catch {}
   try {
-    AppEventsLogger.setUserID(uid);
+    posthog.identify(uid);
+  } catch {}
+  try {
+    mixpanel?.identify(uid);
   } catch {}
 }
 
@@ -79,7 +94,10 @@ export async function setUserProperty(
   value: string | null,
 ): Promise<void> {
   try {
-    await analytics().setUserProperty(key, value);
+    posthog.identify(undefined, { [key]: value });
+  } catch {}
+  try {
+    mixpanel?.getPeople()?.set(key, value ?? '');
   } catch {}
 }
 
@@ -87,28 +105,39 @@ export async function setUserProperties(
   props: Record<string, string | null>,
 ): Promise<void> {
   try {
-    await analytics().setUserProperties(props);
+    posthog.identify(undefined, props);
+  } catch {}
+  try {
+    const cleaned: Record<string, string> = {};
+    for (const [k, v] of Object.entries(props)) cleaned[k] = v ?? '';
+    mixpanel?.getPeople()?.set(cleaned);
   } catch {}
 }
 
 export async function logSignUp(method: string = 'phone'): Promise<void> {
   try {
-    await analytics().logSignUp({ method });
-  } catch {}
-  try {
     AppEventsLogger.logEvent('fb_mobile_complete_registration', {
       fb_registration_method: method,
     });
+  } catch {}
+  try {
+    posthog.capture('sign_up', { method });
+  } catch {}
+  try {
+    mixpanel?.track('sign_up', { method });
   } catch {}
 }
 
 export async function logLogin(method: string = 'phone'): Promise<void> {
   try {
-    await analytics().logLogin({ method });
-  } catch {}
-  try {
     AppEventsLogger.logEvent('fb_mobile_login', {
       fb_login_method: method,
     });
+  } catch {}
+  try {
+    posthog.capture('login', { method });
+  } catch {}
+  try {
+    mixpanel?.track('login', { method });
   } catch {}
 }
