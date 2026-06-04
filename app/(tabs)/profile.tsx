@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import rnAuth from '@react-native-firebase/auth';
-import crashlytics from '@react-native-firebase/crashlytics';
 import { useUserStore, type Gender } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { updateProfileField, saveRoutine } from '@/lib/firestore';
@@ -289,24 +288,6 @@ export default function ProfileScreen() {
               <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
                 {t('logout')}
               </Text>
-            </TouchableOpacity>
-
-            {/* TODO: Remove after verifying Crashlytics */}
-            <TouchableOpacity
-              onPress={() => crashlytics().crash()}
-              style={{
-                backgroundColor: '#FF3B30',
-                borderRadius: 16,
-                paddingVertical: 16,
-                paddingHorizontal: 20,
-                marginBottom: 12,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
-                Test Crash (Remove Later)
-              </Text>
-              <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.3)' }}>{'>'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity

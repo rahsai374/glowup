@@ -90,9 +90,9 @@ export async function deleteAccount(uid: string): Promise<void> {
   await firestore().collection('users').doc(uid).delete();
 }
 
-export async function hydrateFromFirestore(uid: string): Promise<void> {
+export async function hydrateFromFirestore(uid: string): Promise<boolean> {
   const snap = await firestore().collection('users').doc(uid).get();
-  if (!snap.exists()) return;
+  if (!snap.exists()) return false;
 
   const data = snap.data()!;
 
@@ -129,4 +129,6 @@ export async function hydrateFromFirestore(uid: string): Promise<void> {
   if (scans.length > 0) {
     useScanStore.getState().setCurrentScan(scans[0]);
   }
+
+  return true;
 }

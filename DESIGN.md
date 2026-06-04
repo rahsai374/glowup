@@ -126,9 +126,28 @@ The mockup uses Framer Motion — translate patterns as follows:
 
 ## 7. Bottom Navigation
 
-4 tabs: Home, Progress, Tips, Profile.
-Style: white pill container, `rounded-2xl`, active tab uses `bg-[#E07856] text-white shadow-soft`,
-inactive uses `text-[#2D1810]/60`.
+4 tabs: **Home**, **Progress**, **Product**, **Profile**.
+
+### Layout
+- Flat white bar anchored to screen bottom (no floating pill)
+- Height: `60 + safeAreaInsets.bottom`
+- `paddingTop: 8`, `paddingBottom: insets.bottom`
+- `borderTopWidth: 0` — elevation via shadow only
+- Shadow: `shadowColor: #2D1810`, `shadowOffset: { width: 0, height: -4 }`, `shadowOpacity: 0.06`, `shadowRadius: 12`, `elevation: 10`
+
+### Icons
+Custom SVG icons, 22×22 viewBox 24. Each is a stroke-only outline (`strokeWidth: 2`, `strokeLinecap: round`):
+- **Home** — house with peaked roof and door cutout
+- **Progress** — trending-up arrow (line chart going up-right)
+- **Product** — bottle with neck + two label lines
+- **Profile** — head-and-shoulders person silhouette
+
+### Active / Inactive States
+- **Active:** icon stroke `#E07856`, label `#E07856` (`PlusJakartaSans_600SemiBold`, 11px), small dot indicator (`w-4 h-4 rounded-full bg-[#E07856]`, `marginTop: 1`) below icon
+- **Inactive:** icon stroke `rgba(45,24,16,0.5)`, label same color, no dot
+
+### Hidden Tabs (no nav entry)
+Results, Routine, Share, and Notifications are nested under `(tabs)` for navigation but excluded from the bar via `href: null`.
 
 ---
 

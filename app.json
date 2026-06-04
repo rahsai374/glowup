@@ -52,7 +52,7 @@
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-firebase/crashlytics",
+      ["@react-native-firebase/crashlytics", { "android": { "enabledInDevMode": true } }],
       "expo-router",
       "expo-font",
       [
@@ -86,8 +86,7 @@
           "icon": "./assets/notification-icon.png",
           "color": "#E07856"
         }
-      ],
-      "@react-native-firebase/crashlytics"
+      ]
     ],
     "experiments": {
       "typedRoutes": true

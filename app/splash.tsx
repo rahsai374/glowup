@@ -13,7 +13,7 @@ import rnAuth from '@react-native-firebase/auth';
 import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
 import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { useProductStore } from '@/stores/useProductStore';
-import { logEvent, EVENTS } from '@/lib/analytics';
+import { logEvent, setUserId, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
 const appIcon = require('@/assets/icon.png');
@@ -33,6 +33,7 @@ export default function SplashScreen() {
       return () => clearTimeout(t);
     }
 
+    setUserId(currentUser.uid);
     const minSplash = new Promise((r) => setTimeout(r, 2500));
     const hydrate = hydrateFromFirestore(currentUser.uid).catch(() => {});
     const hardTimeout = new Promise((r) => setTimeout(r, 5000));

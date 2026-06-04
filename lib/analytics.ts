@@ -2,9 +2,10 @@ import { AppEventsLogger } from 'react-native-fbsdk-next';
 import PostHog from 'posthog-react-native';
 import { Mixpanel } from 'mixpanel-react-native';
 
-export const posthog = new PostHog('phc_kNMobEnPZYUTjeTjAyNGfu3DuPWEZRtVXy4sSsddJndH', {
+const posthogKey = process.env.EXPO_PUBLIC_POSTHOG_KEY;
+export const posthog = posthogKey ? new PostHog(posthogKey, {
   host: 'https://us.i.posthog.com',
-});
+}) : null;
 
 const mixpanelToken = process.env.EXPO_PUBLIC_MIXPANEL_TOKEN;
 export const mixpanel = mixpanelToken ? new Mixpanel(mixpanelToken, true) : null;
@@ -70,7 +71,7 @@ export async function logEvent(
     AppEventsLogger.logEvent(name, params as Record<string, string | number>);
   } catch {}
   try {
-    posthog.capture(name, params);
+    posthog?.capture(name, params);
   } catch {}
   try {
     mixpanel?.track(name, params);
@@ -82,7 +83,7 @@ export async function setUserId(uid: string): Promise<void> {
     AppEventsLogger.setUserID(uid);
   } catch {}
   try {
-    posthog.identify(uid);
+    posthog?.identify(uid);
   } catch {}
   try {
     mixpanel?.identify(uid);
@@ -94,7 +95,7 @@ export async function setUserProperty(
   value: string | null,
 ): Promise<void> {
   try {
-    posthog.identify(undefined, { [key]: value });
+    posthog?.identify(undefined, { [key]: value });
   } catch {}
   try {
     mixpanel?.getPeople()?.set(key, value ?? '');
@@ -105,7 +106,7 @@ export async function setUserProperties(
   props: Record<string, string | null>,
 ): Promise<void> {
   try {
-    posthog.identify(undefined, props);
+    posthog?.identify(undefined, props);
   } catch {}
   try {
     const cleaned: Record<string, string> = {};
@@ -121,7 +122,7 @@ export async function logSignUp(method: string = 'phone'): Promise<void> {
     });
   } catch {}
   try {
-    posthog.capture('sign_up', { method });
+    posthog?.capture('sign_up', { method });
   } catch {}
   try {
     mixpanel?.track('sign_up', { method });
@@ -135,7 +136,7 @@ export async function logLogin(method: string = 'phone'): Promise<void> {
     });
   } catch {}
   try {
-    posthog.capture('login', { method });
+    posthog?.capture('login', { method });
   } catch {}
   try {
     mixpanel?.track('login', { method });

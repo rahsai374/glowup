@@ -78,10 +78,6 @@ export default function RootLayout() {
 
 
   useEffect(() => {
-    crashlytics().setCrashlyticsCollectionEnabled(true);
-  }, []);
-
-  useEffect(() => {
     setupAndroidChannel();
   }, []);
 
@@ -133,7 +129,7 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontsError) return null;
 
   return (
-    <PostHogProvider client={posthog} autocapture={{ captureScreens: true }}>
+    <PostHogProvider client={posthog ?? undefined} autocapture={{ captureScreens: true }}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <StatusBar style="dark" />
         <Stack screenOptions={{ headerShown: false, animation: 'fade' }} />

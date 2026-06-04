@@ -1,5 +1,13 @@
 # GlowUp — ASO Strategy (Google Play + Apple App Store)
 
+> ⚠️ **SUPERSEDED (Google Play listing):** The Play Store listing copy, title,
+> screenshots, and launch sequence have moved to `docs/play-store-listing.md`
+> (title: `GlowUp: Skin Scanner & Routine`). This doc's title
+> ("Your Skin Care Partner") and Google Play sections are outdated.
+> This doc remains useful for: Apple App Store strategy (Part 1.1, Part 2 Apple
+> sections), defensive brand bidding (Part 0 item 5), and the two-layer ranking
+> model explanation.
+
 **Prepared for:** Rahul (founder, GlowUp)
 **Date:** 29 May 2026
 **Scope:** Full ASO play for an Android-first, Hindi-first, Tier 2/3 India launch — modelled on the PulseCheck doc's two-layer ranking spine but rebuilt for skincare, the Indian Play Store, and the Bharat-native (Path B) direction set in `docs/audience-fit-tier2-tier3.md`.
