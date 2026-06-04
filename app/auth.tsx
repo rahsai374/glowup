@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, AppState, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
+const RESEND_COOLDOWN = 45;
+
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [countryCode, setCountryCode] = useState('+91');
@@ -19,6 +21,9 @@ export default function AuthScreen() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState<Awaited<ReturnType<typeof rnAuth['prototype']['signInWithPhoneNumber']>> | null>(null);
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const [resending, setResending] = useState(false);
+  const resendDeadlineRef = useRef(0);
   const otpRefs = useRef<(TextInput | null)[]>([]);
   const router = useRouter();
   const { t } = useTranslation();
@@ -32,10 +37,49 @@ export default function AuthScreen() {
       setConfirmation(result);
       logEvent(EVENTS.OTP_REQUESTED);
       setStep('otp');
+      resendDeadlineRef.current = Date.now() + RESEND_COOLDOWN * 1000;
+      setResendCountdown(RESEND_COOLDOWN);
     } catch (e: any) {
       Alert.alert('Failed to send OTP', e?.message ?? 'Please check your number and try again.');
     } finally {
       setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+    const timer = setTimeout(() => {
+      const remaining = Math.max(0, Math.ceil((resendDeadlineRef.current - Date.now()) / 1000));
+      setResendCountdown(remaining);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [resendCountdown]);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && resendDeadlineRef.current > 0) {
+        const remaining = Math.max(0, Math.ceil((resendDeadlineRef.current - Date.now()) / 1000));
+        setResendCountdown(remaining);
+      }
+    });
+    return () => sub.remove();
+  }, []);
+
+  async function resendOtp() {
+    if (resendCountdown > 0 || resending) return;
+    setResending(true);
+    try {
+      const result = await rnAuth().signInWithPhoneNumber(countryCode + phone, true);
+      setConfirmation(result);
+      setOtp(['', '', '', '', '', '']);
+      otpRefs.current[0]?.focus();
+      logEvent(EVENTS.OTP_REQUESTED);
+      resendDeadlineRef.current = Date.now() + RESEND_COOLDOWN * 1000;
+      setResendCountdown(RESEND_COOLDOWN);
+    } catch (e: any) {
+      Alert.alert('Failed to resend OTP', e?.message ?? 'Please try again.');
+    } finally {
+      setResending(false);
     }
   }
 
@@ -198,9 +242,17 @@ export default function AuthScreen() {
               ))}
             </View>
 
-            <TouchableOpacity onPress={() => setStep('phone')} style={{ marginBottom: 32 }}>
-              <Text style={{ fontSize: 14, color: '#E07856', fontFamily: 'PlusJakartaSans_500Medium', textAlign: 'center' }}>{t('change_phone')}</Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginBottom: 32 }}>
+              <TouchableOpacity onPress={() => setStep('phone')}>
+                <Text style={{ fontSize: 14, color: '#E07856', fontFamily: 'PlusJakartaSans_500Medium' }}>{t('change_phone')}</Text>
+              </TouchableOpacity>
+              <Text style={{ fontSize: 14, color: 'rgba(45,24,16,0.2)' }}>|</Text>
+              <TouchableOpacity onPress={resendOtp} disabled={resendCountdown > 0 || resending}>
+                <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_500Medium', color: resendCountdown > 0 || resending ? 'rgba(45,24,16,0.35)' : '#E07856' }}>
+                  {resendCountdown > 0 ? `${t('resend_otp')} (${resendCountdown}s)` : t('resend_otp')}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
               onPress={verifyOtp}

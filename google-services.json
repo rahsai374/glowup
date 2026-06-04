@@ -26,9 +26,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:731207438930:android:c54e2588c18f90f1c4c58b",
+        "mobilesdk_app_id": "1:731207438930:android:5c565e6031d10cc4c4c58b",
         "android_client_info": {
-          "package_name": "com.rahul.glowup"
+          "package_name": "com.glowup.skincare"
         }
       },
       "oauth_client": [],

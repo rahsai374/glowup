@@ -2,15 +2,23 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import NotificationBell from '@/components/home/NotificationBell';
 import { useNotificationStore } from '@/stores/useNotificationStore';
+import type { Gender } from '@/stores/useUserStore';
 
 interface HomeHeaderProps {
   name: string;
   greeting: string;
+  gender: Gender;
   onAvatarPress: () => void;
   onBellPress: () => void;
 }
 
-export default function HomeHeader({ name, greeting, onAvatarPress, onBellPress }: HomeHeaderProps) {
+const GENDER_EMOJI: Record<Gender, string> = {
+  male: '👨🏽',
+  female: '👩🏽',
+  unspecified: '🧑🏽',
+};
+
+export default function HomeHeader({ name, greeting, gender, onAvatarPress, onBellPress }: HomeHeaderProps) {
   const unreadCount = useNotificationStore((s) => s.unreadCount);
 
   return (
@@ -41,7 +49,7 @@ export default function HomeHeader({ name, greeting, onAvatarPress, onBellPress 
             elevation: 4,
           }}
         >
-          <Text style={{ fontSize: 22 }}>👩🏽</Text>
+          <Text style={{ fontSize: 22 }}>{GENDER_EMOJI[gender]}</Text>
         </TouchableOpacity>
       </View>
     </View>
