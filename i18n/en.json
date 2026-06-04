@@ -26,6 +26,7 @@
   "send_otp": "Send OTP",
   "verify_otp": "Verify Code",
   "change_phone": "Change phone number",
+  "resend_otp": "Resend OTP",
   "q1_title": "What's your main skin concern?",
   "q1_acne": "Acne & Breakouts",
   "q1_dark_spots": "Dark Spots",
