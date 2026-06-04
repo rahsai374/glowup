@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ActivityIndicator, Alert, AppState, NativeSyntheticEvent, TextInputKeyPressEventData } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
+const RESEND_COOLDOWN = 45;
+
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [countryCode, setCountryCode] = useState('+91');
@@ -20,6 +22,8 @@ export default function AuthScreen() {
   const [loading, setLoading] = useState(false);
   const [confirmation, setConfirmation] = useState<Awaited<ReturnType<typeof rnAuth['prototype']['signInWithPhoneNumber']>> | null>(null);
   const [resendCountdown, setResendCountdown] = useState(0);
+  const [resending, setResending] = useState(false);
+  const resendDeadlineRef = useRef(0);
   const otpRefs = useRef<(TextInput | null)[]>([]);
   const router = useRouter();
   const { t } = useTranslation();
@@ -33,7 +37,8 @@ export default function AuthScreen() {
       setConfirmation(result);
       logEvent(EVENTS.OTP_REQUESTED);
       setStep('otp');
-      setResendCountdown(45);
+      resendDeadlineRef.current = Date.now() + RESEND_COOLDOWN * 1000;
+      setResendCountdown(RESEND_COOLDOWN);
     } catch (e: any) {
       Alert.alert('Failed to send OTP', e?.message ?? 'Please check your number and try again.');
     } finally {
@@ -43,25 +48,40 @@ export default function AuthScreen() {
 
   useEffect(() => {
     if (resendCountdown <= 0) return;
-    const timer = setTimeout(() => setResendCountdown(resendCountdown - 1), 1000);
+    const timer = setTimeout(() => {
+      const remaining = Math.max(0, Math.ceil((resendDeadlineRef.current - Date.now()) / 1000));
+      setResendCountdown(remaining);
+    }, 1000);
     return () => clearTimeout(timer);
   }, [resendCountdown]);
 
-  const resendOtp = useCallback(async () => {
-    if (resendCountdown > 0 || loading) return;
-    setLoading(true);
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (state) => {
+      if (state === 'active' && resendDeadlineRef.current > 0) {
+        const remaining = Math.max(0, Math.ceil((resendDeadlineRef.current - Date.now()) / 1000));
+        setResendCountdown(remaining);
+      }
+    });
+    return () => sub.remove();
+  }, []);
+
+  async function resendOtp() {
+    if (resendCountdown > 0 || resending) return;
+    setResending(true);
     try {
-      const result = await rnAuth().signInWithPhoneNumber(countryCode + phone);
+      const result = await rnAuth().signInWithPhoneNumber(countryCode + phone, true);
       setConfirmation(result);
       setOtp(['', '', '', '', '', '']);
+      otpRefs.current[0]?.focus();
       logEvent(EVENTS.OTP_REQUESTED);
-      setResendCountdown(45);
+      resendDeadlineRef.current = Date.now() + RESEND_COOLDOWN * 1000;
+      setResendCountdown(RESEND_COOLDOWN);
     } catch (e: any) {
       Alert.alert('Failed to resend OTP', e?.message ?? 'Please try again.');
     } finally {
-      setLoading(false);
+      setResending(false);
     }
-  }, [resendCountdown, loading, countryCode, phone]);
+  }
 
   function handleOtpChange(val: string, i: number) {
     const next = [...otp];
@@ -227,8 +247,8 @@ export default function AuthScreen() {
                 <Text style={{ fontSize: 14, color: '#E07856', fontFamily: 'PlusJakartaSans_500Medium' }}>{t('change_phone')}</Text>
               </TouchableOpacity>
               <Text style={{ fontSize: 14, color: 'rgba(45,24,16,0.2)' }}>|</Text>
-              <TouchableOpacity onPress={resendOtp} disabled={resendCountdown > 0}>
-                <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_500Medium', color: resendCountdown > 0 ? 'rgba(45,24,16,0.35)' : '#E07856' }}>
+              <TouchableOpacity onPress={resendOtp} disabled={resendCountdown > 0 || resending}>
+                <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_500Medium', color: resendCountdown > 0 || resending ? 'rgba(45,24,16,0.35)' : '#E07856' }}>
                   {resendCountdown > 0 ? `${t('resend_otp')} (${resendCountdown}s)` : t('resend_otp')}
                 </Text>
               </TouchableOpacity>
