@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import ScoreCircle from '@/components/ScoreCircle';
 import MetricBar from '@/components/MetricBar';
 import BackButton from '@/components/BackButton';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { scanImageExists } from '@/lib/scanImages';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -37,6 +38,16 @@ export default function ResultsScreen() {
     : undefined;
   const scan = historicalScan ?? currentScan;
   const isHistorical = !!historicalScan;
+
+  const [hasImage, setHasImage] = useState(false);
+
+  useEffect(() => {
+    if (!scan?.imageUrl) {
+      setHasImage(false);
+      return;
+    }
+    scanImageExists(scan.imageUrl).then(setHasImage);
+  }, [scan?.imageUrl]);
 
   useEffect(() => {
     if (!scan) {
@@ -95,6 +106,21 @@ export default function ResultsScreen() {
             <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_500Medium', color: 'rgba(45,24,16,0.5)', marginBottom: 14 }}>
               {t('historical_scan_label', { date: new Date(scan.createdAt).toLocaleDateString() })}
             </Text>
+          )}
+
+          {hasImage && scan.imageUrl && (
+            <Image
+              source={{ uri: scan.imageUrl }}
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                marginBottom: 16,
+                borderWidth: 3,
+                borderColor: 'rgba(224,120,86,0.15)',
+              }}
+              resizeMode="cover"
+            />
           )}
 
           <ScoreCircle score={scan.overall_score} size={160} />
