@@ -106,11 +106,12 @@ export async function logEvent(
 ): Promise<void> {
   try {
     const mapping = FB_EVENT_MAP[name];
-    const fbEvent = mapping?.event ?? name;
-    const fbParams = mapping?.mapParams && params
-      ? mapping.mapParams(params as Record<string, string | number>)
-      : params;
-    AppEventsLogger.logEvent(fbEvent, fbParams as Record<string, string | number>);
+    if (mapping) {
+      const fbParams = mapping.mapParams && params
+        ? mapping.mapParams(params as Record<string, string | number>)
+        : undefined;
+      AppEventsLogger.logEvent(mapping.event, fbParams as Record<string, string | number>);
+    }
   } catch {}
   try {
     posthog?.capture(name, params);
