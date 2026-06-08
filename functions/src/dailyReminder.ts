@@ -77,10 +77,15 @@ export const dailyReminderScheduled = onSchedule(
   },
 );
 
-// HTTP trigger for manual test fires
+// HTTP trigger for manual test fires (secret-protected)
 export const sendDailyReminderNow = onRequest(
   { region: 'asia-south1', memory: '256MiB', timeoutSeconds: 540 },
-  async (_req, res) => {
+  async (req, res) => {
+    const secret = process.env.NOTIFY_TEST_SECRET;
+    if (!secret || req.headers['x-notify-secret'] !== secret) {
+      res.status(403).json({ error: 'Forbidden' });
+      return;
+    }
     await runDailyReminder();
     res.json({ ok: true, message: 'Daily reminder sent' });
   },

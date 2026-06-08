@@ -67,7 +67,9 @@ export async function savePushToken(uid: string, token: string): Promise<void> {
   );
 }
 
+// iOS returns APNs token, not FCM — needs @react-native-firebase/messaging for iOS support
 export async function registerFcmTokenAsync(): Promise<string | null> {
+  if (Platform.OS !== 'android') return null;
   if (!Device.isDevice) return null;
 
   const { status } = await Notifications.getPermissionsAsync();
