@@ -9,7 +9,7 @@ import { useUserStore } from '@/stores/useUserStore';
 import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
 import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { logEvent, setUserId, logSignUp, logLogin, setAdvancedMatching, EVENTS } from '@/lib/analytics';
-import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
+import { registerForPushNotificationsAsync, savePushToken, registerFcmTokenAsync, saveFcmToken } from '@/lib/notifications';
 
 export default function AuthScreen() {
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
@@ -33,6 +33,7 @@ export default function AuthScreen() {
     setAdvancedMatching(countryCode + phoneRef.current);
     setUser({ uid, name: '', phone: phoneRef.current, language: 'en', skinType: '', mainConcern: '', waterIntake: '', sunscreenHabit: '', ageRange: '', gender: 'unspecified' });
     registerForPushNotificationsAsync().then((token) => { if (token) savePushToken(uid, token); }).catch(() => {});
+    registerFcmTokenAsync().then((fcm) => { if (fcm) saveFcmToken(uid, fcm); }).catch(() => {});
     saveDeviceInfo(uid, getDeviceMetadata()).catch(() => {});
     try {
       const exists = await hydrateFromFirestore(uid);

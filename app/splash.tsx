@@ -14,7 +14,7 @@ import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
 import { getDeviceMetadata } from '@/lib/deviceInfo';
 import { useProductStore } from '@/stores/useProductStore';
 import { logEvent, setUserId, EVENTS } from '@/lib/analytics';
-import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
+import { registerForPushNotificationsAsync, savePushToken, registerFcmTokenAsync, saveFcmToken } from '@/lib/notifications';
 
 const appIcon = require('@/assets/icon.png');
 
@@ -43,6 +43,10 @@ export default function SplashScreen() {
 
     registerForPushNotificationsAsync()
       .then((token) => { if (token) savePushToken(currentUser.uid, token); })
+      .catch(() => {});
+
+    registerFcmTokenAsync()
+      .then((fcm) => { if (fcm) saveFcmToken(currentUser.uid, fcm); })
       .catch(() => {});
 
     saveDeviceInfo(currentUser.uid, getDeviceMetadata()).catch(() => {});

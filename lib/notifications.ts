@@ -67,6 +67,29 @@ export async function savePushToken(uid: string, token: string): Promise<void> {
   );
 }
 
+export async function registerFcmTokenAsync(): Promise<string | null> {
+  if (!Device.isDevice) return null;
+
+  const { status } = await Notifications.getPermissionsAsync();
+  if (status !== 'granted') return null;
+
+  try {
+    const { data: token } = await Notifications.getDevicePushTokenAsync();
+    console.log('[notifications] FCM device token:', token);
+    return token;
+  } catch (e) {
+    console.warn('[notifications] Failed to get FCM token:', e);
+    return null;
+  }
+}
+
+export async function saveFcmToken(uid: string, token: string): Promise<void> {
+  await firestore().collection('users').doc(uid).set(
+    { fcmToken: token, fcmTokenUpdatedAt: firestore.FieldValue.serverTimestamp() },
+    { merge: true }
+  );
+}
+
 type StringHref = Extract<Href, string>;
 
 const VALID_ROUTES: readonly StringHref[] = [
