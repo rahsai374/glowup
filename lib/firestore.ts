@@ -4,6 +4,7 @@ import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
 import { type DeviceMetadata } from '@/lib/deviceInfo';
 import { type RoutineStep } from '@/lib/routineData';
+import { getScanImagePath, scanImageExists } from '@/lib/scanImages';
 
 export async function saveScan(uid: string, scan: ScanRecord): Promise<void> {
   try {
@@ -123,7 +124,16 @@ export async function hydrateFromFirestore(uid: string): Promise<boolean> {
     .limit(50)
     .get();
 
-  const scans: ScanRecord[] = scansSnap.docs.map((d) => d.data() as ScanRecord);
+  const scans: ScanRecord[] = await Promise.all(
+    scansSnap.docs.map(async (d) => {
+      const rec = d.data() as ScanRecord;
+      if (!rec.imageUrl) {
+        const path = getScanImagePath(rec.id);
+        if (await scanImageExists(path)) rec.imageUrl = path;
+      }
+      return rec;
+    })
+  );
   useScanStore.getState().setHistory(scans);
 
   if (scans.length > 0) {

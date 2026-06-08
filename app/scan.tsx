@@ -231,17 +231,18 @@ export default function ScanScreen() {
         scanHistory[0] ?? null
       );
       const scanId = `scan_${Date.now()}`;
-      let permanentImageUrl: string | undefined;
+      let imageUrl: string | undefined;
       try {
-        permanentImageUrl = await persistScanImage(scanId, compressed.uri);
+        imageUrl = await persistScanImage(scanId, compressed.uri);
       } catch (e) {
         console.warn('[scan] image persist failed:', e);
+        imageUrl = compressed.uri;
       }
       const scan = {
         ...result,
         id: scanId,
         createdAt: new Date().toISOString(),
-        imageUrl: permanentImageUrl,
+        imageUrl,
         wasReady,
       };
       setCurrentScan(scan);

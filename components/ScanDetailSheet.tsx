@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ScanRecord } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import { logEvent, EVENTS } from '@/lib/analytics';
-import { scanImageExists } from '@/lib/scanImages';
+import { useScanImage } from '@/hooks/useScanImage';
 
 interface Props {
   scan: ScanRecord | null;
@@ -36,15 +36,7 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
 
   const displayScan = scan ?? lastScan;
 
-  const [hasImage, setHasImage] = useState(false);
-
-  useEffect(() => {
-    if (!displayScan?.imageUrl) {
-      setHasImage(false);
-      return;
-    }
-    scanImageExists(displayScan.imageUrl).then(setHasImage);
-  }, [displayScan?.imageUrl]);
+  const hasImage = useScanImage(displayScan?.imageUrl);
 
   useEffect(() => {
     translateY.value = withSpring(isOpen ? 0 : sheetHeight, SPRING_CONFIG);

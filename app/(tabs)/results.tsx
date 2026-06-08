@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
@@ -9,7 +9,7 @@ import ScoreCircle from '@/components/ScoreCircle';
 import MetricBar from '@/components/MetricBar';
 import BackButton from '@/components/BackButton';
 import { logEvent, EVENTS } from '@/lib/analytics';
-import { scanImageExists } from '@/lib/scanImages';
+import { useScanImage } from '@/hooks/useScanImage';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -39,15 +39,7 @@ export default function ResultsScreen() {
   const scan = historicalScan ?? currentScan;
   const isHistorical = !!historicalScan;
 
-  const [hasImage, setHasImage] = useState(false);
-
-  useEffect(() => {
-    if (!scan?.imageUrl) {
-      setHasImage(false);
-      return;
-    }
-    scanImageExists(scan.imageUrl).then(setHasImage);
-  }, [scan?.imageUrl]);
+  const hasImage = useScanImage(scan?.imageUrl);
 
   useEffect(() => {
     if (!scan) {
