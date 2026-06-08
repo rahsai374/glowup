@@ -27,6 +27,7 @@ import { analyzeSkin } from '@/lib/gemini';
 import { saveScan } from '@/lib/firestore';
 import { useFaceGuide } from '@/lib/useFaceGuide';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { persistScanImage } from '@/lib/scanImages';
 import type { Face } from 'react-native-vision-camera-face-detector';
 
 const { width, height } = Dimensions.get('window');
@@ -229,11 +230,18 @@ export default function ScanScreen() {
         user?.ageRange ?? '',
         scanHistory[0] ?? null
       );
+      const scanId = `scan_${Date.now()}`;
+      let permanentImageUrl: string | undefined;
+      try {
+        permanentImageUrl = await persistScanImage(scanId, compressed.uri);
+      } catch (e) {
+        console.warn('[scan] image persist failed:', e);
+      }
       const scan = {
         ...result,
-        id: `scan_${Date.now()}`,
+        id: scanId,
         createdAt: new Date().toISOString(),
-        imageUrl: uri,
+        imageUrl: permanentImageUrl,
         wasReady,
       };
       setCurrentScan(scan);
