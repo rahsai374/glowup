@@ -8,7 +8,7 @@ import AmbientBlobs from '@/components/AmbientBlobs';
 import { useUserStore } from '@/stores/useUserStore';
 import { hydrateFromFirestore, saveDeviceInfo } from '@/lib/firestore';
 import { getDeviceMetadata } from '@/lib/deviceInfo';
-import { logEvent, setUserId, logSignUp, logLogin, EVENTS } from '@/lib/analytics';
+import { logEvent, setUserId, logSignUp, logLogin, setAdvancedMatching, EVENTS } from '@/lib/analytics';
 import { registerForPushNotificationsAsync, savePushToken } from '@/lib/notifications';
 
 export default function AuthScreen() {
@@ -30,6 +30,7 @@ export default function AuthScreen() {
     if (didNavigate.current) return;
     didNavigate.current = true;
     setUserId(uid);
+    setAdvancedMatching(countryCode + phoneRef.current);
     setUser({ uid, name: '', phone: phoneRef.current, language: 'en', skinType: '', mainConcern: '', waterIntake: '', sunscreenHabit: '', ageRange: '', gender: 'unspecified' });
     registerForPushNotificationsAsync().then((token) => { if (token) savePushToken(uid, token); }).catch(() => {});
     saveDeviceInfo(uid, getDeviceMetadata()).catch(() => {});

@@ -63,12 +63,55 @@ export const EVENTS = {
   NOTIFICATION_TAPPED: 'notification_tapped',
 } as const;
 
+type FBMapping = {
+  event: string;
+  mapParams?: (p: Record<string, string | number>) => Record<string, string | number>;
+};
+
+const P = AppEventsLogger.AppEventParams;
+
+const FB_EVENT_MAP: Partial<Record<string, FBMapping>> = {
+  [EVENTS.ONBOARDING_COMPLETED]: { event: AppEventsLogger.AppEvents.CompletedTutorial },
+  [EVENTS.SCAN_STARTED]: { event: AppEventsLogger.AppEvents.InitiatedCheckout },
+  [EVENTS.SCAN_COMPLETED]: {
+    event: AppEventsLogger.AppEvents.AchievedLevel,
+    mapParams: (p) => ({ [P.Level]: String(p.overall_score ?? '') }),
+  },
+  [EVENTS.RESULTS_VIEWED]: {
+    event: AppEventsLogger.AppEvents.ViewedContent,
+    mapParams: () => ({ [P.ContentType]: 'scan_results' }),
+  },
+  [EVENTS.ROUTINE_VIEWED]: {
+    event: AppEventsLogger.AppEvents.ViewedContent,
+    mapParams: () => ({ [P.ContentType]: 'routine' }),
+  },
+  [EVENTS.PRODUCT_VERDICT_VIEWED]: {
+    event: AppEventsLogger.AppEvents.ViewedContent,
+    mapParams: (p) => ({ [P.ContentType]: 'product_verdict', [P.ContentID]: String(p.product_id ?? '') }),
+  },
+  [EVENTS.PRODUCT_SEARCHED]: {
+    event: AppEventsLogger.AppEvents.Searched,
+    mapParams: (p) => ({ [P.SearchString]: String(p.query ?? '') }),
+  },
+  [EVENTS.SHARE_COMPLETED]: { event: AppEventsLogger.AppEvents.UnlockedAchievement },
+  [EVENTS.PRODUCT_SELECTED]: {
+    event: AppEventsLogger.AppEvents.AddedToWishlist,
+    mapParams: (p) => ({ [P.ContentID]: String(p.product_id ?? ''), [P.ContentType]: 'product' }),
+  },
+};
+
 export async function logEvent(
   name: string,
   params?: Record<string, string | number | boolean>,
 ): Promise<void> {
   try {
-    AppEventsLogger.logEvent(name, params as Record<string, string | number>);
+    const mapping = FB_EVENT_MAP[name];
+    if (mapping) {
+      const fbParams = mapping.mapParams && params
+        ? mapping.mapParams(params as Record<string, string | number>)
+        : undefined;
+      AppEventsLogger.logEvent(mapping.event, fbParams as Record<string, string | number>);
+    }
   } catch {}
   try {
     posthog?.capture(name, params);
@@ -117,7 +160,7 @@ export async function setUserProperties(
 
 export async function logSignUp(method: string = 'phone'): Promise<void> {
   try {
-    AppEventsLogger.logEvent('fb_mobile_complete_registration', {
+    AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
       fb_registration_method: method,
     });
   } catch {}
@@ -131,14 +174,15 @@ export async function logSignUp(method: string = 'phone'): Promise<void> {
 
 export async function logLogin(method: string = 'phone'): Promise<void> {
   try {
-    AppEventsLogger.logEvent('fb_mobile_login', {
-      fb_login_method: method,
-    });
-  } catch {}
-  try {
     posthog?.capture('login', { method });
   } catch {}
   try {
     mixpanel?.track('login', { method });
+  } catch {}
+}
+
+export function setAdvancedMatching(phone: string): void {
+  try {
+    AppEventsLogger.setUserData({ phone });
   } catch {}
 }
