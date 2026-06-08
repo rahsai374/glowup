@@ -1,1 +1,1 @@
-// Functions will be exported here
+export { dailyReminderScheduled, sendDailyReminderNow } from './dailyReminder';
