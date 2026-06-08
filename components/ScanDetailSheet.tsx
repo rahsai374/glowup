@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Pressable, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, Pressable, useWindowDimensions, Image } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { ScanRecord } from '@/stores/useScanStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { useScanImage } from '@/hooks/useScanImage';
 
 interface Props {
   scan: ScanRecord | null;
@@ -34,6 +35,8 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
   }, [scan]);
 
   const displayScan = scan ?? lastScan;
+
+  const hasImage = useScanImage(displayScan?.imageUrl);
 
   useEffect(() => {
     translateY.value = withSpring(isOpen ? 0 : sheetHeight, SPRING_CONFIG);
@@ -118,6 +121,20 @@ export default function ScanDetailSheet({ scan, isOpen, onClose }: Props) {
 
           {displayScan && (
             <View style={{ flex: 1, paddingHorizontal: 24, alignItems: 'center' }}>
+              {hasImage && displayScan.imageUrl && (
+                <Image
+                  source={{ uri: displayScan.imageUrl }}
+                  style={{
+                    width: 72,
+                    height: 72,
+                    borderRadius: 36,
+                    marginBottom: 12,
+                    borderWidth: 2,
+                    borderColor: 'rgba(224,120,86,0.2)',
+                  }}
+                  resizeMode="cover"
+                />
+              )}
               {/* Score */}
               <ScoreCircle score={displayScan.overall_score} size={96} />
 
