@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Pressable, useWindowDimensions } from 'react-native';
 import Svg, {
   Path,
@@ -128,7 +128,7 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
   const plotW = chartW - PAD_X * 2;
   const plotH = CHART_H - PAD_Y * 2;
 
-  const data = [...scans].reverse();
+  const data = useMemo(() => [...scans].reverse(), [scans]);
 
   const points = data.map((scan, i) => {
     const x = PAD_X + (i / (data.length - 1)) * plotW;

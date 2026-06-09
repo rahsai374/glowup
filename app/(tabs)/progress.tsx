@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { Image } from 'expo-image';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { useScanStore, ScanRecord, daysSinceLastScan } from '@/stores/useScanStore';
@@ -18,6 +19,16 @@ const PRIMARY = '#E07856';
 const ACCENT = '#D4A574';
 
 type ProgressState = 0 | 1 | 'R' | 2 | 3 | 4 | 5;
+
+const SUBTITLE_KEYS: Record<string, string> = {
+  '0': 'progress_sub_ftue',
+  '1': 'progress_sub_first',
+  R: 'progress_sub_returning',
+  '2': 'progress_sub_no_change',
+  '3': 'progress_sub_minor',
+  '4': 'progress_sub_happy',
+  '5': 'progress_sub_decreased',
+};
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'hydration',
@@ -37,13 +48,13 @@ function formatDateShort(dateStr: string): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-function determineProgressState(history: ScanRecord[]): ProgressState {
+function determineProgressState(history: ScanRecord[], timeWindow: TimeWindow): ProgressState {
   if (history.length === 0) return 0;
   if (history.length === 1) return 1;
   const daysSince = daysSinceLastScan(history);
   if (daysSince !== null && daysSince > 56) return 'R';
   const latest = history[0];
-  const comparison = findComparisonScan(history, '4weeks');
+  const comparison = findComparisonScan(history, timeWindow);
   if (!comparison) return 1;
   const diff = latest.overall_score - comparison.overall_score;
   if (diff < 0) return 5;
@@ -100,24 +111,22 @@ function computeBiggestImprover(
   return { metric: bestMetric, delta: bestDelta };
 }
 
-function scansForWindow(history: ScanRecord[], mode: TimeWindow): ScanRecord[] {
-  if (mode === 'all') return history;
-  const latest = history[0];
-  if (!latest) return history;
-  const latestTime = new Date(latest.createdAt).getTime();
-  const days = mode === 'week' ? 7 : 28;
-  const cutoff = latestTime - days * 24 * 60 * 60 * 1000;
-  return history.filter((s) => new Date(s.createdAt).getTime() >= cutoff);
+function scansForWindow(history: ScanRecord[], mode: TimeWindow, comparison: ScanRecord | null): ScanRecord[] {
+  if (mode === 'all' || !comparison) return history;
+  const compTime = new Date(comparison.createdAt).getTime();
+  return history.filter((s) => new Date(s.createdAt).getTime() >= compTime);
 }
 
 function weeksSince(dateStr: string): number {
   return Math.round((Date.now() - new Date(dateStr).getTime()) / (7 * 24 * 60 * 60 * 1000));
 }
 
-function windowLabel(mode: TimeWindow): string {
-  if (mode === 'week') return '1 week ago';
-  if (mode === '4weeks') return '4 weeks ago';
-  return 'First scan';
+function comparisonAgeLabel(comparison: ScanRecord, mode: TimeWindow): string {
+  if (mode === 'all') return 'First scan';
+  const weeks = weeksSince(comparison.createdAt);
+  if (weeks < 1) return 'Days ago';
+  if (weeks === 1) return '1 week ago';
+  return `${weeks} weeks ago`;
 }
 
 function dateRangeText(
@@ -144,14 +153,14 @@ export default function ProgressScreen() {
     }, [])
   );
 
-  const state = useMemo(() => determineProgressState(history), [history]);
+  const state = useMemo(() => determineProgressState(history, timeWindow), [history, timeWindow]);
   const latest = history[0] ?? null;
   const comparison = useMemo(
     () => (history.length >= 2 ? findComparisonScan(history, timeWindow) : null),
     [history, timeWindow]
   );
   const diff = latest && comparison ? latest.overall_score - comparison.overall_score : 0;
-  const windowScans = useMemo(() => scansForWindow(history, timeWindow), [history, timeWindow]);
+  const windowScans = useMemo(() => scansForWindow(history, timeWindow, comparison), [history, timeWindow, comparison]);
   const improver = useMemo(
     () => (comparison && latest ? computeBiggestImprover(comparison, latest) : null),
     [comparison, latest]
@@ -160,22 +169,14 @@ export default function ProgressScreen() {
   const handleScanTap = (scan: ScanRecord) => {
     logEvent(EVENTS.SCAN_HISTORY_CARD_TAPPED, {
       overall_score: scan.overall_score,
+      scan_index: history.findIndex((s) => s.id === scan.id),
     });
     setSelectedScan(scan);
   };
 
+  const { t } = useTranslation();
   const navigateToScan = () => router.push('/scan');
   const navigateToRoutine = () => router.push('/(tabs)/routine');
-
-  const SUBTITLES: Record<string, string> = {
-    '0': "Let's begin your glow story",
-    '1': 'Your journey begins',
-    R: 'Welcome back — ready for a fresh scan?',
-    '2': 'Consistency is key',
-    '3': 'Slow and steady',
-    '4': "See how far you've come",
-    '5': 'Every journey has dips',
-  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
@@ -235,7 +236,7 @@ export default function ProgressScreen() {
             marginBottom: 4,
           }}
         >
-          Your Progress
+          {t('progress_title')}
         </Text>
         <Text
           style={{
@@ -245,7 +246,7 @@ export default function ProgressScreen() {
             marginBottom: 28,
           }}
         >
-          {SUBTITLES[String(state)]}
+          {t(SUBTITLE_KEYS[String(state)])}
         </Text>
 
         {state === 0 && <StateZero onScan={navigateToScan} />}
@@ -720,7 +721,7 @@ function StateComparison({
             date: formatDateShort(latest.createdAt),
             imageUrl: latest.imageUrl,
           }}
-          comparisonLabel={windowLabel(timeWindow)}
+          comparisonLabel={comparisonAgeLabel(comparison, timeWindow)}
           dateRangeText={dateRangeText(comparison, latest, timeWindow, windowScans.length)}
           showToggle
           activeToggle={timeWindow}

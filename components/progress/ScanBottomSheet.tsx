@@ -1,7 +1,8 @@
 import React, { useEffect, useCallback } from 'react';
-import { View, Text, Pressable, useWindowDimensions } from 'react-native';
+import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -11,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { ScanRecord } from '@/stores/useScanStore';
+import { logEvent, EVENTS } from '@/lib/analytics';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 
 const PRIMARY = '#E07856';
@@ -41,8 +43,9 @@ interface ScanBottomSheetProps {
 
 export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps) {
   const router = useRouter();
+  const { t } = useTranslation();
   const { height: screenHeight } = useWindowDimensions();
-  const sheetHeight = 440;
+  const sheetHeight = 540;
 
   const translateY = useSharedValue(sheetHeight);
   const backdropOpacity = useSharedValue(0);
@@ -64,9 +67,7 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
     })
     .onEnd((e) => {
       if (translateY.value > DISMISS_THRESHOLD) {
-        translateY.value = withTiming(sheetHeight, { duration: 300 });
-        backdropOpacity.value = withTiming(0, { duration: 300 });
-        runOnJS(onClose)();
+        runOnJS(dismiss)();
       } else {
         translateY.value = withSpring(0);
       }
@@ -81,6 +82,10 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
   }));
 
   const handleViewResults = () => {
+    logEvent(EVENTS.SCAN_HISTORY_FULL_ANALYSIS, {
+      scan_id: scan.id,
+      overall_score: scan.overall_score,
+    });
     dismiss();
     setTimeout(() => {
       router.push({ pathname: '/(tabs)/results', params: { scanId: scan.id } });
@@ -197,6 +202,33 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
             })}
           </View>
 
+          {/* Scan details */}
+          {[
+            { label: t('skin_type'), value: scan.skin_type },
+            { label: t('skin_age'), value: scan.skin_age ? String(scan.skin_age) : undefined },
+            { label: t('top_concern'), value: scan.top_concern },
+            { label: t('top_win'), value: scan.top_win },
+          ]
+            .filter((d) => d.value)
+            .map((d) => (
+              <View
+                key={d.label}
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingVertical: 6,
+                  paddingHorizontal: 16,
+                }}
+              >
+                <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_500Medium', color: 'rgba(45,24,16,0.55)' }}>
+                  {d.label}
+                </Text>
+                <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810', maxWidth: '60%', textAlign: 'right' }}>
+                  {d.value}
+                </Text>
+              </View>
+            ))}
+
           {/* View Full Results */}
           <Pressable
             onPress={handleViewResults}
@@ -210,7 +242,7 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
             }}
           >
             <Text style={{ fontSize: 15, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
-              View Full Results
+              {t('see_full_analysis')}
             </Text>
           </Pressable>
         </Animated.View>
