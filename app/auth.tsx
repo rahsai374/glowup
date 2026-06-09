@@ -32,8 +32,11 @@ export default function AuthScreen() {
     setUserId(uid);
     setAdvancedMatching(countryCode + phoneRef.current);
     setUser({ uid, name: '', phone: phoneRef.current, language: 'en', skinType: '', mainConcern: '', waterIntake: '', sunscreenHabit: '', ageRange: '', gender: 'unspecified' });
-    registerForPushNotificationsAsync().then((token) => { if (token) savePushToken(uid, token); }).catch(() => {});
-    registerFcmTokenAsync().then((fcm) => { if (fcm) saveFcmToken(uid, fcm); }).catch(() => {});
+    registerForPushNotificationsAsync()
+      .then((token) => { if (token) savePushToken(uid, token); })
+      .then(() => registerFcmTokenAsync())
+      .then((fcm) => { if (fcm) saveFcmToken(uid, fcm); })
+      .catch(() => {});
     saveDeviceInfo(uid, getDeviceMetadata()).catch(() => {});
     try {
       const exists = await hydrateFromFirestore(uid);

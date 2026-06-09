@@ -43,9 +43,7 @@ export default function SplashScreen() {
 
     registerForPushNotificationsAsync()
       .then((token) => { if (token) savePushToken(currentUser.uid, token); })
-      .catch(() => {});
-
-    registerFcmTokenAsync()
+      .then(() => registerFcmTokenAsync())
       .then((fcm) => { if (fcm) saveFcmToken(currentUser.uid, fcm); })
       .catch(() => {});
 
