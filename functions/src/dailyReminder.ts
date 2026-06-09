@@ -66,10 +66,10 @@ async function runDailyReminder(): Promise<void> {
   console.log(`[dailyReminder] Done — sent: ${result.sent}, failed: ${result.failed}, stale removed: ${result.staleRemoved}`);
 }
 
-// Cron: 9:00 AM IST = 03:30 UTC
+// Cron: 7:00 PM IST = 13:30 UTC
 export const dailyReminderScheduled = onSchedule(
   {
-    schedule: '30 3 * * *',
+    schedule: '30 13 * * *',
     timeZone: 'UTC',
     region: 'asia-south1',
     memory: '256MiB',
