@@ -1,8 +1,11 @@
 import * as admin from 'firebase-admin';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { onRequest } from 'firebase-functions/v2/https';
+import { defineSecret } from 'firebase-functions/params';
 import { sendFcmToAll } from './fcmSend';
 import { pickRandom } from './notificationCopy';
+
+const notifyTestSecret = defineSecret('NOTIFY_TEST_SECRET');
 
 if (!admin.apps.length) {
   admin.initializeApp();
@@ -79,9 +82,9 @@ export const dailyReminderScheduled = onSchedule(
 
 // HTTP trigger for manual test fires (secret-protected)
 export const sendDailyReminderNow = onRequest(
-  { region: 'asia-south1', memory: '256MiB', timeoutSeconds: 540 },
+  { region: 'asia-south1', memory: '256MiB', timeoutSeconds: 540, secrets: [notifyTestSecret] },
   async (req, res) => {
-    const secret = process.env.NOTIFY_TEST_SECRET;
+    const secret = notifyTestSecret.value();
     if (!secret || req.headers['x-notify-secret'] !== secret) {
       res.status(403).json({ error: 'Forbidden' });
       return;
