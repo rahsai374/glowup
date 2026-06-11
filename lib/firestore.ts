@@ -4,6 +4,7 @@ import { useScanStore, type ScanRecord } from '@/stores/useScanStore';
 import i18n from '@/i18n';
 import { type DeviceMetadata } from '@/lib/deviceInfo';
 import { type RoutineStep } from '@/lib/routineData';
+import { getRoutine } from '@/lib/routineEngine';
 import { getScanImagePath, scanImageExists } from '@/lib/scanImages';
 
 export async function saveScan(uid: string, scan: ScanRecord): Promise<void> {
@@ -20,7 +21,7 @@ export async function saveProfile(
   profile: { name: string; phone: string; language: string; mainConcern: string; skinType: string; waterIntake: string; sunscreenHabit: string; ageRange: string; gender: string }
 ): Promise<void> {
   try {
-    await firestore().collection('users').doc(uid).set({ ...profile, createdAt: firestore.FieldValue.serverTimestamp() });
+    await firestore().collection('users').doc(uid).set({ ...profile, createdAt: firestore.FieldValue.serverTimestamp() }, { merge: true });
   } catch (e) {
     console.warn('[firestore] saveProfile failed:', e);
   }
@@ -28,7 +29,7 @@ export async function saveProfile(
 
 export async function updateProfileField(uid: string, partial: Record<string, unknown>): Promise<void> {
   try {
-    await firestore().collection('users').doc(uid).update(partial);
+    await firestore().collection('users').doc(uid).set(partial, { merge: true });
   } catch (e) {
     console.warn('[firestore] updateProfileField failed:', e);
   }
@@ -83,6 +84,18 @@ export async function saveRoutine(
   } catch (e) {
     console.warn('[firestore] saveRoutine failed:', e);
   }
+}
+
+export async function generateAndSaveRoutine(
+  uid: string,
+  skinType: string,
+  mainConcern: string,
+  gender: string,
+): Promise<void> {
+  const routine = getRoutine(skinType, mainConcern, gender);
+  await saveRoutine(uid, routine.morning, routine.night, routine.weekly, {
+    skinType, topConcern: mainConcern, gender,
+  });
 }
 
 export async function deleteAccount(uid: string): Promise<void> {
