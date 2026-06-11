@@ -1,26 +1,27 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { View, Text, Pressable } from 'react-native';
+import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import Sparkline from './Sparkline';
 
-interface ScoreTrendCardProps {
+interface ScoreCardProps {
   currentScore: number;
   previousScore: number | null;
-  history: number[]; // oldest first, up to 7 values
   onPress: () => void;
   onScanPress: () => void;
 }
 
-export default function ScoreTrendCard({ currentScore, previousScore, history, onPress, onScanPress }: ScoreTrendCardProps) {
+export default function ScoreCard({ currentScore, previousScore, onPress, onScanPress }: ScoreCardProps) {
   const { t } = useTranslation();
   const delta = previousScore !== null ? currentScore - previousScore : null;
+  const pressScale = useSharedValue(1);
+  const buttonStyle = useAnimatedStyle(() => ({ transform: [{ scale: pressScale.value }] }));
 
   const deltaLabel = () => {
     if (delta === null) return null;
     if (delta > 0) return `▲ +${Math.round(delta)}`;
     if (delta < 0) return `▼ ${Math.round(Math.abs(delta))}`;
-    return '— same';
+    return '—';
   };
 
   const deltaBg = () => {
@@ -32,16 +33,9 @@ export default function ScoreTrendCard({ currentScore, previousScore, history, o
 
   const deltaColor = () => {
     if (delta === null) return '#2D1810';
-    if (delta > 0) return '#4ADE80';
+    if (delta > 0) return '#16A34A';
     if (delta < 0) return '#D97706';
     return '#78716C';
-  };
-
-  const subtitle = () => {
-    if (delta === null) return t('score_trend_baseline');
-    if (delta > 0) return t('score_trend_up');
-    if (delta < 0) return t('score_trend_down');
-    return t('score_trend_same');
   };
 
   return (
@@ -63,8 +57,10 @@ export default function ScoreTrendCard({ currentScore, previousScore, history, o
           elevation: 3,
         }}
       >
+        <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'rgba(45,24,16,0.45)', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 4 }}>
+          {t('glow_score')}
+        </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          {/* Score + delta */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Text style={{ fontSize: 48, fontFamily: 'Fraunces_700Bold', color: '#E07856', lineHeight: 56 }}>
               {currentScore}
@@ -77,28 +73,30 @@ export default function ScoreTrendCard({ currentScore, previousScore, history, o
               </View>
             )}
           </View>
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <TouchableOpacity
+          <Animated.View style={buttonStyle}>
+            <Pressable
               onPress={onScanPress}
+              onPressIn={() => { pressScale.value = withSpring(0.96); }}
+              onPressOut={() => { pressScale.value = withSpring(1); }}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               style={{
                 backgroundColor: '#E07856',
-                borderRadius: 14,
-                paddingHorizontal: 14,
-                paddingVertical: 6,
+                borderRadius: 999,
+                paddingHorizontal: 20,
+                paddingVertical: 12,
+                shadowColor: '#E07856',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.35,
+                shadowRadius: 10,
+                elevation: 4,
               }}
             >
-              <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
-                Scan again
+              <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'white' }}>
+                ✨ {t('scan_again')}
               </Text>
-            </TouchableOpacity>
-          </View>
-          {/* Sparkline */}
-          <Sparkline data={history} width={80} height={28} color="#E07856" />
+            </Pressable>
+          </Animated.View>
         </View>
-        <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(45,24,16,0.55)', marginTop: 8 }}>
-          {subtitle()}
-        </Text>
       </TouchableOpacity>
     </Animated.View>
   );

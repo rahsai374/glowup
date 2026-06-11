@@ -127,6 +127,8 @@
   "home_greeting_afternoon": "Good afternoon",
   "home_greeting_evening": "Good evening",
   "home_greeting_night": "Glowing up tonight",
+  "glow_score": "Glow Score",
+  "scan_again": "Scan again",
   "score_trend_baseline": "Your baseline · scan again to see your trend",
   "score_trend_up": "Glow up since last scan",
   "score_trend_down": "Small dip — let's bounce back",

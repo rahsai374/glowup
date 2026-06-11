@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/stores/useUserStore';
-import { useScanStore, daysSinceLastScan, scansInLastNDays, scoreHistoryLastN } from '@/stores/useScanStore';
+import { useScanStore, daysSinceLastScan, scansInLastNDays } from '@/stores/useScanStore';
 import { useRoutineStore, todayProgress, weeklyConsistency } from '@/stores/useRoutineStore';
 
 import { getGreeting } from '@/lib/home/getGreeting';
@@ -19,7 +19,7 @@ import { MicroTip, SkinConcern } from '@/lib/home/types';
 
 import AmbientBlobs from '@/components/AmbientBlobs';
 import HomeHeader from '@/components/home/HomeHeader';
-import ScoreTrendCard from '@/components/home/ScoreTrendCard';
+import ScoreCard from '@/components/home/ScoreCard';
 import StreakStrip from '@/components/home/StreakStrip';
 import DynamicActionCard from '@/components/home/DynamicActionCard';
 import QuickActionTile from '@/components/home/QuickActionTile';
@@ -79,7 +79,6 @@ export default function HomeScreen() {
   const scanCount = scanHistory.length;
   const daysSince = useMemo(() => daysSinceLastScan(scanHistory), [scanHistory]);
   const scansThisWeek = useMemo(() => scansInLastNDays(scanHistory, 7), [scanHistory]);
-  const scoreHistory = useMemo(() => scoreHistoryLastN(scanHistory, 7), [scanHistory]);
   const currentScore = scanHistory[0]?.overall_score ?? null;
   const previousScore = scanHistory[1]?.overall_score ?? null;
   const lastConcern = scanHistory[0]?.top_concern ?? null;
@@ -148,10 +147,9 @@ export default function HomeScreen() {
         />
 
         {currentScore !== null && (
-          <ScoreTrendCard
+          <ScoreCard
             currentScore={currentScore}
             previousScore={previousScore}
-            history={scoreHistory}
             onPress={() => router.push('/(tabs)/progress')}
             onScanPress={() => router.push('/scan')}
           />
