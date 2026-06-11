@@ -13,6 +13,7 @@ import Animated, {
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { ScanRecord } from '@/stores/useScanStore';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { concernLabel } from '@/lib/scoringLabels';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 
 const PRIMARY = '#E07856';
@@ -206,7 +207,7 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
           {[
             { label: t('skin_type'), value: scan.skin_type },
             { label: t('skin_age'), value: scan.skin_age ? String(scan.skin_age) : undefined },
-            { label: t('top_concern'), value: scan.top_concern },
+            { label: t('top_concern'), value: concernLabel(t, scan.top_concern) },
             { label: t('top_win'), value: scan.top_win },
           ]
             .filter((d) => d.value)

@@ -695,15 +695,63 @@ function StateComparison({
       </Text>
 
       <View style={{ marginBottom: isDecreased ? 16 : 20 }}>
-        {windowScans.map((scan, i) => (
-          <ScanHistoryCard
-            key={scan.id}
-            scan={scan}
-            previousScan={windowScans[i + 1]}
-            isBaseline={i === windowScans.length - 1}
-            onPress={onSelectScan}
-          />
-        ))}
+        {(() => {
+          const now = Date.now();
+          const DAY = 24 * 60 * 60 * 1000;
+          const groups: { key: string; label: string; items: { scan: ScanRecord; index: number }[] }[] = [
+            { key: 'this_week', label: t('scan_group_this_week'), items: [] },
+            { key: 'last_week', label: t('scan_group_last_week'), items: [] },
+            { key: 'earlier', label: t('scan_group_earlier'), items: [] },
+          ];
+          windowScans.forEach((scan, index) => {
+            const ageDays = (now - new Date(scan.createdAt).getTime()) / DAY;
+            const bucket = ageDays < 7 ? 0 : ageDays < 14 ? 1 : 2;
+            groups[bucket].items.push({ scan, index });
+          });
+          const useGrouping = windowScans.length > 3 && groups.filter((g) => g.items.length).length > 1;
+          if (!useGrouping) {
+            return windowScans.map((scan, i) => (
+              <ScanHistoryCard
+                key={scan.id}
+                scan={scan}
+                previousScan={windowScans[i + 1]}
+                isBaseline={i === windowScans.length - 1}
+                isLatest={i === 0}
+                onPress={onSelectScan}
+              />
+            ));
+          }
+          return groups
+            .filter((g) => g.items.length > 0)
+            .map((g) => (
+              <View key={g.key} style={{ marginBottom: 6 }}>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontFamily: 'PlusJakartaSans_700Bold',
+                    color: 'rgba(45,24,16,0.5)',
+                    textTransform: 'uppercase',
+                    letterSpacing: 1,
+                    marginTop: 6,
+                    marginBottom: 8,
+                    paddingLeft: 4,
+                  }}
+                >
+                  {g.label}
+                </Text>
+                {g.items.map(({ scan, index }) => (
+                  <ScanHistoryCard
+                    key={scan.id}
+                    scan={scan}
+                    previousScan={windowScans[index + 1]}
+                    isBaseline={index === windowScans.length - 1}
+                    isLatest={index === 0}
+                    onPress={onSelectScan}
+                  />
+                ))}
+              </View>
+            ));
+        })()}
       </View>
 
       {isDecreased ? (

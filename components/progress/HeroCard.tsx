@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { View, Text, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
+import { useTranslation } from 'react-i18next';
 import Svg, { Circle as SvgCircle, Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import DeltaPill from './DeltaPill';
 import TimeWindowToggle, { TimeWindow } from './TimeWindowToggle';
@@ -106,24 +107,30 @@ export default function HeroCard({
   onToggleChange,
   scans,
 }: HeroCardProps) {
+  const { t } = useTranslation();
   const diff = latest.score - (comparison ? comparison.score : latest.score);
   const scoreColor = diff < 0 ? '#D97706' : PRIMARY;
   const { width: screenWidth } = useWindowDimensions();
   const sparkW = screenWidth - SCROLL_PAD_X * 2 - CARD_PAD_X * 2 - CARD_BORDER_W * 2;
 
-  const sparkPoints = useMemo(() => {
-    if (!scans || scans.length < 2 || !comparison) return null;
+  const { sparkPoints, scoreRange } = useMemo(() => {
+    if (!scans || scans.length < 2 || !comparison) {
+      return { sparkPoints: null as { x: number; y: number }[] | null, scoreRange: 0 };
+    }
     const sorted = [...scans].sort(
       (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
     );
+    const scores = sorted.map((s) => s.overall_score);
     const range = MAX_SCORE - MIN_SCORE || 1;
-    return sorted.map((s, i) => ({
+    const points = sorted.map((s, i) => ({
       x: SPARK_PAD_X + (i / (sorted.length - 1)) * (sparkW - SPARK_PAD_X * 2),
       y: SPARK_PAD_Y + (1 - (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) * (SPARK_H - SPARK_PAD_Y * 2),
     }));
+    return { sparkPoints: points, scoreRange: Math.max(...scores) - Math.min(...scores) };
   }, [scans, comparison, sparkW]);
 
   const sparkD = sparkPoints ? smoothPath(sparkPoints) : '';
+  const showStableFallback = !!sparkPoints && scoreRange < 3;
 
   return (
     <View
@@ -308,7 +315,27 @@ export default function HeroCard({
         {dateRangeText}
       </Text>
 
-      {sparkPoints && (
+      {showStableFallback && (
+        <View
+          style={{
+            marginTop: 12,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 6,
+          }}
+        >
+          <View style={{ width: 18, height: 2, borderRadius: 1, backgroundColor: 'rgba(45,24,16,0.25)' }} />
+          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_600SemiBold', color: 'rgba(45,24,16,0.55)' }}>
+            {t('trend_stable')}
+          </Text>
+          <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_500Medium', color: 'rgba(45,24,16,0.45)' }}>
+            · {t('trend_stable_sub', { range: scoreRange })}
+          </Text>
+        </View>
+      )}
+
+      {sparkPoints && !showStableFallback && (
         <View style={{ marginTop: 12 }}>
           <Svg width={sparkW} height={SPARK_H}>
             <Defs>
