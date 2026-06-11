@@ -14,6 +14,7 @@ import ProgressCTA from '@/components/progress/ProgressCTA';
 import ScanBottomSheet from '@/components/progress/ScanBottomSheet';
 import { TimeWindow } from '@/components/progress/TimeWindowToggle';
 import { logEvent, EVENTS } from '@/lib/analytics';
+import { formatDateShort } from '@/lib/formatDate';
 
 const PRIMARY = '#E07856';
 const ACCENT = '#D4A574';
@@ -29,11 +30,6 @@ const SUBTITLE_KEYS: Record<string, string> = {
   '4': 'progress_sub_happy',
   '5': 'progress_sub_decreased',
 };
-
-function formatDateShort(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 function determineProgressState(history: ScanRecord[], timeWindow: TimeWindow): ProgressState {
   if (history.length === 0) return 0;
@@ -457,7 +453,7 @@ function StateFirstScan({
         />
       </View>
       <View style={{ marginBottom: 20 }}>
-        <ScanHistoryCard scan={latest} onPress={onSelectScan} />
+        <ScanHistoryCard scan={latest} isBaseline onPress={onSelectScan} />
       </View>
       <ProgressCTA label="Take a new scan" onPress={onScan} />
     </>
@@ -704,6 +700,7 @@ function StateComparison({
             key={scan.id}
             scan={scan}
             previousScan={windowScans[i + 1]}
+            isBaseline={i === windowScans.length - 1}
             onPress={onSelectScan}
           />
         ))}

@@ -5,6 +5,7 @@ import Svg, { Circle as SvgCircle, Path, Defs, LinearGradient, Stop } from 'reac
 import DeltaPill from './DeltaPill';
 import TimeWindowToggle, { TimeWindow } from './TimeWindowToggle';
 import { ScanRecord } from '@/stores/useScanStore';
+import { smoothPath } from '@/lib/smoothPath';
 
 const PRIMARY = '#E07856';
 const SPARK_H = 32;
@@ -12,25 +13,9 @@ const SPARK_PAD_X = 12;
 const SPARK_PAD_Y = 4;
 const MIN_SCORE = 50;
 const MAX_SCORE = 100;
-
-function smoothPath(points: { x: number; y: number }[]): string {
-  if (points.length < 2) return '';
-  if (points.length === 2) return `M${points[0].x},${points[0].y}L${points[1].x},${points[1].y}`;
-  const tension = 0.3;
-  let d = `M${points[0].x},${points[0].y}`;
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[Math.max(i - 1, 0)];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[Math.min(i + 2, points.length - 1)];
-    const cp1x = p1.x + (p2.x - p0.x) * tension;
-    const cp1y = p1.y + (p2.y - p0.y) * tension;
-    const cp2x = p2.x - (p3.x - p1.x) * tension;
-    const cp2y = p2.y - (p3.y - p1.y) * tension;
-    d += `C${cp1x},${cp1y},${cp2x},${cp2y},${p2.x},${p2.y}`;
-  }
-  return d;
-}
+const SCROLL_PAD_X = 24;
+const CARD_PAD_X = 20;
+const CARD_BORDER_W = 1;
 
 interface PhotoCircleProps {
   size: number;
@@ -124,7 +109,7 @@ export default function HeroCard({
   const diff = latest.score - (comparison ? comparison.score : latest.score);
   const scoreColor = diff < 0 ? '#D97706' : PRIMARY;
   const { width: screenWidth } = useWindowDimensions();
-  const sparkW = screenWidth - 48 - 40 - 2;
+  const sparkW = screenWidth - SCROLL_PAD_X * 2 - CARD_PAD_X * 2 - CARD_BORDER_W * 2;
 
   const sparkPoints = useMemo(() => {
     if (!scans || scans.length < 2 || !comparison) return null;
@@ -137,6 +122,8 @@ export default function HeroCard({
       y: SPARK_PAD_Y + (1 - (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) * (SPARK_H - SPARK_PAD_Y * 2),
     }));
   }, [scans, comparison, sparkW]);
+
+  const sparkD = sparkPoints ? smoothPath(sparkPoints) : '';
 
   return (
     <View
@@ -325,16 +312,16 @@ export default function HeroCard({
         <View style={{ marginTop: 12 }}>
           <Svg width={sparkW} height={SPARK_H}>
             <Defs>
-              <LinearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+              <LinearGradient id="heroSparkFill" x1="0" y1="0" x2="0" y2="1">
                 <Stop offset="0%" stopColor={PRIMARY} stopOpacity={0.15} />
                 <Stop offset="100%" stopColor={PRIMARY} stopOpacity={0.02} />
               </LinearGradient>
             </Defs>
             <Path
-              d={`${smoothPath(sparkPoints)}L${sparkPoints[sparkPoints.length - 1].x},${SPARK_H}L${sparkPoints[0].x},${SPARK_H}Z`}
-              fill="url(#sparkFill)"
+              d={`${sparkD}L${sparkPoints[sparkPoints.length - 1].x},${SPARK_H}L${sparkPoints[0].x},${SPARK_H}Z`}
+              fill="url(#heroSparkFill)"
             />
-            <Path d={smoothPath(sparkPoints)} fill="none" stroke={PRIMARY} strokeWidth={2} strokeLinecap="round" opacity={0.5} />
+            <Path d={sparkD} fill="none" stroke={PRIMARY} strokeWidth={2} strokeLinecap="round" opacity={0.5} />
             {sparkPoints.map((p, i) => (
               <SvgCircle
                 key={i}

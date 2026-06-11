@@ -8,6 +8,8 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { ScanRecord } from '@/stores/useScanStore';
+import { smoothPath } from '@/lib/smoothPath';
+import { formatDateShort } from '@/lib/formatDate';
 
 const PRIMARY = '#E07856';
 const CHART_H = 64;
@@ -15,29 +17,6 @@ const PAD_X = 36;
 const PAD_Y = 10;
 const MIN_SCORE = 50;
 const MAX_SCORE = 100;
-
-function smoothPath(points: number[][]): string {
-  if (points.length < 2) return '';
-  const tension = 0.3;
-  let d = `M ${points[0][0]} ${points[0][1]}`;
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[Math.max(0, i - 1)];
-    const p1 = points[i];
-    const p2 = points[i + 1];
-    const p3 = points[Math.min(points.length - 1, i + 2)];
-    const cp1x = p1[0] + (p2[0] - p0[0]) * tension;
-    const cp1y = p1[1] + (p2[1] - p0[1]) * tension;
-    const cp2x = p2[0] - (p3[0] - p1[0]) * tension;
-    const cp2y = p2[1] - (p3[1] - p1[1]) * tension;
-    d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2[0]} ${p2[1]}`;
-  }
-  return d;
-}
-
-function formatDateShort(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 interface TrendTimelineProps {
   scans: ScanRecord[];
@@ -134,14 +113,16 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
     const x = PAD_X + (i / (data.length - 1)) * plotW;
     const score = Math.max(MIN_SCORE, Math.min(MAX_SCORE, scan.overall_score));
     const y = PAD_Y + plotH - ((score - MIN_SCORE) / (MAX_SCORE - MIN_SCORE)) * plotH;
-    return [x, y];
+    return { x, y };
   });
 
   const pathD = smoothPath(points);
+  const last = points[points.length - 1];
+  const first = points[0];
   const fillD =
     pathD +
-    ` L ${points[points.length - 1][0]} ${CHART_H - PAD_Y}` +
-    ` L ${points[0][0]} ${CHART_H - PAD_Y} Z`;
+    `L${last.x},${CHART_H - PAD_Y}` +
+    `L${first.x},${CHART_H - PAD_Y}Z`;
 
   return (
     <View
@@ -179,12 +160,12 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
 
       <Svg width="100%" height={CHART_H} viewBox={`0 0 ${chartW} ${CHART_H}`}>
         <Defs>
-          <LinearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+          <LinearGradient id="trendSparkFill" x1="0" y1="0" x2="0" y2="1">
             <Stop offset="0%" stopColor={PRIMARY} stopOpacity={0.2} />
             <Stop offset="100%" stopColor={PRIMARY} stopOpacity={0.01} />
           </LinearGradient>
         </Defs>
-        <Path d={fillD} fill="url(#sparkFill)" />
+        <Path d={fillD} fill="url(#trendSparkFill)" />
         <Path
           d={pathD}
           fill="none"
@@ -198,8 +179,8 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
           return (
             <SvgCircle
               key={i}
-              cx={p[0]}
-              cy={p[1]}
+              cx={p.x}
+              cy={p.y}
               r={isLast ? 4 : 2.5}
               fill={PRIMARY}
               stroke="white"
@@ -233,9 +214,9 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
                 paddingVertical: 8,
                 paddingHorizontal: 4,
                 borderRadius: 12,
-                backgroundColor: pressed ? `${PRIMARY}35` : `${PRIMARY}18`,
-                borderWidth: 1.5,
-                borderColor: pressed ? `${PRIMARY}70` : `${PRIMARY}45`,
+                backgroundColor: pressed ? `${PRIMARY}18` : 'transparent',
+                borderWidth: 1,
+                borderColor: pressed ? `${PRIMARY}25` : 'transparent',
                 transform: [{ scale: pressed ? 0.96 : 1 }],
               })}
             >
@@ -266,17 +247,6 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
           );
         })}
       </View>
-      <Text
-        style={{
-          fontSize: 10,
-          fontFamily: 'PlusJakartaSans_400Regular',
-          color: 'rgba(45,24,16,0.35)',
-          textAlign: 'center',
-          marginTop: 4,
-        }}
-      >
-        Tap a score for details
-      </Text>
     </View>
   );
 }

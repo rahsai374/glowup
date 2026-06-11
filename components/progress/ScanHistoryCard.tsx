@@ -3,28 +3,24 @@ import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { ScanRecord } from '@/stores/useScanStore';
+import { formatDateShort } from '@/lib/formatDate';
 
 const PRIMARY = '#E07856';
-
-function formatDateShort(dateStr: string): string {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 interface ScanHistoryCardProps {
   scan: ScanRecord;
   previousScan?: ScanRecord;
+  isBaseline?: boolean;
   onPress: (scan: ScanRecord) => void;
 }
 
-export default function ScanHistoryCard({ scan, previousScan, onPress }: ScanHistoryCardProps) {
-  const delta = previousScan ? scan.overall_score - previousScan.overall_score : null;
-  const isBaseline = !previousScan;
+export default function ScanHistoryCard({ scan, previousScan, isBaseline, onPress }: ScanHistoryCardProps) {
+  const delta = previousScan ? Math.round(scan.overall_score - previousScan.overall_score) : null;
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}, ${scan.top_concern}, ${scan.top_win}`}
+      accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}${scan.top_win ? `, ${scan.top_win}` : ''}`}
       onPress={() => onPress(scan)}
       style={({ pressed }) => ({
         backgroundColor: 'white',
@@ -133,44 +129,50 @@ export default function ScanHistoryCard({ scan, previousScan, onPress }: ScanHis
             </View>
           )}
         </View>
-        <View style={{ flexDirection: 'row', gap: 6, marginTop: 5, flexWrap: 'wrap' }}>
-          <View
-            style={{
-              backgroundColor: 'rgba(248,113,113,0.12)',
-              paddingVertical: 3,
-              paddingHorizontal: 8,
-              borderRadius: 8,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 10,
-                fontFamily: 'PlusJakartaSans_600SemiBold',
-                color: '#EF4444',
-              }}
-            >
-              {scan.top_concern}
-            </Text>
+        {(scan.top_concern || scan.top_win) && (
+          <View style={{ flexDirection: 'row', gap: 6, marginTop: 5, flexWrap: 'wrap' }}>
+            {scan.top_concern && (
+              <View
+                style={{
+                  backgroundColor: 'rgba(248,113,113,0.12)',
+                  paddingVertical: 3,
+                  paddingHorizontal: 8,
+                  borderRadius: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 10,
+                    fontFamily: 'PlusJakartaSans_600SemiBold',
+                    color: '#EF4444',
+                  }}
+                >
+                  {scan.top_concern}
+                </Text>
+              </View>
+            )}
+            {scan.top_win && (
+              <View
+                style={{
+                  backgroundColor: 'rgba(74,222,128,0.12)',
+                  paddingVertical: 3,
+                  paddingHorizontal: 8,
+                  borderRadius: 8,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 10,
+                    fontFamily: 'PlusJakartaSans_600SemiBold',
+                    color: '#22C55E',
+                  }}
+                >
+                  {scan.top_win} ↑
+                </Text>
+              </View>
+            )}
           </View>
-          <View
-            style={{
-              backgroundColor: 'rgba(74,222,128,0.12)',
-              paddingVertical: 3,
-              paddingHorizontal: 8,
-              borderRadius: 8,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 10,
-                fontFamily: 'PlusJakartaSans_600SemiBold',
-                color: '#22C55E',
-              }}
-            >
-              {scan.top_win} ↑
-            </Text>
-          </View>
-        </View>
+        )}
       </View>
 
       {/* Chevron */}
