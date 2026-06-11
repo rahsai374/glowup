@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, TouchableOpacity } from 'react-native';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 interface ScoreCardProps {
@@ -22,6 +21,13 @@ export default function ScoreCard({ currentScore, previousScore, onPress, onScan
     if (delta > 0) return `▲ +${Math.round(delta)}`;
     if (delta < 0) return `▼ ${Math.round(Math.abs(delta))}`;
     return '—';
+  };
+
+  const subtitle = () => {
+    if (delta === null) return t('score_trend_baseline');
+    if (delta > 0) return t('score_trend_up');
+    if (delta < 0) return t('score_trend_down');
+    return t('score_trend_same');
   };
 
   const deltaBg = () => {
@@ -63,7 +69,7 @@ export default function ScoreCard({ currentScore, previousScore, onPress, onScan
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
             <Text style={{ fontSize: 48, fontFamily: 'Fraunces_700Bold', color: '#E07856', lineHeight: 56 }}>
-              {currentScore}
+              {Math.round(currentScore)}
             </Text>
             {delta !== null && (
               <View style={{ backgroundColor: deltaBg(), borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 }}>
@@ -97,6 +103,9 @@ export default function ScoreCard({ currentScore, previousScore, onPress, onScan
             </Pressable>
           </Animated.View>
         </View>
+        <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(45,24,16,0.55)', marginTop: 8 }}>
+          {subtitle()}
+        </Text>
       </TouchableOpacity>
     </Animated.View>
   );
