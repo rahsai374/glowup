@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { Image } from 'expo-image';
+import { useTranslation } from 'react-i18next';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { ScanRecord } from '@/stores/useScanStore';
 import { formatDateShort } from '@/lib/formatDate';
@@ -11,17 +12,18 @@ interface ScanHistoryCardProps {
   scan: ScanRecord;
   previousScan?: ScanRecord;
   isBaseline?: boolean;
-  onPress: (scan: ScanRecord) => void;
+  onPress?: (scan: ScanRecord) => void;
 }
 
 export default function ScanHistoryCard({ scan, previousScan, isBaseline, onPress }: ScanHistoryCardProps) {
+  const { t } = useTranslation();
   const delta = previousScan ? Math.round(scan.overall_score - previousScan.overall_score) : null;
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}${scan.top_win ? `, ${scan.top_win}` : ''}`}
-      onPress={() => onPress(scan)}
+      onPress={() => onPress?.(scan)}
       style={({ pressed }) => ({
         backgroundColor: 'white',
         borderRadius: 16,
@@ -124,7 +126,7 @@ export default function ScanHistoryCard({ scan, previousScan, isBaseline, onPres
                   color: 'rgba(45,24,16,0.45)',
                 }}
               >
-                Baseline
+                {t('scans_history_baseline')}
               </Text>
             </View>
           )}
