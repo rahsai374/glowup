@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useScanStore } from '@/stores/useScanStore';
+import { useUserStore, type Gender } from '@/stores/useUserStore';
 import ScoreCircle from '@/components/ScoreCircle';
 import MetricBar from '@/components/MetricBar';
 import BackButton from '@/components/BackButton';
+import GenderSelector from '@/components/GenderSelector';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { useScanImage } from '@/hooks/useScanImage';
+import { updateProfileField, generateAndSaveRoutine } from '@/lib/firestore';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -31,7 +34,12 @@ export default function ResultsScreen() {
   const { scanId } = useLocalSearchParams<{ scanId?: string }>();
   const currentScan = useScanStore((s) => s.currentScan);
   const scanHistory = useScanStore((s) => s.scanHistory);
+  const user = useUserStore((s) => s.user);
+  const updateUser = useUserStore((s) => s.updateUser);
   const loggedRef = useRef(false);
+  const [profileSaved, setProfileSaved] = useState(false);
+  const [nameInput, setNameInput] = useState(user?.name ?? '');
+  const [gender, setGender] = useState<Gender | ''>(user?.gender && user.gender !== 'unspecified' ? user.gender : '');
 
   const historicalScan = scanId
     ? scanHistory.find((s) => s.id === scanId)
@@ -59,6 +67,15 @@ export default function ResultsScreen() {
   if (!scan) return null;
 
   const metrics = Object.entries(scan.metrics);
+
+  async function saveProfileCard() {
+    const trimmed = nameInput.trim();
+    if (!trimmed || !gender || !user?.uid) return;
+    updateUser({ name: trimmed, gender });
+    await updateProfileField(user.uid, { name: trimmed, gender });
+    await generateAndSaveRoutine(user.uid, user.skinType ?? '', user.mainConcern ?? '', gender);
+    setProfileSaved(true);
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F0E6DF' }}>
@@ -186,6 +203,36 @@ export default function ResultsScreen() {
                   </Text>
                 </View>
               </Animated.View>
+
+              {/* Profile completion card */}
+              {!profileSaved && (!user?.name || user?.gender === 'unspecified') && (
+                <Animated.View entering={FadeInDown.delay(500).springify()}>
+                  <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 20, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(224,120,86,0.08)' }}>
+                    <Text style={{ fontSize: 10, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2, textTransform: 'uppercase', marginBottom: 4 }}>
+                      {t('profile_complete_title')}
+                    </Text>
+                    <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_400Regular', color: 'rgba(45,24,16,0.6)', marginBottom: 16 }}>
+                      {t('profile_complete_body')}
+                    </Text>
+                    <TextInput
+                      value={nameInput}
+                      onChangeText={(v) => setNameInput(v.replace(/[\x00-\x1F\x7F]/g, ''))}
+                      maxLength={50}
+                      placeholder={t('profile_complete_name_placeholder')}
+                      placeholderTextColor="rgba(45,24,16,0.35)"
+                      style={{ backgroundColor: '#FFF5EE', borderRadius: 12, paddingHorizontal: 14, paddingVertical: 12, fontSize: 15, fontFamily: 'PlusJakartaSans_400Regular', color: '#2D1810', marginBottom: 16 }}
+                    />
+                    <GenderSelector value={gender} onChange={setGender} />
+                    <TouchableOpacity
+                      onPress={saveProfileCard}
+                      disabled={!nameInput.trim() || !gender}
+                      style={{ backgroundColor: nameInput.trim() && gender ? '#E07856' : 'rgba(224,120,86,0.4)', borderRadius: 14, paddingVertical: 12, alignItems: 'center', marginTop: 16 }}
+                    >
+                      <Text style={{ color: 'white', fontSize: 15, fontFamily: 'PlusJakartaSans_700Bold' }}>{t('save')}</Text>
+                    </TouchableOpacity>
+                  </View>
+                </Animated.View>
+              )}
 
               {/* CTAs */}
               <TouchableOpacity

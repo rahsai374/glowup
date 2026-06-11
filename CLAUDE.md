@@ -37,6 +37,34 @@ eas submit                # Submit to stores
 
 **Product data:** JSON in Firebase Storage, cached in AsyncStorage with bundled fallback. Store: `useProductStore`. Types: `lib/productTypes.ts`.
 
+## Coding Rules
+
+Rules learned from past code reviews. Check every item before writing code. Update this section after each review that surfaces a new pattern.
+
+### i18n
+- Every user-facing string must use `t('key')` — zero hardcoded English/Hindi.
+- When adding new UI text, add keys to both `i18n/en.json` and `i18n/hi.json` before writing JSX.
+- Hindi translations use Roman Hindi (transliterated script like "karo", "karne ke liye") + English terms — not Devanagari.
+
+### Firestore
+- Always use `{ merge: true }` with `.set()` unless intentionally replacing the entire document. Bare `.set()` silently wipes fields written by other code paths (device info, streaks, profile card data).
+- `.update()` throws NOT_FOUND if the document doesn't exist. Prefer `.set({...}, { merge: true })` for partial writes that must be safe on first use.
+- When success feedback depends on a Firestore write (hiding a card, showing "saved"), `await` the call and handle the failure path — don't fire-and-forget then claim success.
+
+### Input validation
+- When moving a `TextInput` between files, carry all its validation: `maxLength`, sanitization regex (`/[\x00-\x1F\x7F]/g`), required checks, placeholder i18n key.
+- Name fields: `maxLength={50}`, strip control characters on `onChangeText`.
+
+### State management
+- Initialize local state from existing store values when editing existing data: `useState(user?.name ?? '')`, not `useState('')`.
+- Guard save functions with `!user?.uid` early return when Firestore writes depend on the user being authenticated.
+
+### DRY
+- When a multi-step pattern (e.g. compute → save) appears in 2+ files, extract a shared helper immediately. Don't copy-paste. Current helper: `generateAndSaveRoutine` in `lib/firestore.ts`.
+
+### Component extraction
+- If a self-contained UI block (card, form, modal) exceeds ~30 lines of JSX inside a screen, extract it to `components/`. Pass data and callbacks as props.
+
 ## Design System
 
 See `DESIGN.md` for colors, fonts, motion, blur blobs, and per-screen design briefs.

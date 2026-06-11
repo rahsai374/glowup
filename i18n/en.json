@@ -164,5 +164,8 @@
   "notifications_empty": "No notifications yet",
   "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here.",
   "see_full_analysis": "See Full Analysis",
-  "historical_scan_label": "Scan from {{date}}"
+  "historical_scan_label": "Scan from {{date}}",
+  "profile_complete_title": "Complete Your Profile",
+  "profile_complete_body": "Personalize your routine recommendations",
+  "profile_complete_name_placeholder": "Your name"
 }
