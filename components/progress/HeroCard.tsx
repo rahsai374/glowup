@@ -1,11 +1,36 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, useWindowDimensions } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
+import Svg, { Circle as SvgCircle, Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import DeltaPill from './DeltaPill';
 import TimeWindowToggle, { TimeWindow } from './TimeWindowToggle';
+import { ScanRecord } from '@/stores/useScanStore';
 
 const PRIMARY = '#E07856';
+const SPARK_H = 32;
+const SPARK_PAD_X = 12;
+const SPARK_PAD_Y = 4;
+const MIN_SCORE = 50;
+const MAX_SCORE = 100;
+
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length < 2) return '';
+  if (points.length === 2) return `M${points[0].x},${points[0].y}L${points[1].x},${points[1].y}`;
+  const tension = 0.3;
+  let d = `M${points[0].x},${points[0].y}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(i - 1, 0)];
+    const p1 = points[i];
+    const p2 = points[i + 1];
+    const p3 = points[Math.min(i + 2, points.length - 1)];
+    const cp1x = p1.x + (p2.x - p0.x) * tension;
+    const cp1y = p1.y + (p2.y - p0.y) * tension;
+    const cp2x = p2.x - (p3.x - p1.x) * tension;
+    const cp2y = p2.y - (p3.y - p1.y) * tension;
+    d += `C${cp1x},${cp1y},${cp2x},${cp2y},${p2.x},${p2.y}`;
+  }
+  return d;
+}
 
 interface PhotoCircleProps {
   size: number;
@@ -83,6 +108,7 @@ interface HeroCardProps {
   showToggle?: boolean;
   activeToggle?: TimeWindow;
   onToggleChange?: (mode: TimeWindow) => void;
+  scans?: ScanRecord[];
 }
 
 export default function HeroCard({
@@ -93,9 +119,24 @@ export default function HeroCard({
   showToggle = true,
   activeToggle = '4weeks',
   onToggleChange,
+  scans,
 }: HeroCardProps) {
   const diff = latest.score - (comparison ? comparison.score : latest.score);
   const scoreColor = diff < 0 ? '#D97706' : PRIMARY;
+  const { width: screenWidth } = useWindowDimensions();
+  const sparkW = screenWidth - 48 - 40 - 2;
+
+  const sparkPoints = useMemo(() => {
+    if (!scans || scans.length < 2 || !comparison) return null;
+    const sorted = [...scans].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+    const range = MAX_SCORE - MIN_SCORE || 1;
+    return sorted.map((s, i) => ({
+      x: SPARK_PAD_X + (i / (sorted.length - 1)) * (sparkW - SPARK_PAD_X * 2),
+      y: SPARK_PAD_Y + (1 - (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) * (SPARK_H - SPARK_PAD_Y * 2),
+    }));
+  }, [scans, comparison, sparkW]);
 
   return (
     <View
@@ -279,6 +320,36 @@ export default function HeroCard({
       >
         {dateRangeText}
       </Text>
+
+      {sparkPoints && (
+        <View style={{ marginTop: 12 }}>
+          <Svg width={sparkW} height={SPARK_H}>
+            <Defs>
+              <LinearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0%" stopColor={PRIMARY} stopOpacity={0.15} />
+                <Stop offset="100%" stopColor={PRIMARY} stopOpacity={0.02} />
+              </LinearGradient>
+            </Defs>
+            <Path
+              d={`${smoothPath(sparkPoints)}L${sparkPoints[sparkPoints.length - 1].x},${SPARK_H}L${sparkPoints[0].x},${SPARK_H}Z`}
+              fill="url(#sparkFill)"
+            />
+            <Path d={smoothPath(sparkPoints)} fill="none" stroke={PRIMARY} strokeWidth={2} strokeLinecap="round" opacity={0.5} />
+            {sparkPoints.map((p, i) => (
+              <SvgCircle
+                key={i}
+                cx={p.x}
+                cy={p.y}
+                r={i === sparkPoints.length - 1 ? 3.5 : 2.5}
+                fill={PRIMARY}
+                stroke="white"
+                strokeWidth={i === sparkPoints.length - 1 ? 2 : 1.5}
+                opacity={i === sparkPoints.length - 1 ? 1 : 0.5}
+              />
+            ))}
+          </Svg>
+        </View>
+      )}
     </View>
   );
 }

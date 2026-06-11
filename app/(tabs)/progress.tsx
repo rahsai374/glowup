@@ -9,7 +9,7 @@ import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { useScanStore, ScanRecord, daysSinceLastScan } from '@/stores/useScanStore';
 import HeroCard from '@/components/progress/HeroCard';
 import TrendTimeline from '@/components/progress/TrendTimeline';
-import InsightStrip from '@/components/progress/InsightStrip';
+import ScanHistoryCard from '@/components/progress/ScanHistoryCard';
 import ProgressCTA from '@/components/progress/ProgressCTA';
 import ScanBottomSheet from '@/components/progress/ScanBottomSheet';
 import { TimeWindow } from '@/components/progress/TimeWindowToggle';
@@ -28,19 +28,6 @@ const SUBTITLE_KEYS: Record<string, string> = {
   '3': 'progress_sub_minor',
   '4': 'progress_sub_happy',
   '5': 'progress_sub_decreased',
-};
-
-const METRIC_LABELS: Record<string, string> = {
-  hydration: 'hydration',
-  blemish_prone: 'blemish resistance',
-  redness: 'redness',
-  oiliness: 'oil balance',
-  dark_spots: 'dark spots',
-  radiance: 'radiance',
-  texture: 'texture',
-  firmness: 'firmness',
-  wrinkles: 'wrinkle score',
-  dark_circles: 'dark circles',
 };
 
 function formatDateShort(dateStr: string): string {
@@ -93,24 +80,6 @@ function findComparisonScan(
   return best;
 }
 
-function computeBiggestImprover(
-  baseline: ScanRecord,
-  latest: ScanRecord
-): { metric: string; delta: number } | null {
-  let bestMetric = '';
-  let bestDelta = 0;
-  const keys = Object.keys(baseline.metrics) as (keyof typeof baseline.metrics)[];
-  for (const key of keys) {
-    const delta = latest.metrics[key] - baseline.metrics[key];
-    if (delta > bestDelta) {
-      bestDelta = delta;
-      bestMetric = key;
-    }
-  }
-  if (bestDelta <= 0) return null;
-  return { metric: bestMetric, delta: bestDelta };
-}
-
 function scansForWindow(history: ScanRecord[], mode: TimeWindow, comparison: ScanRecord | null): ScanRecord[] {
   if (mode === 'all' || !comparison) return history;
   const compTime = new Date(comparison.createdAt).getTime();
@@ -161,10 +130,6 @@ export default function ProgressScreen() {
   );
   const diff = latest && comparison ? latest.overall_score - comparison.overall_score : 0;
   const windowScans = useMemo(() => scansForWindow(history, timeWindow, comparison), [history, timeWindow, comparison]);
-  const improver = useMemo(
-    () => (comparison && latest ? computeBiggestImprover(comparison, latest) : null),
-    [comparison, latest]
-  );
 
   const handleScanTap = (scan: ScanRecord) => {
     logEvent(EVENTS.SCAN_HISTORY_CARD_TAPPED, {
@@ -265,7 +230,6 @@ export default function ProgressScreen() {
             timeWindow={timeWindow}
             onTimeWindowChange={setTimeWindow}
             windowScans={windowScans}
-            improver={improver}
             onScan={navigateToScan}
             onRoutine={navigateToRoutine}
             onSelectScan={handleScanTap}
@@ -492,14 +456,8 @@ function StateFirstScan({
           showToggle={false}
         />
       </View>
-      <View style={{ marginBottom: 16 }}>
-        <TrendTimeline scans={[latest]} onSelectScan={onSelectScan} />
-      </View>
       <View style={{ marginBottom: 20 }}>
-        <InsightStrip
-          text="Great start. Your baseline is set — keep scanning weekly to watch your glow evolve."
-          highlightWord="glow"
-        />
+        <ScanHistoryCard scan={latest} onPress={onSelectScan} />
       </View>
       <ProgressCTA label="Take a new scan" onPress={onScan} />
     </>
@@ -687,7 +645,6 @@ function StateComparison({
   timeWindow,
   onTimeWindowChange,
   windowScans,
-  improver,
   onScan,
   onRoutine,
   onSelectScan,
@@ -699,12 +656,11 @@ function StateComparison({
   timeWindow: TimeWindow;
   onTimeWindowChange: (tw: TimeWindow) => void;
   windowScans: ScanRecord[];
-  improver: { metric: string; delta: number } | null;
   onScan: () => void;
   onRoutine: () => void;
   onSelectScan: (scan: ScanRecord) => void;
 }) {
-  const insightConfig = getInsightConfig(state, improver, timeWindow);
+  const { t } = useTranslation();
   const isDecreased = state === 5;
 
   return (
@@ -726,18 +682,33 @@ function StateComparison({
           showToggle
           activeToggle={timeWindow}
           onToggleChange={onTimeWindowChange}
+          scans={windowScans}
         />
       </View>
-      <View style={{ marginBottom: 16 }}>
-        <TrendTimeline scans={windowScans} onSelectScan={onSelectScan} />
-      </View>
+
+      <Text
+        style={{
+          fontFamily: 'Fraunces_700Bold',
+          fontSize: 17,
+          color: '#2D1810',
+          marginBottom: 10,
+          paddingLeft: 4,
+        }}
+      >
+        {t('past_scans')}
+      </Text>
+
       <View style={{ marginBottom: isDecreased ? 16 : 20 }}>
-        <InsightStrip
-          text={insightConfig.text}
-          highlightWord={insightConfig.highlightWord}
-          supportive={isDecreased}
-        />
+        {windowScans.map((scan, i) => (
+          <ScanHistoryCard
+            key={scan.id}
+            scan={scan}
+            previousScan={windowScans[i + 1]}
+            onPress={onSelectScan}
+          />
+        ))}
       </View>
+
       {isDecreased ? (
         <ProgressCTA label="Review your routine" outlined onPress={onRoutine} />
       ) : (
@@ -745,45 +716,4 @@ function StateComparison({
       )}
     </>
   );
-}
-
-function getInsightConfig(
-  state: 2 | 3 | 4 | 5,
-  improver: { metric: string; delta: number } | null,
-  timeWindow: TimeWindow
-): { text: string; highlightWord: string } {
-  const windowText = timeWindow === 'week' ? 'the last week' : timeWindow === '4weeks' ? 'the last 4 weeks' : 'all time';
-
-  if (state === 5) {
-    return {
-      text: "Small dips are normal — sleep, stress, and weather all affect your skin. Stick with your routine.",
-      highlightWord: 'sleep, stress, and weather',
-    };
-  }
-
-  if (state === 2) {
-    return {
-      text: 'Your skin is holding steady. Your routine is keeping things stable — give it a few more weeks to see lift.',
-      highlightWord: 'routine',
-    };
-  }
-
-  if (improver) {
-    const label = METRIC_LABELS[improver.metric] || improver.metric;
-    if (state === 4) {
-      return {
-        text: `Your ${label} has improved the most — up ${improver.delta} points in ${windowText}.`,
-        highlightWord: label,
-      };
-    }
-    return {
-      text: `Small changes add up. Your ${label} score is trending up — keep going, the glow is building.`,
-      highlightWord: label,
-    };
-  }
-
-  return {
-    text: 'Keep scanning to track your progress over time.',
-    highlightWord: 'progress',
-  };
 }

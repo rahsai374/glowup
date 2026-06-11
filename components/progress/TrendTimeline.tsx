@@ -222,6 +222,8 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
           const isLatest = i === data.length - 1;
           return (
             <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}`}
               key={scan.id}
               onPress={() => onSelectScan(scan)}
               style={({ pressed }) => ({
@@ -231,7 +233,9 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
                 paddingVertical: 8,
                 paddingHorizontal: 4,
                 borderRadius: 12,
-                backgroundColor: pressed ? `${PRIMARY}10` : 'transparent',
+                backgroundColor: pressed ? `${PRIMARY}35` : `${PRIMARY}18`,
+                borderWidth: 1.5,
+                borderColor: pressed ? `${PRIMARY}70` : `${PRIMARY}45`,
                 transform: [{ scale: pressed ? 0.96 : 1 }],
               })}
             >
@@ -262,6 +266,17 @@ export default function TrendTimeline({ scans, onSelectScan }: TrendTimelineProp
           );
         })}
       </View>
+      <Text
+        style={{
+          fontSize: 10,
+          fontFamily: 'PlusJakartaSans_400Regular',
+          color: 'rgba(45,24,16,0.35)',
+          textAlign: 'center',
+          marginTop: 4,
+        }}
+      >
+        Tap a score for details
+      </Text>
     </View>
   );
 }
