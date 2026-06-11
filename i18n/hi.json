@@ -226,5 +226,6 @@
   "progress_range_last_week": "पिछला हफ्ता",
   "progress_range_last_4weeks": "पिछले 4 हफ्ते",
   "progress_range_all_time": "अब तक",
-  "progress_journey_total_short": "total"
+  "progress_journey_total_short": "total",
+  "scans_history_baseline": "Baseline"
 }

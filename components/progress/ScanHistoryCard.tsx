@@ -14,7 +14,7 @@ interface ScanHistoryCardProps {
   previousScan?: ScanRecord;
   isBaseline?: boolean;
   isLatest?: boolean;
-  onPress: (scan: ScanRecord) => void;
+  onPress?: (scan: ScanRecord) => void;
 }
 
 export default function ScanHistoryCard({
@@ -49,7 +49,7 @@ export default function ScanHistoryCard({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${concern ? `, ${concern}` : ''}${win ? `, ${win}` : ''}`}
-        onPress={() => onPress(scan)}
+        onPress={() => onPress?.(scan)}
         style={({ pressed }) => ({
           flexDirection: 'row',
           alignItems: 'center',
