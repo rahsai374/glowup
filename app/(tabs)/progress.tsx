@@ -4,14 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Image } from 'expo-image';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { useScanStore, ScanRecord, daysSinceLastScan } from '@/stores/useScanStore';
+import { ScanResult } from '@/lib/gemini';
 import HeroCard from '@/components/progress/HeroCard';
 import TrendTimeline from '@/components/progress/TrendTimeline';
-import ScanHistoryCard from '@/components/progress/ScanHistoryCard';
+import InsightStrip from '@/components/progress/InsightStrip';
 import ProgressCTA from '@/components/progress/ProgressCTA';
-import ScanBottomSheet from '@/components/progress/ScanBottomSheet';
 import { TimeWindow } from '@/components/progress/TimeWindowToggle';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { formatDateShort } from '@/lib/formatDate';
@@ -20,6 +19,19 @@ const PRIMARY = '#E07856';
 const ACCENT = '#D4A574';
 
 type ProgressState = 0 | 1 | 'R' | 2 | 3 | 4 | 5;
+
+const METRIC_KEYS: (keyof ScanResult['metrics'])[] = [
+  'hydration',
+  'blemish_prone',
+  'redness',
+  'oiliness',
+  'dark_spots',
+  'radiance',
+  'texture',
+  'firmness',
+  'wrinkles',
+  'dark_circles',
+];
 
 const SUBTITLE_KEYS: Record<string, string> = {
   '0': 'progress_sub_ftue',
@@ -46,10 +58,7 @@ function determineProgressState(history: ScanRecord[], timeWindow: TimeWindow): 
   return 2;
 }
 
-function findComparisonScan(
-  history: ScanRecord[],
-  mode: TimeWindow
-): ScanRecord | null {
+function findComparisonScan(history: ScanRecord[], mode: TimeWindow): ScanRecord | null {
   if (history.length < 2) return null;
   const latest = history[0];
   const latestTime = new Date(latest.createdAt).getTime();
@@ -76,41 +85,46 @@ function findComparisonScan(
   return best;
 }
 
-function scansForWindow(history: ScanRecord[], mode: TimeWindow, comparison: ScanRecord | null): ScanRecord[] {
+function scansForWindow(
+  history: ScanRecord[],
+  mode: TimeWindow,
+  comparison: ScanRecord | null
+): ScanRecord[] {
   if (mode === 'all' || !comparison) return history;
   const compTime = new Date(comparison.createdAt).getTime();
   return history.filter((s) => new Date(s.createdAt).getTime() >= compTime);
 }
 
-function weeksSince(dateStr: string): number {
-  return Math.round((Date.now() - new Date(dateStr).getTime()) / (7 * 24 * 60 * 60 * 1000));
-}
-
-function comparisonAgeLabel(comparison: ScanRecord, mode: TimeWindow): string {
-  if (mode === 'all') return 'First scan';
-  const weeks = weeksSince(comparison.createdAt);
-  if (weeks < 1) return 'Days ago';
-  if (weeks === 1) return '1 week ago';
-  return `${weeks} weeks ago`;
-}
-
-function dateRangeText(
-  comparison: ScanRecord | null,
+function biggestMetricChange(
   latest: ScanRecord,
-  mode: TimeWindow,
-  scanCount: number
-): string {
-  if (!comparison) return 'Scan again next week to track changes';
-  const modeLabel = mode === 'week' ? 'Last week' : mode === '4weeks' ? 'Last 4 weeks' : 'All time';
-  return `${modeLabel} · ${formatDateShort(comparison.createdAt)} — ${formatDateShort(latest.createdAt)} · ${scanCount} scans`;
+  comparison: ScanRecord,
+  direction: 'improve' | 'decline'
+): keyof ScanResult['metrics'] {
+  let bestKey: keyof ScanResult['metrics'] = 'hydration';
+  let bestDelta = direction === 'improve' ? -Infinity : Infinity;
+  for (const k of METRIC_KEYS) {
+    const delta = latest.metrics[k] - comparison.metrics[k];
+    if (direction === 'improve' && delta > bestDelta) {
+      bestDelta = delta;
+      bestKey = k;
+    } else if (direction === 'decline' && delta < bestDelta) {
+      bestDelta = delta;
+      bestKey = k;
+    }
+  }
+  return bestKey;
+}
+
+function stripTags(s: string): string {
+  return s.replace(/<\/?0>/g, '');
 }
 
 export default function ProgressScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const { t } = useTranslation();
   const history = useScanStore((s) => s.scanHistory);
   const [timeWindow, setTimeWindow] = useState<TimeWindow>('4weeks');
-  const [selectedScan, setSelectedScan] = useState<ScanRecord | null>(null);
 
   useFocusEffect(
     useCallback(() => {
@@ -124,24 +138,43 @@ export default function ProgressScreen() {
     () => (history.length >= 2 ? findComparisonScan(history, timeWindow) : null),
     [history, timeWindow]
   );
-  const diff = latest && comparison ? latest.overall_score - comparison.overall_score : 0;
-  const windowScans = useMemo(() => scansForWindow(history, timeWindow, comparison), [history, timeWindow, comparison]);
+  const windowScans = useMemo(
+    () => scansForWindow(history, timeWindow, comparison),
+    [history, timeWindow, comparison]
+  );
 
-  const handleScanTap = (scan: ScanRecord) => {
-    logEvent(EVENTS.SCAN_HISTORY_CARD_TAPPED, {
-      overall_score: scan.overall_score,
-      scan_index: history.findIndex((s) => s.id === scan.id),
-    });
-    setSelectedScan(scan);
-  };
-
-  const { t } = useTranslation();
   const navigateToScan = () => router.push('/scan');
   const navigateToRoutine = () => router.push('/(tabs)/routine');
+  const navigateToScansHistory = () => router.push('/scans-history');
+
+  function comparisonAgeLabel(comp: ScanRecord, mode: TimeWindow): string {
+    if (mode === 'all') return t('progress_first_scan_label');
+    const weeks = Math.round(
+      (Date.now() - new Date(comp.createdAt).getTime()) / (7 * 24 * 60 * 60 * 1000)
+    );
+    if (weeks < 1) return t('progress_age_days_ago');
+    if (weeks === 1) return t('progress_age_week_ago');
+    return t('progress_age_weeks_ago', { weeks });
+  }
+
+  function dateRangeText(
+    comp: ScanRecord | null,
+    last: ScanRecord,
+    mode: TimeWindow,
+    scanCount: number
+  ): string {
+    if (!comp) return t('progress_scan_again_to_fill');
+    const modeLabel =
+      mode === 'week'
+        ? t('progress_range_last_week')
+        : mode === '4weeks'
+          ? t('progress_range_last_4weeks')
+          : t('progress_range_all_time');
+    return `${modeLabel} · ${formatDateShort(comp.createdAt)} — ${formatDateShort(last.createdAt)} · ${scanCount} ${t('progress_journey_total_short', { count: scanCount })}`;
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
-      {/* Ambient blobs */}
       <View
         style={{
           position: 'absolute',
@@ -188,7 +221,6 @@ export default function ProgressScreen() {
         }}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <Text
           style={{
             fontSize: 30,
@@ -212,30 +244,38 @@ export default function ProgressScreen() {
 
         {state === 0 && <StateZero onScan={navigateToScan} />}
         {state === 1 && latest && (
-          <StateFirstScan latest={latest} onScan={navigateToScan} onSelectScan={handleScanTap} />
+          <StateFirstScan
+            latest={latest}
+            history={history}
+            onScan={navigateToScan}
+            onSeeAll={navigateToScansHistory}
+          />
         )}
         {state === 'R' && latest && (
-          <StateReturning history={history} latest={latest} onScan={navigateToScan} onSelectScan={handleScanTap} />
+          <StateReturning
+            history={history}
+            latest={latest}
+            onScan={navigateToScan}
+            onSeeAll={navigateToScansHistory}
+          />
         )}
         {(state === 2 || state === 3 || state === 4 || state === 5) && latest && comparison && (
           <StateComparison
             state={state}
             latest={latest}
             comparison={comparison}
-            diff={diff}
             timeWindow={timeWindow}
             onTimeWindowChange={setTimeWindow}
             windowScans={windowScans}
+            historyCount={history.length}
             onScan={navigateToScan}
             onRoutine={navigateToRoutine}
-            onSelectScan={handleScanTap}
+            onSeeAll={navigateToScansHistory}
+            comparisonAgeLabel={comparisonAgeLabel}
+            dateRangeText={dateRangeText}
           />
         )}
       </ScrollView>
-
-      {selectedScan && (
-        <ScanBottomSheet scan={selectedScan} onClose={() => setSelectedScan(null)} />
-      )}
     </View>
   );
 }
@@ -245,15 +285,15 @@ export default function ProgressScreen() {
 /* ────────────────────────────────────────────────── */
 
 function StateZero({ onScan }: { onScan: () => void }) {
+  const { t } = useTranslation();
   const FEATURES = [
-    { emoji: '✨', title: 'Weekly insights', desc: "See what's improving and what needs care" },
-    { emoji: '📈', title: 'Trend tracking', desc: 'Watch your glow score evolve over time' },
-    { emoji: '🌿', title: 'Personalized tips', desc: "Suggestions tailored to your skin's journey" },
+    { emoji: '✨', titleKey: 'progress_feature_score', descKey: 'progress_feature_score_desc' },
+    { emoji: '📈', titleKey: 'progress_feature_before_after', descKey: 'progress_feature_before_after_desc' },
+    { emoji: '🌿', titleKey: 'progress_feature_insights', descKey: 'progress_feature_insights_desc' },
   ];
 
   return (
     <>
-      {/* Empty hero card with dashed placeholders */}
       <View
         style={{
           backgroundColor: 'white',
@@ -273,7 +313,6 @@ function StateZero({ onScan }: { onScan: () => void }) {
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-          {/* Before placeholder */}
           <View
             style={{
               width: 100,
@@ -298,11 +337,10 @@ function StateZero({ onScan }: { onScan: () => void }) {
                 color: 'rgba(45,24,16,0.35)',
               }}
             >
-              Before
+              {t('progress_before_placeholder')}
             </Text>
           </View>
           <Text style={{ marginHorizontal: 4, fontSize: 14, color: PRIMARY, opacity: 0.3 }}>→</Text>
-          {/* After placeholder */}
           <View
             style={{
               width: 110,
@@ -320,7 +358,13 @@ function StateZero({ onScan }: { onScan: () => void }) {
           >
             <Svg width={32} height={32} viewBox="0 0 24 24" fill="none" opacity={0.6}>
               <SvgCircle cx={12} cy={12} r={9} stroke={PRIMARY} strokeWidth={1.5} />
-              <Path d="M9 12l2 2 4-4" stroke={PRIMARY} strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
+              <Path
+                d="M9 12l2 2 4-4"
+                stroke={PRIMARY}
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </Svg>
           </View>
         </View>
@@ -334,7 +378,7 @@ function StateZero({ onScan }: { onScan: () => void }) {
             textAlign: 'center',
           }}
         >
-          Your first scan awaits
+          {t('progress_ftue_headline')}
         </Text>
         <Text
           style={{
@@ -346,11 +390,10 @@ function StateZero({ onScan }: { onScan: () => void }) {
             maxWidth: 280,
           }}
         >
-          Take a quick selfie to set your baseline. We'll track your skin's glow over time.
+          {t('progress_ftue_body')}
         </Text>
       </View>
 
-      {/* What you'll get */}
       <Text
         style={{
           fontFamily: 'Fraunces_700Bold',
@@ -360,12 +403,12 @@ function StateZero({ onScan }: { onScan: () => void }) {
           paddingLeft: 2,
         }}
       >
-        What you'll get
+        {t('progress_what_you_get')}
       </Text>
       <View style={{ gap: 8, marginBottom: 20 }}>
         {FEATURES.map((item) => (
           <View
-            key={item.title}
+            key={item.titleKey}
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -404,7 +447,7 @@ function StateZero({ onScan }: { onScan: () => void }) {
                   marginBottom: 2,
                 }}
               >
-                {item.title}
+                {t(item.titleKey)}
               </Text>
               <Text
                 style={{
@@ -413,14 +456,22 @@ function StateZero({ onScan }: { onScan: () => void }) {
                   color: 'rgba(45,24,16,0.55)',
                 }}
               >
-                {item.desc}
+                {t(item.descKey)}
               </Text>
             </View>
           </View>
         ))}
       </View>
 
-      <ProgressCTA label="Take my first scan" onPress={onScan} />
+      <View style={{ marginBottom: 14 }}>
+        <InsightStrip
+          text={stripTags(t('progress_insight_first'))}
+          highlightWord={t('progress_insight_highlight_step')}
+          supportive
+        />
+      </View>
+
+      <ProgressCTA label={t('progress_cta_first')} onPress={onScan} />
     </>
   );
 }
@@ -431,13 +482,16 @@ function StateZero({ onScan }: { onScan: () => void }) {
 
 function StateFirstScan({
   latest,
+  history,
   onScan,
-  onSelectScan,
+  onSeeAll,
 }: {
   latest: ScanRecord;
+  history: ScanRecord[];
   onScan: () => void;
-  onSelectScan: (scan: ScanRecord) => void;
+  onSeeAll: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <>
       <View style={{ marginBottom: 16 }}>
@@ -448,14 +502,21 @@ function StateFirstScan({
             date: formatDateShort(latest.createdAt),
             imageUrl: latest.imageUrl,
           }}
-          dateRangeText="Scan again next week to track changes"
+          dateRangeText={t('progress_scan_again_to_fill')}
           showToggle={false}
         />
       </View>
-      <View style={{ marginBottom: 20 }}>
-        <ScanHistoryCard scan={latest} isBaseline onPress={onSelectScan} />
+      <View style={{ marginBottom: 16 }}>
+        <TrendTimeline scans={history} totalScans={history.length} onSeeAll={onSeeAll} />
       </View>
-      <ProgressCTA label="Take a new scan" onPress={onScan} />
+      <View style={{ marginBottom: 14 }}>
+        <InsightStrip
+          text={stripTags(t('progress_insight_first'))}
+          highlightWord={t('progress_insight_highlight_step')}
+          supportive
+        />
+      </View>
+      <ProgressCTA label={t('progress_cta_new')} onPress={onScan} />
     </>
   );
 }
@@ -468,18 +529,21 @@ function StateReturning({
   history,
   latest,
   onScan,
-  onSelectScan,
+  onSeeAll,
 }: {
   history: ScanRecord[];
   latest: ScanRecord;
   onScan: () => void;
-  onSelectScan: (scan: ScanRecord) => void;
+  onSeeAll: () => void;
 }) {
-  const weeks = weeksSince(latest.createdAt);
+  const { t } = useTranslation();
+  const days = Math.max(
+    1,
+    Math.round((Date.now() - new Date(latest.createdAt).getTime()) / (24 * 60 * 60 * 1000))
+  );
 
   return (
     <>
-      {/* Welcome-back banner */}
       <View
         style={{
           borderRadius: 24,
@@ -492,7 +556,6 @@ function StateReturning({
           overflow: 'hidden',
         }}
       >
-        {/* Blob accent */}
         <View
           style={{
             position: 'absolute',
@@ -504,127 +567,27 @@ function StateReturning({
             backgroundColor: `${PRIMARY}15`,
           }}
         />
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Text style={{ fontSize: 16 }}>👋</Text>
           <Text
             style={{
-              fontSize: 10,
-              fontFamily: 'PlusJakartaSans_700Bold',
-              textTransform: 'uppercase',
-              letterSpacing: 1.2,
-              color: PRIMARY,
-            }}
-          >
-            It's been a while
-          </Text>
-        </View>
-        <Text
-          style={{
-            fontFamily: 'Fraunces_700Bold',
-            fontSize: 20,
-            color: '#2D1810',
-            marginBottom: 6,
-            lineHeight: 25,
-          }}
-        >
-          Your last scan was {weeks} weeks ago
-        </Text>
-        <Text
-          style={{
-            fontSize: 12.5,
-            lineHeight: 19,
-            color: 'rgba(45,24,16,0.65)',
-            fontFamily: 'PlusJakartaSans_400Regular',
-          }}
-        >
-          Skin changes a lot in {weeks} weeks. Take a fresh scan to see where you are now.
-        </Text>
-      </View>
-
-      {/* Last known scan card */}
-      <View
-        style={{
-          backgroundColor: 'white',
-          borderRadius: 20,
-          paddingVertical: 16,
-          paddingHorizontal: 16,
-          borderWidth: 1,
-          borderColor: 'rgba(224,120,86,0.08)',
-          shadowColor: '#2D1810',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.04,
-          shadowRadius: 12,
-          elevation: 2,
-          marginBottom: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 14,
-        }}
-      >
-        {latest.imageUrl ? (
-          <View style={{ width: 48, height: 48, borderRadius: 24, overflow: 'hidden', borderWidth: 2, borderColor: 'rgba(224,120,86,0.18)' }}>
-            <Image source={{ uri: latest.imageUrl }} style={{ width: '100%', height: '100%' }} />
-          </View>
-        ) : (
-          <View
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: 24,
-              borderWidth: 2,
-              borderColor: 'rgba(224,120,86,0.18)',
-              backgroundColor: '#FFEEDC',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Svg width={15} height={15} viewBox="0 0 24 24" fill="none" opacity={0.45}>
-              <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.2} />
-              <Path d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6" stroke={PRIMARY} strokeWidth={1.2} strokeLinecap="round" />
-            </Svg>
-          </View>
-        )}
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              fontSize: 11,
-              fontFamily: 'PlusJakartaSans_700Bold',
-              textTransform: 'uppercase',
-              letterSpacing: 1,
-              color: 'rgba(45,24,16,0.5)',
-              marginBottom: 2,
-            }}
-          >
-            Your last scan
-          </Text>
-          <Text
-            style={{
               fontSize: 13,
-              fontFamily: 'PlusJakartaSans_500Medium',
+              lineHeight: 19,
               color: '#2D1810',
+              fontFamily: 'PlusJakartaSans_500Medium',
+              flex: 1,
             }}
           >
-            {formatDateShort(latest.createdAt)} · Score {latest.overall_score}
+            {t('progress_returning_banner', { days })}
           </Text>
         </View>
-        <Text
-          style={{
-            fontFamily: 'Fraunces_700Bold',
-            fontSize: 26,
-            color: PRIMARY,
-            opacity: 0.5,
-          }}
-        >
-          {latest.overall_score}
-        </Text>
       </View>
 
-      {/* Previous journey (faded) */}
-      <View style={{ marginBottom: 20, opacity: 0.75 }}>
-        <TrendTimeline scans={history} onSelectScan={onSelectScan} />
+      <View style={{ marginBottom: 16, opacity: 0.85 }}>
+        <TrendTimeline scans={history} totalScans={history.length} onSeeAll={onSeeAll} />
       </View>
 
-      <ProgressCTA label="Resume tracking — take a scan" onPress={onScan} />
+      <ProgressCTA label={t('progress_cta_resume')} onPress={onScan} />
     </>
   );
 }
@@ -637,27 +600,67 @@ function StateComparison({
   state,
   latest,
   comparison,
-  diff,
   timeWindow,
   onTimeWindowChange,
   windowScans,
+  historyCount,
   onScan,
   onRoutine,
-  onSelectScan,
+  onSeeAll,
+  comparisonAgeLabel,
+  dateRangeText,
 }: {
   state: 2 | 3 | 4 | 5;
   latest: ScanRecord;
   comparison: ScanRecord;
-  diff: number;
   timeWindow: TimeWindow;
   onTimeWindowChange: (tw: TimeWindow) => void;
   windowScans: ScanRecord[];
+  historyCount: number;
   onScan: () => void;
   onRoutine: () => void;
-  onSelectScan: (scan: ScanRecord) => void;
+  onSeeAll: () => void;
+  comparisonAgeLabel: (comp: ScanRecord, mode: TimeWindow) => string;
+  dateRangeText: (
+    comp: ScanRecord | null,
+    last: ScanRecord,
+    mode: TimeWindow,
+    scanCount: number
+  ) => string;
 }) {
   const { t } = useTranslation();
   const isDecreased = state === 5;
+
+  const insightMetric = useMemo<keyof ScanResult['metrics'] | null>(() => {
+    if (state === 3 || state === 4) return biggestMetricChange(latest, comparison, 'improve');
+    if (state === 5) return biggestMetricChange(latest, comparison, 'decline');
+    return null;
+  }, [state, latest, comparison]);
+
+  const insight = useMemo(() => {
+    if (state === 2) {
+      return {
+        text: stripTags(t('progress_insight_no_change')),
+        highlight: t('progress_insight_highlight_consistency'),
+        supportive: true,
+      };
+    }
+    if (insightMetric) {
+      const metricLabel = t(insightMetric);
+      const key =
+        state === 5
+          ? 'progress_insight_decreased'
+          : state === 4
+            ? 'progress_insight_happy'
+            : 'progress_insight_minor';
+      return {
+        text: stripTags(t(key, { metric: metricLabel })),
+        highlight: metricLabel,
+        supportive: state !== 5,
+      };
+    }
+    return null;
+  }, [state, insightMetric, t]);
 
   return (
     <>
@@ -678,38 +681,27 @@ function StateComparison({
           showToggle
           activeToggle={timeWindow}
           onToggleChange={onTimeWindowChange}
-          scans={windowScans}
         />
       </View>
 
-      <Text
-        style={{
-          fontFamily: 'Fraunces_700Bold',
-          fontSize: 17,
-          color: '#2D1810',
-          marginBottom: 10,
-          paddingLeft: 4,
-        }}
-      >
-        {t('past_scans')}
-      </Text>
-
-      <View style={{ marginBottom: isDecreased ? 16 : 20 }}>
-        {windowScans.map((scan, i) => (
-          <ScanHistoryCard
-            key={scan.id}
-            scan={scan}
-            previousScan={windowScans[i + 1]}
-            isBaseline={i === windowScans.length - 1}
-            onPress={onSelectScan}
-          />
-        ))}
+      <View style={{ marginBottom: 16 }}>
+        <TrendTimeline scans={windowScans} totalScans={historyCount} onSeeAll={onSeeAll} />
       </View>
 
+      {insight && (
+        <View style={{ marginBottom: 14 }}>
+          <InsightStrip
+            text={insight.text}
+            highlightWord={insight.highlight}
+            supportive={insight.supportive}
+          />
+        </View>
+      )}
+
       {isDecreased ? (
-        <ProgressCTA label="Review your routine" outlined onPress={onRoutine} />
+        <ProgressCTA label={t('progress_cta_review')} outlined onPress={onRoutine} />
       ) : (
-        <ProgressCTA label="Take a new scan" onPress={onScan} />
+        <ProgressCTA label={t('progress_cta_new')} onPress={onScan} />
       )}
     </>
   );

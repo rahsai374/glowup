@@ -1,21 +1,12 @@
-import React, { useMemo } from 'react';
-import { View, Text, useWindowDimensions } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Circle as SvgCircle, Path, Defs, LinearGradient, Stop } from 'react-native-svg';
+import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
+import { useTranslation } from 'react-i18next';
 import DeltaPill from './DeltaPill';
 import TimeWindowToggle, { TimeWindow } from './TimeWindowToggle';
-import { ScanRecord } from '@/stores/useScanStore';
-import { smoothPath } from '@/lib/smoothPath';
 
 const PRIMARY = '#E07856';
-const SPARK_H = 32;
-const SPARK_PAD_X = 12;
-const SPARK_PAD_Y = 4;
-const MIN_SCORE = 50;
-const MAX_SCORE = 100;
-const SCROLL_PAD_X = 24;
-const CARD_PAD_X = 20;
-const CARD_BORDER_W = 1;
 
 interface PhotoCircleProps {
   size: number;
@@ -93,7 +84,6 @@ interface HeroCardProps {
   showToggle?: boolean;
   activeToggle?: TimeWindow;
   onToggleChange?: (mode: TimeWindow) => void;
-  scans?: ScanRecord[];
 }
 
 export default function HeroCard({
@@ -104,26 +94,10 @@ export default function HeroCard({
   showToggle = true,
   activeToggle = '4weeks',
   onToggleChange,
-  scans,
 }: HeroCardProps) {
+  const { t } = useTranslation();
   const diff = latest.score - (comparison ? comparison.score : latest.score);
   const scoreColor = diff < 0 ? '#D97706' : PRIMARY;
-  const { width: screenWidth } = useWindowDimensions();
-  const sparkW = screenWidth - SCROLL_PAD_X * 2 - CARD_PAD_X * 2 - CARD_BORDER_W * 2;
-
-  const sparkPoints = useMemo(() => {
-    if (!scans || scans.length < 2 || !comparison) return null;
-    const sorted = [...scans].sort(
-      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-    );
-    const range = MAX_SCORE - MIN_SCORE || 1;
-    return sorted.map((s, i) => ({
-      x: SPARK_PAD_X + (i / (sorted.length - 1)) * (sparkW - SPARK_PAD_X * 2),
-      y: SPARK_PAD_Y + (1 - (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) * (SPARK_H - SPARK_PAD_Y * 2),
-    }));
-  }, [scans, comparison, sparkW]);
-
-  const sparkD = sparkPoints ? smoothPath(sparkPoints) : '';
 
   return (
     <View
@@ -209,7 +183,7 @@ export default function HeroCard({
                   marginTop: 8,
                 }}
               >
-                Latest
+                {t('progress_latest_label')}
               </Text>
               <Text
                 style={{
@@ -252,7 +226,7 @@ export default function HeroCard({
                 marginTop: 10,
               }}
             >
-              Your First Scan
+              {t('progress_first_scan_label')}
             </Text>
             <Text
               style={{
@@ -291,7 +265,7 @@ export default function HeroCard({
           >
             <Text style={{ fontSize: 13 }}>🌱</Text>
             <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-              Baseline established
+              {t('progress_baseline_established')}
             </Text>
           </View>
         </>
@@ -307,36 +281,6 @@ export default function HeroCard({
       >
         {dateRangeText}
       </Text>
-
-      {sparkPoints && (
-        <View style={{ marginTop: 12 }}>
-          <Svg width={sparkW} height={SPARK_H}>
-            <Defs>
-              <LinearGradient id="heroSparkFill" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0%" stopColor={PRIMARY} stopOpacity={0.15} />
-                <Stop offset="100%" stopColor={PRIMARY} stopOpacity={0.02} />
-              </LinearGradient>
-            </Defs>
-            <Path
-              d={`${sparkD}L${sparkPoints[sparkPoints.length - 1].x},${SPARK_H}L${sparkPoints[0].x},${SPARK_H}Z`}
-              fill="url(#heroSparkFill)"
-            />
-            <Path d={sparkD} fill="none" stroke={PRIMARY} strokeWidth={2} strokeLinecap="round" opacity={0.5} />
-            {sparkPoints.map((p, i) => (
-              <SvgCircle
-                key={i}
-                cx={p.x}
-                cy={p.y}
-                r={i === sparkPoints.length - 1 ? 3.5 : 2.5}
-                fill={PRIMARY}
-                stroke="white"
-                strokeWidth={i === sparkPoints.length - 1 ? 2 : 1.5}
-                opacity={i === sparkPoints.length - 1 ? 1 : 0.5}
-              />
-            ))}
-          </Svg>
-        </View>
-      )}
     </View>
   );
 }
