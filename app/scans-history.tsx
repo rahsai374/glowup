@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Svg, { Path } from 'react-native-svg';
 import { useScanStore } from '@/stores/useScanStore';
 import ScanHistoryCard from '@/components/progress/ScanHistoryCard';
+import { logEvent, EVENTS } from '@/lib/analytics';
 
 const ESPRESSO = '#2D1810';
 const PRIMARY = '#E07856';
@@ -122,6 +123,13 @@ export default function ScansHistoryScreen() {
                 scan={scan}
                 previousScan={history[i + 1]}
                 isBaseline={i === history.length - 1}
+                onPress={(s) => {
+                  logEvent(EVENTS.SCAN_HISTORY_CARD_TAPPED, {
+                    scan_id: s.id,
+                    score: s.overall_score,
+                  });
+                  router.push(`/(tabs)/results?scanId=${s.id}`);
+                }}
               />
             </Animated.View>
           ))}

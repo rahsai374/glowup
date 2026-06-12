@@ -83,11 +83,12 @@ export default function TrendTimeline({ scans, totalScans, onSeeAll }: TrendTime
   const chips = [...lastFive].reverse();
   const hasMultiple = chips.length >= 2;
 
+  const scanCount = scans.length;
   const meta = !hasMultiple
     ? t('progress_journey_total', { count: totalScans })
-    : totalScans > 5
-      ? t('progress_journey_count', { shown: chips.length, total: totalScans })
-      : t('progress_journey_total', { count: totalScans });
+    : scanCount < totalScans
+      ? t('progress_journey_count', { shown: chips.length, total: scanCount })
+      : t('progress_journey_total', { count: scanCount });
 
   return (
     <View

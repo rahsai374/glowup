@@ -31,8 +31,12 @@ export default function ScanHistoryCard({
   const thumbSize = isLatest ? 56 : 48;
 
   return (
-    <View
-      style={{
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}${scan.top_win ? `, ${scan.top_win}` : ''}`}
+      onPress={onPress ? () => onPress(scan) : undefined}
+      disabled={!onPress}
+      style={({ pressed }) => ({
         backgroundColor: 'white',
         borderRadius: 16,
         borderWidth: 1,
@@ -43,114 +47,132 @@ export default function ScanHistoryCard({
         shadowRadius: 12,
         elevation: 2,
         marginBottom: 8,
-        overflow: 'hidden',
-      }}
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        transform: [{ scale: pressed && onPress ? 0.98 : 1 }],
+      })}
     >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${concern ? `, ${concern}` : ''}${win ? `, ${win}` : ''}`}
-        onPress={() => onPress?.(scan)}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingVertical: 14,
-          paddingHorizontal: 16,
-          opacity: pressed ? 0.7 : 1,
-        })}
-      >
-        {scan.imageUrl ? (
-          <View
-            style={{
-              width: thumbSize,
-              height: thumbSize,
-              borderRadius: 14,
-              overflow: 'hidden',
-              borderWidth: isLatest ? 2 : 1,
-              borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
-              marginRight: 12,
-            }}
-          >
-            <Image source={{ uri: scan.imageUrl }} style={{ width: '100%', height: '100%' }} />
-          </View>
-        ) : (
-          <View
-            style={{
-              width: thumbSize,
-              height: thumbSize,
-              borderRadius: 14,
-              backgroundColor: '#FFEEDC',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: isLatest ? 2 : 1,
-              borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
-              marginRight: 12,
-            }}
-          >
-            <Svg width={15} height={15} viewBox="0 0 24 24" fill="none" opacity={0.45}>
-              <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.2} />
-              <Path
-                d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
-                stroke={PRIMARY}
-                strokeWidth={1.2}
-                strokeLinecap="round"
-              />
-            </Svg>
-          </View>
-        )}
+      {scan.imageUrl ? (
+        <View
+          style={{
+            width: thumbSize,
+            height: thumbSize,
+            borderRadius: 14,
+            overflow: 'hidden',
+            borderWidth: isLatest ? 2 : 1,
+            borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
+            marginRight: 12,
+          }}
+        >
+          <Image source={{ uri: scan.imageUrl }} style={{ width: '100%', height: '100%' }} />
+        </View>
+      ) : (
+        <View
+          style={{
+            width: thumbSize,
+            height: thumbSize,
+            borderRadius: 14,
+            backgroundColor: '#FFEEDC',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderWidth: isLatest ? 2 : 1,
+            borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
+            marginRight: 12,
+          }}
+        >
+          <Svg width={15} height={15} viewBox="0 0 24 24" fill="none" opacity={0.45}>
+            <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.2} />
+            <Path
+              d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
+              stroke={PRIMARY}
+              strokeWidth={1.2}
+              strokeLinecap="round"
+            />
+          </Svg>
+        </View>
+      )}
 
-        <View style={{ flex: 1, minWidth: 0 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 18, color: PRIMARY, marginRight: 8 }}>
-              {scan.overall_score}
-            </Text>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+          <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 18, color: PRIMARY, marginRight: 8 }}>
+            {scan.overall_score}
+          </Text>
+          <Text
+            style={{
+              fontFamily: 'PlusJakartaSans_600SemiBold',
+              fontSize: 13,
+              color: '#2D1810',
+              marginRight: 8,
+            }}
+          >
+            {formatDateShort(scan.createdAt)}
+          </Text>
+          {delta !== null && delta !== 0 && (
             <Text
               style={{
-                fontFamily: 'PlusJakartaSans_600SemiBold',
-                fontSize: 13,
-                color: '#2D1810',
+                fontSize: 11,
+                fontFamily: 'PlusJakartaSans_700Bold',
+                color: delta > 0 ? '#22C55E' : '#D97706',
                 marginRight: 8,
               }}
             >
-              {formatDateShort(scan.createdAt)}
+              {delta > 0 ? `+${delta} ↑` : `${delta} ↓`}
             </Text>
-            {delta !== null && delta !== 0 && (
+          )}
+          {isLatest && (
+            <View
+              style={{
+                backgroundColor: 'rgba(224,120,86,0.12)',
+                paddingVertical: 3,
+                paddingHorizontal: 8,
+                borderRadius: 8,
+              }}
+            >
               <Text
                 style={{
-                  fontSize: 11,
+                  fontSize: 10,
                   fontFamily: 'PlusJakartaSans_700Bold',
-                  color: delta > 0 ? '#22C55E' : '#D97706',
-                  marginRight: 8,
+                  color: PRIMARY,
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.8,
                 }}
               >
-                {delta > 0 ? `+${delta} ↑` : `${delta} ↓`}
+                {t('scan_latest_badge')}
               </Text>
-            )}
-            {isLatest && (
-              <View
+            </View>
+          )}
+          {isBaseline && !isLatest && (
+            <View
+              style={{
+                backgroundColor: 'rgba(45,24,16,0.06)',
+                paddingVertical: 3,
+                paddingHorizontal: 8,
+                borderRadius: 8,
+              }}
+            >
+              <Text
                 style={{
-                  backgroundColor: 'rgba(224,120,86,0.12)',
-                  paddingVertical: 3,
-                  paddingHorizontal: 8,
-                  borderRadius: 8,
+                  fontSize: 10,
+                  fontFamily: 'PlusJakartaSans_600SemiBold',
+                  color: 'rgba(45,24,16,0.45)',
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.8,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 10,
-                    fontFamily: 'PlusJakartaSans_700Bold',
-                    color: PRIMARY,
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.8,
-                  }}
-                >
-                  {t('scan_latest_badge')}
-                </Text>
-              </View>
-            )}
-            {isBaseline && !isLatest && (
+                {t('scan_baseline_badge')}
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {(concern || win) && (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5, gap: 6, flexWrap: 'wrap' }}>
+            {concern && (
               <View
                 style={{
-                  backgroundColor: 'rgba(45,24,16,0.06)',
+                  backgroundColor: 'rgba(248,113,113,0.12)',
                   paddingVertical: 3,
                   paddingHorizontal: 8,
                   borderRadius: 8,
@@ -160,59 +182,35 @@ export default function ScanHistoryCard({
                   style={{
                     fontSize: 10,
                     fontFamily: 'PlusJakartaSans_600SemiBold',
-                    color: 'rgba(45,24,16,0.45)',
-                    textTransform: 'uppercase',
-                    letterSpacing: 0.8,
+                    color: '#EF4444',
                   }}
                 >
-                  {t('scan_baseline_badge')}
+                  {concern}
                 </Text>
               </View>
             )}
+            {win && (
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{
+                  flex: 1,
+                  fontSize: 11,
+                  fontFamily: 'PlusJakartaSans_500Medium',
+                  color: 'rgba(45,24,16,0.6)',
+                }}
+              >
+                {win}
+              </Text>
+            )}
           </View>
+        )}
+      </View>
 
-          {(concern || win) && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5, gap: 6, flexWrap: 'wrap' }}>
-              {concern && (
-                <View
-                  style={{
-                    backgroundColor: 'rgba(248,113,113,0.12)',
-                    paddingVertical: 3,
-                    paddingHorizontal: 8,
-                    borderRadius: 8,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 10,
-                      fontFamily: 'PlusJakartaSans_600SemiBold',
-                      color: '#EF4444',
-                    }}
-                  >
-                    {concern}
-                  </Text>
-                </View>
-              )}
-              {win && (
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={{
-                    flex: 1,
-                    fontSize: 11,
-                    fontFamily: 'PlusJakartaSans_500Medium',
-                    color: 'rgba(45,24,16,0.6)',
-                  }}
-                >
-                  {win}
-                </Text>
-              )}
-            </View>
-          )}
-        </View>
-
-        <Text style={{ color: 'rgba(45,24,16,0.25)', fontSize: 20, marginLeft: 8 }}>›</Text>
-      </Pressable>
-    </View>
+      {/* Chevron — only show when tappable */}
+      {onPress && (
+        <Text style={{ color: 'rgba(45,24,16,0.25)', fontSize: 20, flexShrink: 0 }}>›</Text>
+      )}
+    </Pressable>
   );
 }

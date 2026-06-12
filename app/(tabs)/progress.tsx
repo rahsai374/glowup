@@ -21,18 +21,18 @@ const ACCENT = '#D4A574';
 
 type ProgressState = 0 | 1 | 'R' | 2 | 3 | 4 | 5;
 
-const METRIC_KEYS: (keyof ScanResult['metrics'])[] = [
-  'hydration',
-  'blemish_prone',
-  'redness',
-  'oiliness',
-  'dark_spots',
-  'radiance',
-  'texture',
-  'firmness',
-  'wrinkles',
-  'dark_circles',
-];
+const METRIC_KEYS = Object.keys({
+  hydration: 0,
+  blemish_prone: 0,
+  redness: 0,
+  oiliness: 0,
+  dark_spots: 0,
+  radiance: 0,
+  texture: 0,
+  firmness: 0,
+  wrinkles: 0,
+  dark_circles: 0,
+} satisfies ScanResult['metrics']) as (keyof ScanResult['metrics'])[];
 
 const SUBTITLE_KEYS: Record<string, string> = {
   '0': 'progress_sub_ftue',
@@ -104,7 +104,9 @@ function biggestMetricChange(
   let bestKey: keyof ScanResult['metrics'] = 'hydration';
   let bestDelta = direction === 'improve' ? -Infinity : Infinity;
   for (const k of METRIC_KEYS) {
-    const delta = latest.metrics[k] - comparison.metrics[k];
+    const a = latest.metrics[k] ?? 0;
+    const b = comparison.metrics[k] ?? 0;
+    const delta = a - b;
     if (direction === 'improve' && delta > bestDelta) {
       bestDelta = delta;
       bestKey = k;
@@ -117,7 +119,7 @@ function biggestMetricChange(
 }
 
 function stripTags(s: string): string {
-  return s.replace(/<\/?0>/g, '');
+  return s.replace(/<\/?[0-9]+>/g, '');
 }
 
 export default function ProgressScreen() {
