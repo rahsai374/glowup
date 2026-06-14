@@ -9,7 +9,7 @@ import { Camera as VisionCamera, useCameraDevice, usePhotoOutput } from 'react-n
 import * as Haptics from 'expo-haptics';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, {
   FadeInDown,
   FadeInUp,
@@ -57,6 +57,7 @@ export default function ScanScreen() {
   const pendingNudge = useRef<string | null>(null);
   const pendingNudgeSince = useRef<number>(0);
   const router = useRouter();
+  const { from } = useLocalSearchParams<{ from?: string }>();
   const { t } = useTranslation();
   const user = useUserStore((s) => s.user);
   const { setCurrentScan, addToHistory, scanHistory } = useScanStore();
@@ -255,7 +256,7 @@ export default function ScanScreen() {
       });
       stopScanning();
       // TODO: Insert paywall gate here before navigating to results
-      router.replace({ pathname: '/(tabs)/results', params: { scanId: '' } } as any);
+      router.replace({ pathname: '/(tabs)/results', params: { scanId: '', from: from ?? 'home' } } as any);
     } catch (e: any) {
       stopScanning();
       logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });

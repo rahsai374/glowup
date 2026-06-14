@@ -127,7 +127,7 @@ export default function HomeScreen() {
     if (heroState.kind === 'routine-in-progress' || heroState.kind === 'fresh-scan') {
       router.push('/(tabs)/routine');
     } else {
-      router.push('/scan');
+      router.push('/scan?from=home');
     }
   }
 
@@ -152,7 +152,7 @@ export default function HomeScreen() {
             currentScore={currentScore}
             previousScore={previousScore}
             onPress={() => router.push('/(tabs)/progress')}
-            onScanPress={() => router.push('/scan')}
+            onScanPress={() => router.push('/scan?from=home')}
           />
         )}
 

@@ -60,7 +60,7 @@ function NoScanEmptyState() {
       </Animated.Text>
       <Animated.View entering={FadeInDown.delay(240).springify()}>
         <TouchableOpacity
-          onPress={() => router.push('/scan')}
+          onPress={() => router.push('/scan?from=routine')}
           activeOpacity={0.85}
           style={{
             backgroundColor: '#E07856',

@@ -145,7 +145,7 @@ export default function ProgressScreen() {
     [history, timeWindow, comparison]
   );
 
-  const navigateToScan = () => router.push('/scan');
+  const navigateToScan = () => router.push('/scan?from=progress');
   const navigateToRoutine = () => router.push('/(tabs)/routine');
   const navigateToScansHistory = () => router.push('/scans-history');
 

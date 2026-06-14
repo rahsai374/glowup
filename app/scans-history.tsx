@@ -460,7 +460,7 @@ export default function ScansHistoryScreen() {
                               scan_id: s.id,
                               score: s.overall_score,
                             });
-                            router.push(`/(tabs)/results?scanId=${s.id}`);
+                            router.push(`/(tabs)/results?scanId=${s.id}&from=history`);
                           }}
                         />
                       );
@@ -483,7 +483,7 @@ export default function ScansHistoryScreen() {
                       scan_id: s.id,
                       score: s.overall_score,
                     });
-                    router.push(`/(tabs)/results?scanId=${s.id}`);
+                    router.push(`/(tabs)/results?scanId=${s.id}&from=history`);
                   }}
                 />
               ))}
