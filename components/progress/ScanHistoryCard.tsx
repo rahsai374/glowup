@@ -5,65 +5,54 @@ import { useTranslation } from 'react-i18next';
 import Svg, { Circle as SvgCircle, Path } from 'react-native-svg';
 import { ScanRecord } from '@/stores/useScanStore';
 import { formatDateShort } from '@/lib/formatDate';
-import { concernLabel, truncateWin } from '@/lib/scoringLabels';
+import { concernLabel } from '@/lib/scoringLabels';
 
 const PRIMARY = '#E07856';
 
 interface ScanHistoryCardProps {
   scan: ScanRecord;
   previousScan?: ScanRecord;
-  isBaseline?: boolean;
-  isLatest?: boolean;
   onPress?: (scan: ScanRecord) => void;
 }
 
 export default function ScanHistoryCard({
   scan,
   previousScan,
-  isBaseline,
-  isLatest,
   onPress,
 }: ScanHistoryCardProps) {
   const { t } = useTranslation();
   const delta = previousScan ? Math.round(scan.overall_score - previousScan.overall_score) : null;
   const concern = concernLabel(t, scan.top_concern);
-  const win = truncateWin(scan.top_win, 36);
-  const thumbSize = isLatest ? 56 : 48;
 
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}${scan.top_win ? `, ${scan.top_win}` : ''}`}
+      accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}`}
       onPress={onPress ? () => onPress(scan) : undefined}
       disabled={!onPress}
       style={({ pressed }) => ({
-        backgroundColor: 'white',
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: isLatest ? 'rgba(224,120,86,0.25)' : 'rgba(224,120,86,0.08)',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 18,
         shadowColor: '#2D1810',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: isLatest ? 0.06 : 0.04,
-        shadowRadius: 12,
-        elevation: 2,
-        marginBottom: 8,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
+        elevation: 3,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 14,
+        paddingVertical: 16,
         paddingHorizontal: 16,
-        transform: [{ scale: pressed && onPress ? 0.98 : 1 }],
+        transform: [{ scale: pressed && onPress ? 0.97 : 1 }],
       })}
     >
       {scan.imageUrl ? (
         <View
           style={{
-            width: thumbSize,
-            height: thumbSize,
-            borderRadius: 14,
+            width: 56,
+            height: 56,
+            borderRadius: 16,
             overflow: 'hidden',
-            borderWidth: isLatest ? 2 : 1,
-            borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
-            marginRight: 12,
+            marginRight: 14,
           }}
         >
           <Image source={{ uri: scan.imageUrl }} style={{ width: '100%', height: '100%' }} />
@@ -71,60 +60,36 @@ export default function ScanHistoryCard({
       ) : (
         <View
           style={{
-            width: thumbSize,
-            height: thumbSize,
-            borderRadius: 14,
+            width: 56,
+            height: 56,
+            borderRadius: 16,
             backgroundColor: '#FFEEDC',
             alignItems: 'center',
             justifyContent: 'center',
-            borderWidth: isLatest ? 2 : 1,
-            borderColor: isLatest ? PRIMARY : 'rgba(224,120,86,0.1)',
-            marginRight: 12,
+            marginRight: 14,
           }}
         >
-          <Svg width={15} height={15} viewBox="0 0 24 24" fill="none" opacity={0.45}>
-            <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.2} />
+          <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" opacity={0.5}>
+            <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.5} />
             <Path
               d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
               stroke={PRIMARY}
-              strokeWidth={1.2}
+              strokeWidth={1.5}
               strokeLinecap="round"
             />
           </Svg>
         </View>
       )}
 
-      <View style={{ flex: 1, minWidth: 0 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 18, color: PRIMARY, marginRight: 8 }}>
+      <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 24, color: PRIMARY }}>
             {scan.overall_score}
           </Text>
-          <Text
-            style={{
-              fontFamily: 'PlusJakartaSans_600SemiBold',
-              fontSize: 13,
-              color: '#2D1810',
-              marginRight: 8,
-            }}
-          >
-            {formatDateShort(scan.createdAt)}
-          </Text>
           {delta !== null && delta !== 0 && (
-            <Text
-              style={{
-                fontSize: 11,
-                fontFamily: 'PlusJakartaSans_700Bold',
-                color: delta > 0 ? '#22C55E' : '#D97706',
-                marginRight: 8,
-              }}
-            >
-              {delta > 0 ? `+${delta} ↑` : `${delta} ↓`}
-            </Text>
-          )}
-          {isLatest && (
             <View
               style={{
-                backgroundColor: 'rgba(224,120,86,0.12)',
+                backgroundColor: delta > 0 ? '#DCFCE7' : '#FEF3C7',
                 paddingVertical: 3,
                 paddingHorizontal: 8,
                 borderRadius: 8,
@@ -132,84 +97,40 @@ export default function ScanHistoryCard({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'PlusJakartaSans_700Bold',
-                  color: PRIMARY,
-                  textTransform: 'uppercase',
-                  letterSpacing: 0.8,
+                  color: delta > 0 ? '#16A34A' : '#D97706',
                 }}
               >
-                {t('scan_latest_badge')}
-              </Text>
-            </View>
-          )}
-          {isBaseline && !isLatest && (
-            <View
-              style={{
-                backgroundColor: 'rgba(45,24,16,0.06)',
-                paddingVertical: 3,
-                paddingHorizontal: 8,
-                borderRadius: 8,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 10,
-                  fontFamily: 'PlusJakartaSans_600SemiBold',
-                  color: 'rgba(45,24,16,0.45)',
-                  textTransform: 'uppercase',
-                  letterSpacing: 0.8,
-                }}
-              >
-                {t('scan_baseline_badge')}
+                {delta > 0 ? `+${delta}` : `${delta}`}
               </Text>
             </View>
           )}
         </View>
 
-        {(concern || win) && (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5, gap: 6, flexWrap: 'wrap' }}>
-            {concern && (
-              <View
-                style={{
-                  backgroundColor: 'rgba(248,113,113,0.12)',
-                  paddingVertical: 3,
-                  paddingHorizontal: 8,
-                  borderRadius: 8,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 10,
-                    fontFamily: 'PlusJakartaSans_600SemiBold',
-                    color: '#EF4444',
-                  }}
-                >
-                  {concern}
-                </Text>
-              </View>
-            )}
-            {win && (
-              <Text
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={{
-                  flex: 1,
-                  fontSize: 11,
-                  fontFamily: 'PlusJakartaSans_500Medium',
-                  color: 'rgba(45,24,16,0.6)',
-                }}
-              >
-                {win}
-              </Text>
-            )}
-          </View>
-        )}
+        <Text
+          style={{
+            fontFamily: 'PlusJakartaSans_500Medium',
+            fontSize: 13,
+            color: 'rgba(45,24,16,0.50)',
+          }}
+          numberOfLines={1}
+        >
+          {formatDateShort(scan.createdAt)}
+          {concern ? `  ·  ${concern}` : ''}
+        </Text>
       </View>
 
-      {/* Chevron — only show when tappable */}
       {onPress && (
-        <Text style={{ color: 'rgba(45,24,16,0.25)', fontSize: 20, flexShrink: 0 }}>›</Text>
+        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" style={{ marginLeft: 8 }}>
+          <Path
+            d="M9 18l6-6-6-6"
+            stroke="rgba(45,24,16,0.25)"
+            strokeWidth={2.5}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Svg>
       )}
     </Pressable>
   );

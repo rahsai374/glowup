@@ -184,6 +184,7 @@
   "notifications_empty": "Abhi koi notification nahi",
   "notifications_empty_body": "Tips, reminders, aur skin updates ki jaankari yahan milegi.",
   "see_full_analysis": "Pura Analysis dekho",
+  "see_full_analysis_short": "देखो",
   "historical_scan_label": "{{date}} ka Scan",
   "profile_complete_title": "Profile pura karo",
   "profile_complete_body": "Routine recommendations personalize karne ke liye",
@@ -227,5 +228,11 @@
   "progress_range_last_4weeks": "पिछले 4 हफ्ते",
   "progress_range_all_time": "अब तक",
   "progress_journey_total_short": "total",
-  "scans_history_baseline": "Baseline"
+  "scans_history_baseline": "Baseline",
+  "scans_history_total_scans": "Scans",
+  "scans_history_days_tracked": "दिन Track किए",
+  "scans_history_score_change": "Score बदलाव",
+  "scans_history_since_day_one": "पहले दिन से",
+  "scans_history_empty_title": "तुम्हारी journey यहाँ से शुरू होती है",
+  "scans_history_empty_body": "पहला scan लो और देखो कैसे तुम्हारी skin बदलती है।"
 }

@@ -184,6 +184,7 @@
   "notifications_empty": "No notifications yet",
   "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here.",
   "see_full_analysis": "See Full Analysis",
+  "see_full_analysis_short": "View",
   "historical_scan_label": "Scan from {{date}}",
   "profile_complete_title": "Complete Your Profile",
   "profile_complete_body": "Personalize your routine recommendations",
@@ -227,5 +228,11 @@
   "progress_range_last_4weeks": "Last 4 weeks",
   "progress_range_all_time": "All time",
   "progress_journey_total_short": "total",
-  "scans_history_baseline": "Baseline"
+  "scans_history_baseline": "Baseline",
+  "scans_history_total_scans": "Scans",
+  "scans_history_days_tracked": "Days Tracked",
+  "scans_history_score_change": "Score Change",
+  "scans_history_since_day_one": "Since Day 1",
+  "scans_history_empty_title": "Your journey starts here",
+  "scans_history_empty_body": "Take your first scan and watch your skin transform over time."
 }
