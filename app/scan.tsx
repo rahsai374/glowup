@@ -63,6 +63,7 @@ export default function ScanScreen() {
   const device = useCameraDevice('front');
   const factIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lastScanTime = useRef<number>(0);
+  const isProcessing = useRef(false);
 
   React.useEffect(() => {
     return () => {
@@ -171,12 +172,18 @@ export default function ScanScreen() {
 
   async function takePhoto() {
     if (!photoOutput) return;
-    const photo = await photoOutput.capturePhotoToFile({}, {});
-    const uri = Platform.OS === 'android' ? `file://${photo.filePath}` : photo.filePath;
-    await processImage(uri, isReady);
+    try {
+      const photo = await photoOutput.capturePhotoToFile({}, {});
+      const uri = Platform.OS === 'android' ? `file://${photo.filePath}` : photo.filePath;
+      await processImage(uri, isReady);
+    } catch (e: any) {
+      console.warn('[scan] takePhoto failed:', e?.message ?? e);
+      Alert.alert(t('scan_failed_title'), t('scan_failed_body'));
+    }
   }
 
   async function processImage(uri: string, wasReady = false) {
+    if (isProcessing.current) return;
     const now = Date.now();
     const elapsed = now - lastScanTime.current;
     if (elapsed < SCAN_COOLDOWN_MS) {
@@ -184,6 +191,7 @@ export default function ScanScreen() {
       Alert.alert(t('scan_cooldown_title'), t('scan_cooldown_body', { seconds: remaining }));
       return;
     }
+    isProcessing.current = true;
     setCapturedUri(uri);
     setState('analyzing');
     logEvent(EVENTS.SCAN_PHOTO_CAPTURED);
@@ -253,10 +261,12 @@ export default function ScanScreen() {
         skin_type: scan.skin_type,
         top_concern: scan.top_concern,
       });
+      isProcessing.current = false;
       stopScanning();
       // TODO: Insert paywall gate here before navigating to results
       router.replace({ pathname: '/(tabs)/results', params: { scanId: '' } } as any);
     } catch (e: any) {
+      isProcessing.current = false;
       stopScanning();
       logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });
       console.error('[SCAN ERROR]', e?.message ?? e);

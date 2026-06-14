@@ -37,7 +37,7 @@ export async function updateProfileField(uid: string, partial: Record<string, un
 
 export async function updateStreak(uid: string, streak: StreakData): Promise<void> {
   try {
-    await firestore().collection('users').doc(uid).update({ streak });
+    await firestore().collection('users').doc(uid).set({ streak }, { merge: true });
   } catch (e) {
     console.warn('[firestore] updateStreak failed:', e);
   }
@@ -80,7 +80,7 @@ export async function saveRoutine(
       generatedAt: firestore.FieldValue.serverTimestamp(),
       inputs,
     };
-    await firestore().collection('users').doc(uid).collection('routine').doc('current').set(data);
+    await firestore().collection('users').doc(uid).collection('routine').doc('current').set(data, { merge: true });
   } catch (e) {
     console.warn('[firestore] saveRoutine failed:', e);
   }
@@ -99,9 +99,14 @@ export async function generateAndSaveRoutine(
 }
 
 export async function deleteAccount(uid: string): Promise<void> {
-  const scansSnap = await firestore().collection('users').doc(uid).collection('scans').get();
-  await Promise.all(scansSnap.docs.map((d) => d.ref.delete()));
-  await firestore().collection('users').doc(uid).delete();
+  try {
+    const scansSnap = await firestore().collection('users').doc(uid).collection('scans').get();
+    await Promise.all(scansSnap.docs.map((d) => d.ref.delete()));
+    await firestore().collection('users').doc(uid).delete();
+  } catch (e) {
+    console.warn('[firestore] deleteAccount failed:', e);
+    throw e;
+  }
 }
 
 export async function hydrateFromFirestore(uid: string): Promise<boolean> {
@@ -131,26 +136,30 @@ export async function hydrateFromFirestore(uid: string): Promise<boolean> {
 
   i18n.changeLanguage(profile.language);
 
-  const scansSnap = await firestore()
-    .collection('users').doc(uid).collection('scans')
-    .orderBy('createdAt', 'desc')
-    .limit(50)
-    .get();
+  try {
+    const scansSnap = await firestore()
+      .collection('users').doc(uid).collection('scans')
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get();
 
-  const scans: ScanRecord[] = await Promise.all(
-    scansSnap.docs.map(async (d) => {
-      const rec = d.data() as ScanRecord;
-      if (!rec.imageUrl) {
-        const path = getScanImagePath(rec.id);
-        if (await scanImageExists(path)) rec.imageUrl = path;
-      }
-      return rec;
-    })
-  );
-  useScanStore.getState().setHistory(scans);
+    const scans: ScanRecord[] = await Promise.all(
+      scansSnap.docs.map(async (d) => {
+        const rec = d.data() as ScanRecord;
+        if (!rec.imageUrl) {
+          const path = getScanImagePath(rec.id);
+          if (await scanImageExists(path)) rec.imageUrl = path;
+        }
+        return rec;
+      })
+    );
+    useScanStore.getState().setHistory(scans);
 
-  if (scans.length > 0) {
-    useScanStore.getState().setCurrentScan(scans[0]);
+    if (scans.length > 0) {
+      useScanStore.getState().setCurrentScan(scans[0]);
+    }
+  } catch (e) {
+    console.warn('[firestore] hydrateFromFirestore scans fetch failed:', e);
   }
 
   return true;

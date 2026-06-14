@@ -135,7 +135,28 @@ export async function analyzeSkin(
       prompt,
     ]);
     const result = await Promise.race([call, timeout]);
-    return JSON.parse(result.response.text()) as ScanResult;
+
+    const text = result.response.text().trim();
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Invalid Gemini response');
+
+    let parsed: any;
+    try {
+      parsed = JSON.parse(jsonMatch[0]);
+    } catch {
+      throw new Error('Malformed JSON in Gemini response');
+    }
+
+    if (
+      typeof parsed.overall_score !== 'number' ||
+      typeof parsed.skin_type !== 'string' ||
+      !parsed.metrics ||
+      typeof parsed.metrics.hydration !== 'number'
+    ) {
+      throw new Error('Gemini response missing required fields');
+    }
+
+    return parsed as ScanResult;
   };
 
   try {
