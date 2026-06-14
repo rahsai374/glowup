@@ -72,7 +72,7 @@ export function getPersonalizedScore(
   const staticMatch =
     product.skinTypeMatch[skinType] ?? product.skinTypeMatch['all'];
   const baseScore = isRelevant(staticMatch.suitability)
-    ? staticMatch.matchScore
+    ? Math.min(staticMatch.matchScore, MAX_SCORE - MAX_CONCERN_BONUS)
     : Math.round(staticMatch.matchScore * IRRELEVANCE_PENALTY);
 
   const concernMatches: string[] = [];
