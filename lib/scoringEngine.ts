@@ -54,7 +54,11 @@ export function getPersonalizedScore(
   scanResult: ScanResult | null
 ): PersonalizedScore {
   if (!scanResult) {
-    const bestMatch = Object.values(product.skinTypeMatch).reduce((a, b) =>
+    const entries = Object.values(product.skinTypeMatch);
+    if (entries.length === 0) {
+      return { matchScore: 50, suitability: 'caution', concernMatches: [] };
+    }
+    const bestMatch = entries.reduce((a, b) =>
       a.matchScore > b.matchScore ? a : b
     );
     const baseScore = isRelevant(bestMatch.suitability)
@@ -71,6 +75,9 @@ export function getPersonalizedScore(
   const skinType = scanResult.skin_type;
   const staticMatch =
     product.skinTypeMatch[skinType] ?? product.skinTypeMatch['all'];
+  if (!staticMatch) {
+    return { matchScore: 50, suitability: 'caution', concernMatches: [] };
+  }
   const baseScore = isRelevant(staticMatch.suitability)
     ? staticMatch.matchScore
     : Math.round(staticMatch.matchScore * IRRELEVANCE_PENALTY);

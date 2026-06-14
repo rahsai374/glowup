@@ -180,6 +180,8 @@
   "delete": "Delete karo",
   "scan_cooldown_title": "Thoda rukiye",
   "scan_cooldown_body": "{{seconds}} second baad scan kar sakte hain",
+  "scan_failed_title": "Scan fail hua",
+  "scan_failed_body": "Photo capture nahi ho paya. Please try again.",
   "notifications_title": "Notifications",
   "notifications_empty": "Abhi koi notification nahi",
   "notifications_empty_body": "Tips, reminders, aur skin updates ki jaankari yahan milegi.",

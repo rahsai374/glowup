@@ -180,6 +180,8 @@
   "delete": "Delete",
   "scan_cooldown_title": "Please wait",
   "scan_cooldown_body": "You can scan again in {{seconds}} second",
+  "scan_failed_title": "Scan failed",
+  "scan_failed_body": "Could not capture photo. Please try again.",
   "notifications_title": "Notifications",
   "notifications_empty": "No notifications yet",
   "notifications_empty_body": "We'll let you know about tips, reminders, and skin updates here.",

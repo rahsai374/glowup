@@ -67,7 +67,7 @@ export default function ResultsScreen() {
 
   if (!scan) return null;
 
-  const metrics = Object.entries(scan.metrics);
+  const metrics = Object.entries(scan.metrics ?? {});
 
   async function saveProfileCard() {
     const trimmed = nameInput.trim();

@@ -127,11 +127,13 @@ interface StepCardProps {
 
 function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
   const [remedyIndex, setRemedyIndex] = useState(() => {
+    if (step.remedies.length === 0) return 0;
     const now = new Date();
     const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
     return (dayOfYear + index) % step.remedies.length;
   });
   const currentRemedy = step.remedies[remedyIndex];
+  if (!currentRemedy) return null;
   const hasMultipleRemedies = step.remedies.length > 1;
 
   const handleSwapRemedy = useCallback(() => {
