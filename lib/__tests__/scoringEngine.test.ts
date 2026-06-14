@@ -136,7 +136,7 @@ describe('getPersonalizedScore', () => {
       expect(result.matchScore).toBe(98);
     });
 
-    it('caps total score at 100', () => {
+    it('caps base score so bonuses have headroom', () => {
       const product = makeProduct({
         concerns: ['acne', 'dark_spots', 'dryness'],
         skinTypeMatch: {
@@ -148,7 +148,22 @@ describe('getPersonalizedScore', () => {
         metrics: { ...makeScan().metrics, blemish_prone: 90, dark_spots: 80, hydration: 20 },
       });
       const result = getPersonalizedScore(product, scan);
+      // base 95 clamped to 90, +10 bonus cap = 100 exactly (not over-clamped)
       expect(result.matchScore).toBe(100);
+    });
+
+    it('clamps a high base score down to MAX_SCORE - MAX_CONCERN_BONUS', () => {
+      const product = makeProduct({
+        concerns: [],
+        skinTypeMatch: {
+          ...makeProduct().skinTypeMatch,
+          oily: { suitability: 'excellent', matchScore: 95 },
+        },
+      });
+      const scan = makeScan();
+      const result = getPersonalizedScore(product, scan);
+      // base 95 -> clamped to 90, no concern matches -> 90
+      expect(result.matchScore).toBe(90);
     });
   });
 
