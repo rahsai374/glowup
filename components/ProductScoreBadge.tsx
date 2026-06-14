@@ -24,15 +24,18 @@ const TIER_STYLE: Record<Tier, { bg: string; text: string; border: string; emoji
 export interface ProductScoreBadgeProps {
   score: number;
   suitability: ProductSuitability;
-  hindi: boolean;
 }
 
-export function ProductScoreBadge({ score, suitability, hindi }: ProductScoreBadgeProps) {
-  const { t } = useTranslation();
+export function ProductScoreBadge({ score, suitability }: ProductScoreBadgeProps) {
+  const { t, i18n } = useTranslation();
+  const hindi = i18n.language === 'hi';
   const tier = getTier(score, suitability);
   const style = TIER_STYLE[tier];
+  const label = t(style.key);
   return (
     <View
+      accessibilityRole="text"
+      accessibilityLabel={label}
       style={{
         alignSelf: 'flex-start',
         flexDirection: 'row',
@@ -50,13 +53,13 @@ export function ProductScoreBadge({ score, suitability, hindi }: ProductScoreBad
       <Text style={{ fontSize: 12 }}>{style.emoji}</Text>
       <Text
         style={{
-          fontFamily: hindi ? 'Hind_700Bold' : 'PlusJakartaSans_700Bold',
+          fontFamily: hindi ? 'Hind_600SemiBold' : 'PlusJakartaSans_700Bold',
           fontSize: 11,
           color: style.text,
           letterSpacing: hindi ? 0 : 0.3,
         }}
       >
-        {t(style.key)}
+        {label}
       </Text>
     </View>
   );

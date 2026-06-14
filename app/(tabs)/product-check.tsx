@@ -382,7 +382,6 @@ function ResultsStep({ product, personalizedScore, isPersonalized, userSkinType,
             <ProductScoreBadge
               score={personalizedScore.matchScore}
               suitability={personalizedScore.suitability}
-              hindi={hindi}
             />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 8 }}>
               <Text style={{ fontSize: 10, fontFamily: hindi ? 'Hind_700Bold' : 'PlusJakartaSans_700Bold', color: 'rgba(45,24,16,0.5)', textTransform: hindi ? 'none' : 'uppercase', letterSpacing: hindi ? 0 : 1.5 }}>
