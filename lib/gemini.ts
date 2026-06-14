@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI, GenerationConfig } from '@google/generative-ai';
+import { GoogleGenerativeAI, GenerationConfig, SchemaType, type ResponseSchema } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.EXPO_PUBLIC_GEMINI_API_KEY!);
 
@@ -22,6 +22,37 @@ export interface ScanResult {
   top_win: string;
   advice: string;
 }
+
+const METRIC_INT = { type: SchemaType.INTEGER } as const;
+
+const SCAN_SCHEMA: ResponseSchema = {
+  type: SchemaType.OBJECT,
+  required: ['overall_score', 'skin_type', 'skin_age', 'metrics', 'top_concern', 'top_win', 'advice'],
+  properties: {
+    overall_score: { type: SchemaType.INTEGER },
+    skin_type:     { type: SchemaType.STRING, format: 'enum', enum: ['oily', 'dry', 'combination', 'normal'] },
+    skin_age:      { type: SchemaType.INTEGER },
+    metrics: {
+      type: SchemaType.OBJECT,
+      required: ['hydration', 'blemish_prone', 'redness', 'oiliness', 'dark_spots', 'radiance', 'texture', 'firmness', 'wrinkles', 'dark_circles'],
+      properties: {
+        hydration:     METRIC_INT,
+        blemish_prone: METRIC_INT,
+        redness:       METRIC_INT,
+        oiliness:      METRIC_INT,
+        dark_spots:    METRIC_INT,
+        radiance:      METRIC_INT,
+        texture:       METRIC_INT,
+        firmness:      METRIC_INT,
+        wrinkles:      METRIC_INT,
+        dark_circles:  METRIC_INT,
+      },
+    },
+    top_concern: { type: SchemaType.STRING, format: 'enum', enum: ['acne', 'dark_spots', 'pigmentation', 'dryness', 'anti_aging'] },
+    top_win:     { type: SchemaType.STRING },
+    advice:      { type: SchemaType.STRING },
+  },
+};
 
 export interface PreviousScanContext {
   overall_score: number;
@@ -69,27 +100,8 @@ USER CONTEXT (self-reported — treat as a rough guide, not ground truth):
 - Main concern: ${mainConcern}
 - Self-reported skin type: ${skinType}
 
-Return ONLY valid JSON with no markdown, no explanation:
-{
-  "overall_score": <0-100>,
-  "skin_type": "<oily|dry|combination|normal>",
-  "skin_age": <number>,
-  "metrics": {
-    "hydration": <0-100>,
-    "blemish_prone": <0-100>,
-    "redness": <0-100>,
-    "oiliness": <0-100>,
-    "dark_spots": <0-100>,
-    "radiance": <0-100>,
-    "texture": <0-100>,
-    "firmness": <0-100>,
-    "wrinkles": <0-100>,
-    "dark_circles": <0-100>
-  },
-  "top_concern": "<acne|dark_spots|pigmentation|dryness|anti_aging>",
-  "top_win": "<2-4 word noun phrase naming the strongest metric, e.g. 'Even tone', 'Good hydration', 'Smooth texture'. No sentences.>",
-  "advice": "<2 sentences max>"
-}`;
+top_win: 2-4 word noun phrase for the strongest metric (e.g. "Even tone", "Good hydration"). No sentences.
+advice: 2 sentences max. Specific and actionable.`;
 }
 
 export async function analyzeSkin(
@@ -102,9 +114,14 @@ export async function analyzeSkin(
 ): Promise<ScanResult> {
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.5-flash',
-    // thinkingBudget: 0 disables extended thinking — saves 5-20s per scan with no quality loss
-    // for structured JSON extraction. SDK 0.24.1 types don't include it yet, cast to pass through.
-    generationConfig: { temperature: 0, thinkingConfig: { thinkingBudget: 0 } } as GenerationConfig,
+    // thinkingBudget: 0 — disables extended thinking (saves 5-20s, no quality loss for structured extraction).
+    // SDK 0.24.1 doesn't type thinkingConfig yet; cast to pass it through to the REST API.
+    generationConfig: {
+      temperature: 0,
+      thinkingConfig: { thinkingBudget: 0 },
+      responseMimeType: 'application/json',
+      responseSchema: SCAN_SCHEMA,
+    } as GenerationConfig,
   });
 
   const prompt = buildPrompt(mainConcern, skinType, ageRange, previousScan);
@@ -118,10 +135,7 @@ export async function analyzeSkin(
       prompt,
     ]);
     const result = await Promise.race([call, timeout]);
-    const text = result.response.text().trim();
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Invalid Gemini response');
-    return JSON.parse(jsonMatch[0]) as ScanResult;
+    return JSON.parse(result.response.text()) as ScanResult;
   };
 
   try {
