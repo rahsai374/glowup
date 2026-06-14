@@ -124,7 +124,11 @@ export default function HeroCard({
     const range = MAX_SCORE - MIN_SCORE || 1;
     const points = sorted.map((s, i) => ({
       x: SPARK_PAD_X + (i / (sorted.length - 1)) * (sparkW - SPARK_PAD_X * 2),
-      y: SPARK_PAD_Y + (1 - (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) * (SPARK_H - SPARK_PAD_Y * 2),
+      y:
+        SPARK_PAD_Y +
+        (1 -
+          (Math.min(Math.max(s.overall_score, MIN_SCORE), MAX_SCORE) - MIN_SCORE) / range) *
+          (SPARK_H - SPARK_PAD_Y * 2),
     }));
     return { sparkPoints: points, scoreRange: Math.max(...scores) - Math.min(...scores) };
   }, [scans, comparison, sparkW]);
@@ -216,7 +220,7 @@ export default function HeroCard({
                   marginTop: 8,
                 }}
               >
-                Latest
+                {t('progress_latest_label')}
               </Text>
               <Text
                 style={{
@@ -259,7 +263,7 @@ export default function HeroCard({
                 marginTop: 10,
               }}
             >
-              Your First Scan
+              {t('progress_first_scan_label')}
             </Text>
             <Text
               style={{
@@ -298,7 +302,7 @@ export default function HeroCard({
           >
             <Text style={{ fontSize: 13 }}>🌱</Text>
             <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-              Baseline established
+              {t('progress_baseline_established')}
             </Text>
           </View>
         </>

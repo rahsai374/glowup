@@ -6,6 +6,7 @@ export const CONCERN_I18N_KEYS: Record<string, string> = {
   pigmentation: 'concern_pigmentation',
   dryness: 'concern_dryness',
   anti_aging: 'concern_anti_aging',
+  aging: 'concern_anti_aging',
 };
 
 export function concernLabel(t: TFunction, value: string | undefined): string {

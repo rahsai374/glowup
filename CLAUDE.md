@@ -33,7 +33,7 @@ eas submit                # Submit to stores
 
 **i18n:** i18next (`en`/`hi`). Hindi = Hind font (`font-hindi`), English headings = Fraunces (`font-serif`).
 
-**Gemini key:** `EXPO_PUBLIC_GEMINI_API_KEY` in `.env`. Client-side for MVP — must move server-side before store submission.
+**Gemini key:** `EXPO_PUBLIC_GEMINI_API_KEY` in `.env`. Client-side for MVP — must move server-side before store submission. On the **paid Gemini API** (not free tier) — rate limit errors are not a timeout cause.
 
 **Product data:** JSON in Firebase Storage, cached in AsyncStorage with bundled fallback. Store: `useProductStore`. Types: `lib/productTypes.ts`.
 

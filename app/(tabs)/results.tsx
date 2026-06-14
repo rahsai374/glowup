@@ -13,6 +13,7 @@ import GenderSelector from '@/components/GenderSelector';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { useScanImage } from '@/hooks/useScanImage';
 import { updateProfileField, generateAndSaveRoutine } from '@/lib/firestore';
+import { concernLabel, truncateWin } from '@/lib/scoringLabels';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -31,7 +32,7 @@ export default function ResultsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { scanId } = useLocalSearchParams<{ scanId?: string }>();
+  const { scanId, from } = useLocalSearchParams<{ scanId?: string; from?: string }>();
   const currentScan = useScanStore((s) => s.currentScan);
   const scanHistory = useScanStore((s) => s.scanHistory);
   const user = useUserStore((s) => s.user);
@@ -104,7 +105,15 @@ export default function ResultsScreen() {
           <View style={{ position: 'absolute', top: -40, right: -40, width: 200, height: 200, borderRadius: 100, backgroundColor: 'rgba(224,120,86,0.08)' }} pointerEvents="none" />
 
           <View style={{ alignSelf: 'flex-start', marginBottom: 16 }}>
-            <BackButton />
+            <BackButton onPress={from ? () => {
+              const routes: Record<string, string> = {
+                history: '/scans-history',
+                progress: '/(tabs)/progress',
+                routine: '/(tabs)/routine',
+                home: '/(tabs)',
+              };
+              router.navigate((routes[from] ?? '/(tabs)') as any);
+            } : undefined} />
           </View>
 
           <Text style={{ fontSize: 11, fontFamily: 'PlusJakartaSans_700Bold', color: '#E07856', letterSpacing: 2.5, textTransform: 'uppercase', marginBottom: isHistorical ? 6 : 20 }}>
@@ -155,7 +164,7 @@ export default function ResultsScreen() {
                   {t('top_concern')}
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-                  {scan.top_concern}
+                  {concernLabel(t, scan.top_concern)}
                 </Text>
               </View>
               <View style={{ flex: 1, backgroundColor: '#DCFCE7', borderRadius: 16, padding: 14 }}>
@@ -163,7 +172,7 @@ export default function ResultsScreen() {
                   {t('top_win')}
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-                  {scan.top_win}
+                  {truncateWin(scan.top_win, 36)}
                 </Text>
               </View>
             </View>
