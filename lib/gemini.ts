@@ -87,7 +87,7 @@ Return ONLY valid JSON with no markdown, no explanation:
     "dark_circles": <0-100>
   },
   "top_concern": "<acne|dark_spots|pigmentation|dryness|anti_aging>",
-  "top_win": "<string>",
+  "top_win": "<2-4 word noun phrase naming the strongest metric, e.g. 'Even tone', 'Good hydration', 'Smooth texture'. No sentences.>",
   "advice": "<2 sentences max>"
 }`;
 }
