@@ -21,7 +21,9 @@ export default function ScanHistoryCard({
   onPress,
 }: ScanHistoryCardProps) {
   const { t } = useTranslation();
-  const delta = previousScan ? Math.round(scan.overall_score - previousScan.overall_score) : null;
+  const delta = previousScan
+    ? Math.round(scan.overall_score - previousScan.overall_score)
+    : null;
   const concern = concernLabel(t, scan.top_concern);
 
   return (
@@ -30,108 +32,145 @@ export default function ScanHistoryCard({
       accessibilityLabel={`Score ${scan.overall_score} on ${formatDateShort(scan.createdAt)}${scan.top_concern ? `, ${scan.top_concern}` : ''}`}
       onPress={onPress ? () => onPress(scan) : undefined}
       disabled={!onPress}
-      style={({ pressed }) => ({
-        backgroundColor: '#FFFFFF',
-        borderRadius: 18,
-        shadowColor: '#2D1810',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.08,
-        shadowRadius: 16,
-        elevation: 3,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 16,
-        paddingHorizontal: 16,
-        transform: [{ scale: pressed && onPress ? 0.97 : 1 }],
-      })}
+      style={{ opacity: 1 }}
     >
-      {scan.imageUrl ? (
-        <View
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 16,
-            overflow: 'hidden',
-            marginRight: 14,
-          }}
-        >
-          <Image source={{ uri: scan.imageUrl }} style={{ width: '100%', height: '100%' }} />
-        </View>
-      ) : (
-        <View
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 16,
-            backgroundColor: '#FFEEDC',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginRight: 14,
-          }}
-        >
-          <Svg width={22} height={22} viewBox="0 0 24 24" fill="none" opacity={0.5}>
-            <SvgCircle cx={12} cy={9} r={4} stroke={PRIMARY} strokeWidth={1.5} />
-            <Path
-              d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
-              stroke={PRIMARY}
-              strokeWidth={1.5}
-              strokeLinecap="round"
+      <View
+        style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: 'rgba(224,120,86,0.12)',
+          elevation: 4,
+          shadowColor: '#2D1810',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.08,
+          shadowRadius: 8,
+          flexDirection: 'row',
+          alignItems: 'center',
+          padding: 14,
+        }}
+      >
+        {scan.imageUrl ? (
+          <View
+            style={{
+              width: 52,
+              height: 52,
+              borderRadius: 14,
+              overflow: 'hidden',
+              marginRight: 12,
+            }}
+          >
+            <Image
+              source={{ uri: scan.imageUrl }}
+              style={{ width: 52, height: 52 }}
             />
-          </Svg>
-        </View>
-      )}
+          </View>
+        ) : (
+          <View
+            style={{
+              width: 52,
+              height: 52,
+              borderRadius: 14,
+              backgroundColor: '#FFEEDC',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 12,
+            }}
+          >
+            <Svg
+              width={22}
+              height={22}
+              viewBox="0 0 24 24"
+              fill="none"
+              opacity={0.5}
+            >
+              <SvgCircle
+                cx={12}
+                cy={9}
+                r={4}
+                stroke={PRIMARY}
+                strokeWidth={1.5}
+              />
+              <Path
+                d="M4 20c0-3.3 2.7-6 6-6h4c3.3 0 6 2.7 6 6"
+                stroke={PRIMARY}
+                strokeWidth={1.5}
+                strokeLinecap="round"
+              />
+            </Svg>
+          </View>
+        )}
 
-      <View style={{ flex: 1, minWidth: 0, gap: 4 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Text style={{ fontFamily: 'Fraunces_700Bold', fontSize: 24, color: PRIMARY }}>
-            {scan.overall_score}
-          </Text>
-          {delta !== null && delta !== 0 && (
-            <View
+        <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <Text
               style={{
-                backgroundColor: delta > 0 ? '#DCFCE7' : '#FEF3C7',
-                paddingVertical: 3,
-                paddingHorizontal: 8,
-                borderRadius: 8,
+                fontFamily: 'Fraunces_700Bold',
+                fontSize: 22,
+                color: PRIMARY,
               }}
             >
-              <Text
+              {scan.overall_score}
+            </Text>
+            {delta !== null && delta !== 0 && (
+              <View
                 style={{
-                  fontSize: 12,
-                  fontFamily: 'PlusJakartaSans_700Bold',
-                  color: delta > 0 ? '#16A34A' : '#D97706',
+                  backgroundColor: delta > 0 ? '#DCFCE7' : '#FEF3C7',
+                  paddingVertical: 2,
+                  paddingHorizontal: 7,
+                  borderRadius: 6,
                 }}
               >
-                {delta > 0 ? `+${delta}` : `${delta}`}
-              </Text>
-            </View>
-          )}
+                <Text
+                  style={{
+                    fontSize: 11,
+                    fontFamily: 'PlusJakartaSans_700Bold',
+                    color: delta > 0 ? '#16A34A' : '#D97706',
+                  }}
+                >
+                  {delta > 0 ? `+${delta}` : `${delta}`}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          <Text
+            style={{
+              fontFamily: 'PlusJakartaSans_500Medium',
+              fontSize: 12,
+              color: 'rgba(45,24,16,0.50)',
+            }}
+            numberOfLines={1}
+          >
+            {formatDateShort(scan.createdAt)}
+            {concern ? `  ·  ${concern}` : ''}
+          </Text>
         </View>
 
-        <Text
-          style={{
-            fontFamily: 'PlusJakartaSans_500Medium',
-            fontSize: 13,
-            color: 'rgba(45,24,16,0.50)',
-          }}
-          numberOfLines={1}
-        >
-          {formatDateShort(scan.createdAt)}
-          {concern ? `  ·  ${concern}` : ''}
-        </Text>
+        {onPress && (
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 15,
+              backgroundColor: 'rgba(224,120,86,0.10)',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginLeft: 6,
+            }}
+          >
+            <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+              <Path
+                d="M9 18l6-6-6-6"
+                stroke={PRIMARY}
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </Svg>
+          </View>
+        )}
       </View>
-
-      {onPress && (
-        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" style={{ marginLeft: 8 }}>
-          <Path
-            d="M9 18l6-6-6-6"
-            stroke="rgba(45,24,16,0.25)"
-            strokeWidth={2.5}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Svg>
-      )}
     </Pressable>
   );
 }
