@@ -13,6 +13,7 @@ import GenderSelector from '@/components/GenderSelector';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { useScanImage } from '@/hooks/useScanImage';
 import { updateProfileField, generateAndSaveRoutine } from '@/lib/firestore';
+import { concernLabel, truncateWin } from '@/lib/scoringLabels';
 
 const METRIC_LABELS: Record<string, string> = {
   hydration: 'Hydration',
@@ -155,7 +156,7 @@ export default function ResultsScreen() {
                   {t('top_concern')}
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-                  {scan.top_concern}
+                  {concernLabel(t, scan.top_concern)}
                 </Text>
               </View>
               <View style={{ flex: 1, backgroundColor: '#DCFCE7', borderRadius: 16, padding: 14 }}>
@@ -163,7 +164,7 @@ export default function ResultsScreen() {
                   {t('top_win')}
                 </Text>
                 <Text style={{ fontSize: 14, fontFamily: 'PlusJakartaSans_600SemiBold', color: '#2D1810' }}>
-                  {scan.top_win}
+                  {truncateWin(scan.top_win, 36)}
                 </Text>
               </View>
             </View>

@@ -16,6 +16,7 @@ import { getRoutine } from '@/lib/routineEngine';
 
 import tips from '@/data/tips.json';
 import { MicroTip, SkinConcern } from '@/lib/home/types';
+import { concernLabel as formatConcern } from '@/lib/scoringLabels';
 
 import AmbientBlobs from '@/components/AmbientBlobs';
 import HomeHeader from '@/components/home/HomeHeader';
@@ -183,7 +184,7 @@ export default function HomeScreen() {
 
         <ContextualTipCard
           tip={dailyTip}
-          concernLabel={userConcern ? lastConcern?.toLowerCase() ?? null : null}
+          concernLabel={userConcern ? formatConcern(t, lastConcern ?? undefined) || null : null}
           isDone={isTipDone}
           onMarkDone={() => markTipDone(todayKey, dailyTip.id)}
           enterDelay={160}
