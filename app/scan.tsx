@@ -25,6 +25,7 @@ import { useUserStore } from '@/stores/useUserStore';
 import { useScanStore } from '@/stores/useScanStore';
 import { analyzeSkin } from '@/lib/gemini';
 import { saveScan } from '@/lib/firestore';
+import crashlytics from '@react-native-firebase/crashlytics';
 import { useFaceGuide } from '@/lib/useFaceGuide';
 import { logEvent, EVENTS } from '@/lib/analytics';
 import { persistScanImage } from '@/lib/scanImages';
@@ -248,7 +249,13 @@ export default function ScanScreen() {
       };
       setCurrentScan(scan);
       addToHistory(scan);
-      if (user?.uid) saveScan(user.uid, scan).catch(() => {});
+      if (user?.uid) {
+        saveScan(user.uid, scan).catch((err) => {
+          crashlytics().recordError(
+            err instanceof Error ? err : new Error(String(err)),
+          );
+        });
+      }
       logEvent(EVENTS.SCAN_COMPLETED, {
         overall_score: scan.overall_score,
         skin_type: scan.skin_type,
