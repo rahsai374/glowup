@@ -154,7 +154,9 @@ async function main() {
         const translations = await translate(model, pairs);
         pairs.forEach((pp, idx) => applyPair(p, pp.path, translations[idx]));
         done.add(p.id);
-        fs.writeFileSync(SEED, JSON.stringify(products, null, 2) + '\n', 'utf-8');
+        const tmp = SEED + '.tmp';
+        fs.writeFileSync(tmp, JSON.stringify(products, null, 2) + '\n', 'utf-8');
+        fs.renameSync(tmp, SEED);
         fs.writeFileSync(CHECKPOINT, JSON.stringify({ done: [...done] }, null, 2), 'utf-8');
         console.log(`${label} OK`);
         ok++;
