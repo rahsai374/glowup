@@ -437,7 +437,7 @@
         "name": "Lemon Extract",
         "nameHi": "Nimbu ark",
         "benefitEn": "Natural brightening and oil control",
-        "benefitHi": "Praakritik chamak aur tel niyantran",
+        "benefitHi": "Praakritik chamak aur oil niyantran",
         "rating": "good"
       },
       {
@@ -456,7 +456,7 @@
     "improvementsHi": [
       "Tarotaaza, chamakdaar skin",
       "Bejaanpan aur tan mein kami",
-      "Har baar dhone ke baad saaf anubhav"
+      "Har baar dhone ke baad saaf feel"
     ],
     "warningsEn": [
       "Contains fragrance — not ideal for very sensitive skin",
@@ -546,7 +546,7 @@
     "improvementsHi": [
       "Mulayam, zyada chamakdar skin",
       "Halka brightening prabhav",
-      "Bina dryness aaramdayak saaf anubhav"
+      "Bina dryness aaramdayak saaf feel"
     ],
     "warningsEn": [
       "Contains fragrance — patch test for sensitive skin"
@@ -612,7 +612,7 @@
     "keyIngredients": [
       {
         "name": "Neem Oil",
-        "nameHi": "Neem ka tel",
+        "nameHi": "Neem ka oil",
         "benefitEn": "Antibacterial, fights acne naturally",
         "benefitHi": "Antibacterial, praakritik roop se acne se ladta hai",
         "rating": "good"
@@ -1040,9 +1040,9 @@
       "Fewer clogged pores and breakouts"
     ],
     "improvementsHi": [
-      "Gehrai se saaf, oil-free anubhav",
+      "Gehrai se saaf, oil-free feel",
       "Dinbhar kam chamak",
-      "Kam band romchhidra aur breakout"
+      "Kam band pores aur breakout"
     ],
     "warningsEn": [
       "Too stripping for dry or sensitive skin",
@@ -1715,7 +1715,7 @@
         "name": "Green Tea Extract",
         "nameHi": "Green Tea Extract",
         "benefitEn": "Rich in antioxidants, controls oil production",
-        "benefitHi": "antioxidants se bharpoor, tel production niyantrit karta hai",
+        "benefitHi": "antioxidants se bharpoor, oil production niyantrit karta hai",
         "rating": "good"
       },
       {
@@ -1820,7 +1820,7 @@
         "name": "Apple Cider Vinegar",
         "nameHi": "Seb ka sirka",
         "benefitEn": "Balances skin pH, controls excess oil",
-        "benefitHi": "Skin ka pH santulit karta hai, atirikt tel niyantrit karta hai",
+        "benefitHi": "Skin ka pH santulit karta hai, atirikt oil niyantrit karta hai",
         "rating": "good"
       },
       {
@@ -1845,8 +1845,8 @@
       "Reduced dullness"
     ],
     "improvementsHi": [
-      "Santulit tel utpaadan",
-      "Kam breakout ke saath saaf romchhidra",
+      "Santulit oil utpaadan",
+      "Kam breakout ke saath saaf pores",
       "Adhik samaan rangat",
       "Bejaanpan mein kami"
     ],
@@ -2039,14 +2039,14 @@
         "name": "Niacinamide",
         "nameHi": "Niacinamide",
         "benefitEn": "Controls oil, smoothens skin",
-        "benefitHi": "tel niyantrit karta hai, skin chikni banata hai",
+        "benefitHi": "oil niyantrit karta hai, skin chikni banata hai",
         "rating": "good"
       },
       {
         "name": "Salicylic Acid",
         "nameHi": "Salicylic Acid",
         "benefitEn": "Mild exfoliation, clears pores",
-        "benefitHi": "halki exfoliation, romchhidra saaf karta hai",
+        "benefitHi": "halki exfoliation, pores saaf karta hai",
         "rating": "good"
       }
     ],
@@ -2745,7 +2745,7 @@
     "improvementsHi": [
       "chamakdar, damakti rangat",
       "kaale dhabbe aur daag dikhne mein kam",
-      "samaan tvacha rangat",
+      "samaan skin rangat",
       "bina makeup praakritik chamak"
     ],
     "warningsEn": [
@@ -2761,7 +2761,7 @@
         "weeksEn": "2 weeks",
         "weeksHi": "2 hafte",
         "resultEn": "Skin starts looking brighter",
-        "resultHi": "tvacha chamakdar dikhne lagti hai"
+        "resultHi": "skin chamakdar dikhne lagti hai"
       },
       {
         "weeksEn": "6 weeks",
@@ -3924,7 +3924,7 @@
       },
       {
         "name": "Wheat Germ Oil",
-        "nameHi": "gehun ke beej ka tel",
+        "nameHi": "gehun ke beej ka oil",
         "benefitEn": "Rich in Vitamin E, nourishes skin",
         "benefitHi": "Vitamin E se bharpoor, skin ko poshan deta hai",
         "rating": "good"
@@ -4789,13 +4789,13 @@
         "weeksEn": "Immediate",
         "weeksHi": "Turant",
         "resultEn": "Lightweight hydration without oiliness",
-        "resultHi": "Bina tel halka hydration"
+        "resultHi": "Bina oil halka hydration"
       },
       {
         "weeksEn": "3 weeks",
         "weeksHi": "3 hafte",
         "resultEn": "Balanced oil-moisture across face",
-        "resultHi": "Poore chehre par tel-nami ka santulan"
+        "resultHi": "Poore chehre par oil-nami ka santulan"
       }
     ]
   },
@@ -5519,7 +5519,7 @@
         "name": "Argan Oil",
         "nameHi": "Argan Oil",
         "benefitEn": "Non-comedogenic nourishment",
-        "benefitHi": "romchhidra band kiye bina nourishment",
+        "benefitHi": "pores band kiye bina nourishment",
         "rating": "good"
       }
     ],
@@ -5971,7 +5971,7 @@
         "name": "Cucumber Extract",
         "nameHi": "Kheera ark",
         "benefitEn": "Astringent, tightens pores naturally",
-        "benefitHi": "Astringent, romchhidra praakritik roop se kasta hai",
+        "benefitHi": "Astringent, pores praakritik roop se kasta hai",
         "rating": "good"
       },
       {
@@ -5988,7 +5988,7 @@
       "Prepares skin for better product absorption"
     ],
     "improvementsHi": [
-      "Kase, saaf romchhidra",
+      "Kase, saaf pores",
       "Dinbhar tarotaaza mehsoos",
       "Behtar product avshoshan ke liye skin taiyaar"
     ],
@@ -6009,7 +6009,7 @@
         "weeksEn": "4 weeks",
         "weeksHi": "4 hafte",
         "resultEn": "Visibly smaller pores",
-        "resultHi": "Dikhne mein chote romchhidra"
+        "resultHi": "Dikhne mein chote pores"
       }
     ]
   },
@@ -6662,7 +6662,7 @@
       },
       {
         "name": "Almond Oil",
-        "nameHi": "Badam tel",
+        "nameHi": "Badam oil",
         "benefitEn": "Deeply nourishes and softens skin",
         "benefitHi": "Gehra poshan aur mulayami deta hai",
         "rating": "good"
@@ -6751,21 +6751,21 @@
     "keyIngredients": [
       {
         "name": "Wheat Germ Oil",
-        "nameHi": "Gehun ke beej ka tel",
+        "nameHi": "Gehun ke beej ka oil",
         "benefitEn": "Rich in Vitamin E, firms and nourishes",
         "benefitHi": "Vitamin E se bharpoor, kasawat aur poshan deta hai",
         "rating": "good"
       },
       {
         "name": "Sunflower Oil",
-        "nameHi": "Surajmukhi tel",
+        "nameHi": "Surajmukhi oil",
         "benefitEn": "Moisturizes without clogging pores",
-        "benefitHi": "Bina romchhidra band kiye nami deta hai",
+        "benefitHi": "Bina pores band kiye nami deta hai",
         "rating": "good"
       },
       {
         "name": "Almond Oil",
-        "nameHi": "Baadaam tel",
+        "nameHi": "Baadaam oil",
         "benefitEn": "Softens and conditions skin",
         "benefitHi": "Skin ko mulaayam aur condition karta hai",
         "rating": "good"
@@ -7180,7 +7180,7 @@
       },
       {
         "name": "Wheat Germ Oil",
-        "nameHi": "Gehun ke beej ka tel",
+        "nameHi": "Gehun ke beej ka oil",
         "benefitEn": "Nourishes and softens delicate eye skin",
         "benefitHi": "Nazuk aankhon ki skin ko poshan aur mulayami deta hai",
         "rating": "good"
@@ -7375,21 +7375,21 @@
     "keyIngredients": [
       {
         "name": "Strawberry Seed Oil",
-        "nameHi": "Strawberry beej tel",
+        "nameHi": "Strawberry beej oil",
         "benefitEn": "Rich in antioxidants, softens lips",
         "benefitHi": "Antioxidant se bharpoor, honth mulayam karta hai",
         "rating": "good"
       },
       {
         "name": "Apricot Kernel Oil",
-        "nameHi": "khoobani beej tel",
+        "nameHi": "khoobani beej oil",
         "benefitEn": "Deep moisturization and nourishment",
         "benefitHi": "gahri nami aur poshan",
         "rating": "good"
       },
       {
         "name": "Castor Oil",
-        "nameHi": "arandi tel",
+        "nameHi": "arandi oil",
         "benefitEn": "Forms protective barrier on lips",
         "benefitHi": "honthon par surakshatmak parat banata hai",
         "rating": "good"
@@ -7556,9 +7556,9 @@
       },
       {
         "name": "Jojoba Oil",
-        "nameHi": "jojoba tel",
+        "nameHi": "jojoba oil",
         "benefitEn": "Lightweight oil that mimics natural lip oils",
-        "benefitHi": "halka tel jo praakritik honth tel jaisa hai",
+        "benefitHi": "halka oil jo praakritik honth oil jaisa hai",
         "rating": "good"
       },
       {
@@ -7747,14 +7747,14 @@
       },
       {
         "name": "Peppermint Oil",
-        "nameHi": "Pudeena tel",
+        "nameHi": "Pudeena oil",
         "benefitEn": "Cooling sensation, mildly plumps lips",
         "benefitHi": "Thandak ka ehsaas, honth halke bhare dikhte hain",
         "rating": "good"
       },
       {
         "name": "Coconut Oil",
-        "nameHi": "Naariyal tel",
+        "nameHi": "Naariyal oil",
         "benefitEn": "Deep nourishment and softening",
         "benefitHi": "Gehra poshan aur mulaayami",
         "rating": "good"
@@ -7920,7 +7920,7 @@
         "name": "Adapalene 0.1%",
         "nameHi": "Adapalene 0.1%",
         "benefitEn": "Retinoid that unclogs pores and prevents acne",
-        "benefitHi": "Retinoid jo romchhidra kholta hai aur acne rokta hai",
+        "benefitHi": "Retinoid jo pores kholta hai aur acne rokta hai",
         "rating": "good"
       },
       {
@@ -8528,7 +8528,7 @@
         "name": "Kaolin",
         "nameHi": "kaolin",
         "benefitEn": "Gentle oil-absorbing clay",
-        "benefitHi": "saumya tel-sokhne waali mitti",
+        "benefitHi": "saumya oil-sokhne waali mitti",
         "rating": "good"
       }
     ],
@@ -8540,7 +8540,7 @@
     ],
     "improvementsHi": [
       "chamakdar, damakti rangat",
-      "gehrai se saaf, tarotaaza romchhidra",
+      "gehrai se saaf, tarotaaza pores",
       "kam bejaan aur asamaan patch",
       "mulayam skin"
     ],
@@ -8952,7 +8952,7 @@
       "Mild brightening effect"
     ],
     "improvementsHi": [
-      "turant tarotaaza aur hydrated anubhav",
+      "turant tarotaaza aur hydrated feel",
       "event se pehle turant glow",
       "mulayam, komal skin",
       "halka brightening asar"
@@ -9141,7 +9141,7 @@
       },
       {
         "name": "Apricot Oil",
-        "nameHi": "Khubani tel",
+        "nameHi": "Khubani oil",
         "benefitEn": "Nourishes and softens dry skin",
         "benefitHi": "Dry skin ko poshit aur mulayam karta hai",
         "rating": "good"
@@ -9343,16 +9343,16 @@
       },
       {
         "name": "Apricot Oil",
-        "nameHi": "khubani tel",
+        "nameHi": "khubani oil",
         "benefitEn": "Moisturizes while exfoliating",
         "benefitHi": "exfoliate karte hue nami deta hai",
         "rating": "good"
       },
       {
         "name": "Wheat Germ Oil",
-        "nameHi": "gehun ke beej ka tel",
+        "nameHi": "gehun ke beej ka oil",
         "benefitEn": "Vitamin E-rich, nourishes skin",
-        "benefitHi": "Vitamin E se bharpur, tvacha poshit karta hai",
+        "benefitHi": "Vitamin E se bharpur, skin poshit karta hai",
         "rating": "good"
       }
     ],
@@ -9363,9 +9363,9 @@
       "Fresh, healthy glow"
     ],
     "improvementsHi": [
-      "har istemal ke baad mulayam tvacha",
+      "har istemal ke baad mulayam skin",
       "nami na chhinne jitna saumya",
-      "bejaanpan aur mrit tvacha kam",
+      "bejaanpan aur mrit skin kam",
       "tarotaaza, swasth chamak"
     ],
     "warningsEn": [
@@ -9381,13 +9381,13 @@
         "weeksEn": "Immediate",
         "weeksHi": "turant",
         "resultEn": "Soft, smooth skin with a fresh feel",
-        "resultHi": "mulayam tvacha aur tarotaaza anubhav"
+        "resultHi": "mulayam skin aur tarotaaza feel"
       },
       {
         "weeksEn": "4 weeks",
         "weeksHi": "4 hafte",
         "resultEn": "Brighter complexion, less dull skin",
-        "resultHi": "chamakdar rangat, kam bejaan tvacha"
+        "resultHi": "chamakdar rangat, kam bejaan skin"
       }
     ]
   },
@@ -9577,7 +9577,7 @@
     "improvementsHi": [
       "Mulayam, daane-mukt banawat",
       "Acne ke nishan aur kaale dhabbe kam",
-      "Saaf, kam band romchhidra",
+      "Saaf, kam band pores",
       "Samaan rangat"
     ],
     "warningsEn": [
@@ -9772,7 +9772,7 @@
       },
       {
         "name": "Sandalwood Oil",
-        "nameHi": "Chandan tel",
+        "nameHi": "Chandan oil",
         "benefitEn": "Soothes skin, anti-inflammatory",
         "benefitHi": "Skin shant karta hai, sujan-rodhi",
         "rating": "good"
@@ -9885,7 +9885,7 @@
       },
       {
         "name": "Sesame Oil Base",
-        "nameHi": "Til tel adhar",
+        "nameHi": "Til oil adhar",
         "benefitEn": "Rich in antioxidants, deeply nourishing",
         "benefitHi": "Antioxidants se bharpoor, gehra poshan",
         "rating": "good"
@@ -10073,7 +10073,7 @@
     "keyIngredients": [
       {
         "name": "Rosehip Seed Oil",
-        "nameHi": "Rosehip beej tel",
+        "nameHi": "Rosehip beej oil",
         "benefitEn": "Rich in Vitamin A & C, fades scars",
         "benefitHi": "Vitamin A aur C se bharpoor, scars kam karta hai",
         "rating": "good"
@@ -10365,7 +10365,7 @@
         "name": "Multivitamins",
         "nameHi": "Multivitamins",
         "benefitEn": "Nourishes skin for natural radiance",
-        "benefitHi": "prakritik chamak ke liye tvacha ko poshan deta hai",
+        "benefitHi": "prakritik chamak ke liye skin ko poshan deta hai",
         "rating": "good"
       },
       {
@@ -10384,7 +10384,7 @@
     "improvementsHi": [
       "chamakdar, damakti rangat",
       "niyamit upyog se saman rangat",
-      "dhone ke baad mulayam, poshit tvacha"
+      "dhone ke baad mulayam, poshit skin"
     ],
     "warningsEn": [
       "Contains fragrance"
@@ -10397,7 +10397,7 @@
         "weeksEn": "2 weeks",
         "weeksHi": "2 hafte",
         "resultEn": "Skin feels softer and brighter",
-        "resultHi": "tvacha mulayam aur chamakdar"
+        "resultHi": "skin mulayam aur chamakdar"
       },
       {
         "weeksEn": "6 weeks",
@@ -11163,7 +11163,7 @@
       "dinbhar niyantrit oil aur shine",
       "kam acne",
       "mulayam, matte finish",
-      "koi bhari ya chipchipa anubhav nahi"
+      "koi bhari ya chipchipa feel nahi"
     ],
     "warningsEn": [
       "Not moisturizing enough for dry skin types"
@@ -11419,7 +11419,7 @@
     "keyIngredients": [
       {
         "name": "Sweet Almond Oil",
-        "nameHi": "Meetha badam tel",
+        "nameHi": "Meetha badam oil",
         "benefitEn": "Rich in Vitamin E, deeply nourishes skin",
         "benefitHi": "Vitamin E se bharpoor, skin ko gehrai se poshan deta hai",
         "rating": "good"
@@ -11889,7 +11889,7 @@
     "improvementsHi": [
       "kam pimples aur breakout",
       "keetaanuon se mukt saaf skin",
-      "dhone ke baad oil-mukt anubhav"
+      "dhone ke baad oil-mukt feel"
     ],
     "warningsEn": [
       "Can be drying for dry or sensitive skin",
@@ -12001,7 +12001,7 @@
         "weeksEn": "2 weeks",
         "weeksHi": "2 hafte",
         "resultEn": "Balanced oil-moisture levels, calmer skin",
-        "resultHi": "Santulit tel-nami, shaant skin"
+        "resultHi": "Santulit oil-nami, shaant skin"
       }
     ]
   },
@@ -12071,7 +12071,7 @@
     "improvementsHi": [
       "sun tan aur bejanpan mein kami",
       "chamakdar, saman rangat",
-      "har bar dhone ke baad tarotaza citrus anubhav"
+      "har bar dhone ke baad tarotaza citrus feel"
     ],
     "warningsEn": [
       "Contains citrus — may sting on broken or very sensitive skin"
@@ -12158,7 +12158,7 @@
     ],
     "improvementsHi": [
       "Dinbhar oil-free skin",
-      "Dhone ke baad tarotaaza, saaf anubhav",
+      "Dhone ke baad tarotaaza, saaf feel",
       "Atirikt oil se hone wale pimples kam"
     ],
     "warningsEn": [
@@ -12234,7 +12234,7 @@
         "name": "Menthol",
         "nameHi": "Menthol",
         "benefitEn": "Cooling, refreshing sensation",
-        "benefitHi": "Thandak bhara, tarotaaza anubhav",
+        "benefitHi": "Thandak bhara, tarotaaza feel",
         "rating": "neutral"
       }
     ],
@@ -12246,7 +12246,7 @@
     "improvementsHi": [
       "Gehrai se saaf, keetanu-mukt skin",
       "Bacteria se hone wale acne kam",
-      "Dhone ke baad tarotaaza, thanda anubhav"
+      "Dhone ke baad tarotaaza, thanda feel"
     ],
     "warningsEn": [
       "Strong formula — can strip moisture from dry/sensitive skin",
@@ -12490,7 +12490,7 @@
         "name": "98% Pure Niacinamide",
         "nameHi": "98% shuddh Niacinamide",
         "benefitEn": "Reduces pigmentation and brightens skin",
-        "benefitHi": "jhaiyan kam karta hai aur tvacha chamkata hai",
+        "benefitHi": "jhaiyan kam karta hai aur skin chamkata hai",
         "rating": "good"
       },
       {
@@ -12509,7 +12509,7 @@
     "improvementsHi": [
       "dikhne mein chamakdar, damakti rangat",
       "jhaiyan aur asaman rangat mein kami",
-      "pehli baar dhone se chamakti tvacha"
+      "pehli baar dhone se chamakti skin"
     ],
     "warningsEn": [],
     "warningsHi": [],
@@ -12518,7 +12518,7 @@
         "weeksEn": "1 week",
         "weeksHi": "1 hafta",
         "resultEn": "Skin looks brighter after every wash",
-        "resultHi": "har baar dhone ke baad tvacha chamakdar"
+        "resultHi": "har baar dhone ke baad skin chamakdar"
       },
       {
         "weeksEn": "6 weeks",
@@ -13374,14 +13374,14 @@
         "name": "3 Essential Ceramides",
         "nameHi": "3 zaroori ceramide",
         "benefitEn": "Restores and maintains the skin's natural barrier",
-        "benefitHi": "tvacha ki praakritik badha bahal aur banaye rakhta hai",
+        "benefitHi": "skin ki praakritik badha bahal aur banaye rakhta hai",
         "rating": "good"
       },
       {
         "name": "Hyaluronic Acid",
         "nameHi": "Hyaluronic Acid",
         "benefitEn": "Retains skin's natural moisture",
-        "benefitHi": "tvacha ki praakritik nami banaye rakhta hai",
+        "benefitHi": "skin ki praakritik nami banaye rakhta hai",
         "rating": "good"
       },
       {
@@ -13400,17 +13400,17 @@
     ],
     "improvementsHi": [
       "48 ghante nami",
-      "tvacha badha bahal",
+      "skin badha bahal",
       "rookhe, papdidaar patch theek",
-      "eczema wali tvacha ke liye sujhaav"
+      "eczema wali skin ke liye sujhaav"
     ],
     "warningsEn": [
       "Too rich for oily skin on face",
       "Best for dry to very dry skin"
     ],
     "warningsHi": [
-      "chehre ki tailiya tvacha ke liye bahut gaadha",
-      "rookhi se bahut rookhi tvacha ke liye sabse achha"
+      "chehre ki tailiya skin ke liye bahut gaadha",
+      "rookhi se bahut rookhi skin ke liye sabse achha"
     ],
     "expectedTimeline": [
       {
@@ -13423,13 +13423,13 @@
         "weeksEn": "2 weeks",
         "weeksHi": "2 hafte",
         "resultEn": "Repaired skin barrier, less flaking",
-        "resultHi": "tvacha badha theek, kam papdi"
+        "resultHi": "skin badha theek, kam papdi"
       },
       {
         "weeksEn": "4 weeks",
         "weeksHi": "4 hafte",
         "resultEn": "Healthier, softer skin overall",
-        "resultHi": "kul milakar swasth, mulayam tvacha"
+        "resultHi": "kul milakar swasth, mulayam skin"
       }
     ]
   },
