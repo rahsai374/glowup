@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, ActivityIndicator, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,7 +52,7 @@ export default function ResultsScreen() {
 
   useEffect(() => {
     if (!scan) {
-      if (!scanId) router.replace('/(tabs)');
+      router.replace('/(tabs)');
       return;
     }
     if (!loggedRef.current) {
@@ -65,17 +65,29 @@ export default function ResultsScreen() {
     }
   }, [scan, scanId]);
 
-  if (!scan) return null;
+  if (!scan) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#F0E6DF', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#E07856" />
+      </View>
+    );
+  }
 
   const metrics = Object.entries(scan.metrics);
 
   async function saveProfileCard() {
     const trimmed = nameInput.trim();
     if (!trimmed || !gender || !user?.uid) return;
-    updateUser({ name: trimmed, gender });
-    await updateProfileField(user.uid, { name: trimmed, gender });
-    await generateAndSaveRoutine(user.uid, user.skinType ?? '', user.mainConcern ?? '', gender);
-    setProfileSaved(true);
+    try {
+      await updateProfileField(user.uid, { name: trimmed, gender });
+      updateUser({ name: trimmed, gender });
+      setProfileSaved(true);
+    } catch {
+      Alert.alert(t('error_boundary_title'), t('save_failed'));
+      return;
+    }
+    // Routine generation is best-effort — profile is already saved
+    generateAndSaveRoutine(user.uid, user.skinType ?? '', user.mainConcern ?? '', gender).catch(() => {});
   }
 
   return (

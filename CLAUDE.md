@@ -65,6 +65,10 @@ Rules learned from past code reviews. Check every item before writing code. Upda
 ### Component extraction
 - If a self-contained UI block (card, form, modal) exceeds ~30 lines of JSX inside a screen, extract it to `components/`. Pass data and callbacks as props.
 
+### Veo video prompts (ads)
+- Always include `"vertical 9:16 aspect ratio, 1080x1920 resolution"` in Veo prompts — Meta Ads rejects media under 500px wide across all placements (Feed, Stories, Reels, Explore).
+- When downloading from AI Studio, use the Download button — never right-click save from the preview player (streams at lower resolution).
+
 ## Design System
 
 See `DESIGN.md` for colors, fonts, motion, blur blobs, and per-screen design briefs.

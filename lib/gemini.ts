@@ -140,7 +140,10 @@ export async function analyzeSkin(
 
   try {
     return await attempt();
-  } catch {
+  } catch (e: any) {
+    const msg = e?.message ?? '';
+    if (msg.includes('API key') || msg.includes('PERMISSION_DENIED')) throw e;
+    await new Promise((r) => setTimeout(r, 2000));
     return attempt();
   }
 }

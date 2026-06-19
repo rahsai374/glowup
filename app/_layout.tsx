@@ -7,6 +7,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as Notifications from 'expo-notifications';
 import crashlytics from '@react-native-firebase/crashlytics';
+import { useTranslation } from 'react-i18next';
 import { setupAndroidChannel, handleNotificationTap } from '@/lib/notifications';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 import { logEvent, EVENTS, posthog } from '@/lib/analytics';
@@ -36,6 +37,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: { error: Error; retry: () => void }) {
+  const { t } = useTranslation();
   useEffect(() => {
     crashlytics().recordError(error);
   }, [error]);
@@ -44,7 +46,7 @@ export function ErrorBoundary({ error, retry }: { error: Error; retry: () => voi
     <View style={{ flex: 1, backgroundColor: '#FFF5EE', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
       <Text style={{ fontSize: 40, marginBottom: 16 }}>😥</Text>
       <Text style={{ fontSize: 20, fontWeight: '700', color: '#2D1810', marginBottom: 8, textAlign: 'center' }}>
-        Something went wrong
+        {t('error_boundary_title')}
       </Text>
       <Text style={{ fontSize: 14, color: 'rgba(45,24,16,0.6)', textAlign: 'center', marginBottom: 24, lineHeight: 20 }}>
         {error.message}
@@ -53,7 +55,7 @@ export function ErrorBoundary({ error, retry }: { error: Error; retry: () => voi
         onPress={retry}
         style={{ backgroundColor: '#E07856', borderRadius: 20, paddingVertical: 14, paddingHorizontal: 32 }}
       >
-        <Text style={{ color: 'white', fontSize: 16, fontWeight: '700' }}>Try Again</Text>
+        <Text style={{ color: 'white', fontSize: 16, fontWeight: '700' }}>{t('try_again')}</Text>
       </TouchableOpacity>
     </View>
   );

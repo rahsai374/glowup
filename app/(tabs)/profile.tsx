@@ -37,15 +37,24 @@ export default function ProfileScreen() {
     }, [])
   );
 
-  function save() {
+  async function save() {
     const trimmed = name.trim();
-    updateUser({ name: trimmed });
+    if (!trimmed) return;
     logEvent(EVENTS.PROFILE_UPDATED, { field: 'name' });
     if (user?.uid) {
-      updateProfileField(user.uid, { name: trimmed }).catch(() => {});
+      try {
+        await updateProfileField(user.uid, { name: trimmed });
+        updateUser({ name: trimmed });
+        setSaved(true);
+        setTimeout(() => setSaved(false), 1500);
+      } catch {
+        Alert.alert(t('error_boundary_title'), t('save_failed'));
+      }
+    } else {
+      updateUser({ name: trimmed });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1500);
     }
-    setSaved(true);
-    setTimeout(() => setSaved(false), 1500);
   }
 
   function handleLogout() {
@@ -129,8 +138,9 @@ export default function ProfileScreen() {
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <TextInput
                 value={name}
-                onChangeText={setName}
-                placeholder="Your name"
+                maxLength={50}
+                onChangeText={(text) => setName(text.replace(/[\x00-\x1F\x7F]/g, ''))}
+                placeholder={t('q7_placeholder')}
                 style={{
                   flex: 1,
                   backgroundColor: 'white',
