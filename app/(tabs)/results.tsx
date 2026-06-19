@@ -52,7 +52,7 @@ export default function ResultsScreen() {
 
   useEffect(() => {
     if (!scan) {
-      if (!scanId) router.replace('/(tabs)');
+      router.replace('/(tabs)');
       return;
     }
     if (!loggedRef.current) {
@@ -79,13 +79,15 @@ export default function ResultsScreen() {
     const trimmed = nameInput.trim();
     if (!trimmed || !gender || !user?.uid) return;
     try {
-      updateUser({ name: trimmed, gender });
       await updateProfileField(user.uid, { name: trimmed, gender });
-      await generateAndSaveRoutine(user.uid, user.skinType ?? '', user.mainConcern ?? '', gender);
+      updateUser({ name: trimmed, gender });
       setProfileSaved(true);
     } catch {
       Alert.alert(t('error_boundary_title'), t('save_failed'));
+      return;
     }
+    // Routine generation is best-effort — profile is already saved
+    generateAndSaveRoutine(user.uid, user.skinType ?? '', user.mainConcern ?? '', gender).catch(() => {});
   }
 
   return (

@@ -40,17 +40,18 @@ export default function ProfileScreen() {
   async function save() {
     const trimmed = name.trim();
     if (!trimmed) return;
-    updateUser({ name: trimmed });
     logEvent(EVENTS.PROFILE_UPDATED, { field: 'name' });
     if (user?.uid) {
       try {
         await updateProfileField(user.uid, { name: trimmed });
+        updateUser({ name: trimmed });
         setSaved(true);
         setTimeout(() => setSaved(false), 1500);
       } catch {
         Alert.alert(t('error_boundary_title'), t('save_failed'));
       }
     } else {
+      updateUser({ name: trimmed });
       setSaved(true);
       setTimeout(() => setSaved(false), 1500);
     }
