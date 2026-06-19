@@ -239,5 +239,18 @@
   "scans_history_score_change": "Score बदलाव",
   "scans_history_since_day_one": "पहले दिन से",
   "scans_history_empty_title": "तुम्हारी journey यहाँ से शुरू होती है",
-  "scans_history_empty_body": "पहला scan लो और देखो कैसे तुम्हारी skin बदलती है।"
+  "scans_history_empty_body": "पहला scan लो और देखो कैसे तुम्हारी skin बदलती है।",
+  "error_boundary_title": "कुछ गड़बड़ हो गई",
+  "try_again": "दोबारा कोशिश करो",
+  "scan_failed_title": "Scan fail हो गया",
+  "scan_failed_message": "कुछ गड़बड़ हो गई। कृपया दोबारा कोशिश करें।",
+  "no_face_title": "चेहरा नहीं मिला",
+  "no_face_message": "कृपया अपना चेहरा photo में साफ़ दिखाएं।",
+  "photo_unsupported_title": "Photo support नहीं है",
+  "photo_unsupported_message": "यह photo process नहीं हो पाई। कृपया दोबारा कोशिश करें।",
+  "camera_access_required": "Camera Access ज़रूरी है",
+  "camera_access_message": "GlowUp को skin scan करने के लिए camera access चाहिए। Settings में enable करें।",
+  "open_settings": "Settings खोलें",
+  "save_failed": "Save नहीं हो पाया। Connection check करें और दोबारा कोशिश करें।",
+  "loading_products": "Products load हो रहे हैं..."
 }

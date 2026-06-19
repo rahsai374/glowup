@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import Animated, { FadeInDown, FadeIn, withRepeat, withTiming, useAnimatedStyle, useSharedValue, Easing } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -90,6 +90,17 @@ export default function ProductCheckTab() {
   const skinTypeLabel = hindi
     ? { oily: 'तैलीय', dry: 'रूखी', combination: 'मिश्रित', normal: 'सामान्य', all: '' }[userSkinType]
     : userSkinType;
+
+  if (products.length === 0) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#FFF5EE', alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size="large" color="#E07856" />
+        <Text style={{ marginTop: 12, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_500Medium' }}>
+          {t('loading_products')}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFF5EE' }}>
@@ -199,7 +210,8 @@ function SearchStep({
           <Text style={{ fontSize: 18, color: 'rgba(45,24,16,0.35)', marginRight: 10 }}>🔍</Text>
           <TextInput
             value={query}
-            onChangeText={setQuery}
+            maxLength={100}
+            onChangeText={(text) => setQuery(text.replace(/[\x00-\x1F\x7F]/g, ''))}
             placeholder={hindi ? 'प्रोडक्ट खोजें...' : 'Search products...'}
             placeholderTextColor="rgba(45,24,16,0.35)"
             style={{ flex: 1, paddingVertical: 14, fontSize: 15, fontFamily: hindi ? 'Hind_400Regular' : 'PlusJakartaSans_400Regular', color: '#2D1810' }}

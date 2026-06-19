@@ -144,11 +144,11 @@ export default function ScanScreen() {
     if (!permission?.granted) {
       if (permission?.canAskAgain === false) {
         Alert.alert(
-          'Camera Access Required',
-          'GlowUp needs camera access to scan your skin. Please enable it in Settings.',
+          t('camera_access_required'),
+          t('camera_access_message'),
           [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Open Settings', onPress: () => Linking.openSettings() },
+            { text: t('cancel'), style: 'cancel' },
+            { text: t('open_settings'), onPress: () => Linking.openSettings() },
           ]
         );
         return;
@@ -161,13 +161,18 @@ export default function ScanScreen() {
   }
 
   async function openGallery() {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.8,
-    });
-    if (!result.canceled) {
-      logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
-      await processImage(result.assets[0].uri);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.8,
+      });
+      if (!result.canceled) {
+        logEvent(EVENTS.SCAN_STARTED, { source: 'gallery' });
+        await processImage(result.assets[0].uri);
+      }
+    } catch (e: any) {
+      crashlytics().recordError(e instanceof Error ? e : new Error(String(e)));
+      Alert.alert(t('scan_failed_title'), t('scan_failed_message'));
     }
   }
 
@@ -209,7 +214,7 @@ export default function ScanScreen() {
             setCapturedUri(null);
             setState('choice');
             logEvent(EVENTS.SCAN_FAILED, { error_message: 'no_face_detected' });
-            Alert.alert('No face detected', 'Please make sure your face is clearly visible in the photo.');
+            Alert.alert(t('no_face_title'), t('no_face_message'));
             return;
           }
         } catch (e: any) {
@@ -217,7 +222,7 @@ export default function ScanScreen() {
           setCapturedUri(null);
           setState('choice');
           logEvent(EVENTS.SCAN_FAILED, { error_message: 'face_detection_error' });
-          Alert.alert('Photo not supported', "Couldn't process this photo. Please try again.");
+          Alert.alert(t('photo_unsupported_title'), t('photo_unsupported_message'));
           return;
         }
       }
@@ -266,9 +271,10 @@ export default function ScanScreen() {
       router.replace({ pathname: '/(tabs)/results', params: { scanId: '', from: from ?? 'home' } } as any);
     } catch (e: any) {
       stopScanning();
-      logEvent(EVENTS.SCAN_FAILED, { error_message: (e?.message ?? String(e)).slice(0, 100) });
-      console.error('[SCAN ERROR]', e?.message ?? e);
-      Alert.alert('Scan failed', e?.message ?? String(e));
+      const rawMsg = (e?.message ?? String(e)).slice(0, 100);
+      logEvent(EVENTS.SCAN_FAILED, { error_message: rawMsg });
+      crashlytics().recordError(e instanceof Error ? e : new Error(rawMsg));
+      Alert.alert(t('scan_failed_title'), t('scan_failed_message'));
       setState('choice');
     }
   }

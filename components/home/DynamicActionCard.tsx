@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Animated, { useSharedValue, useAnimatedStyle, withSpring } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import { HeroState } from '@/lib/home/types';
 
 interface DynamicActionCardProps {
@@ -9,6 +10,7 @@ interface DynamicActionCardProps {
 }
 
 export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActionCardProps) {
+  const { t } = useTranslation();
   const scale = useSharedValue(1);
   const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
 
@@ -26,9 +28,9 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         return {
           bg: '#E07856',
           icon: '🔍',
-          title: 'Scan your skin',
+          title: t('hero_first_scan_title'),
           titleColor: 'white',
-          subtitle: 'Takes 30 seconds',
+          subtitle: t('hero_first_scan_sub'),
           subtitleColor: 'rgba(255,255,255,0.75)',
           showProgressBar: false,
           progress: 0,
@@ -37,9 +39,9 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         return {
           bg: '#FBF2E0',
           icon: '🌿',
-          title: state.period === 'am' ? 'Morning routine' : 'Evening routine',
+          title: state.period === 'am' ? t('hero_routine_am_title') : t('hero_routine_pm_title'),
           titleColor: '#2D1810',
-          subtitle: `${state.done} of ${state.total} done`,
+          subtitle: t('hero_routine_sub', { done: state.done, total: state.total }),
           subtitleColor: 'rgba(45,24,16,0.65)',
           showProgressBar: true,
           progress: state.total > 0 ? state.done / state.total : 0,
@@ -48,9 +50,9 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         return {
           bg: '#FFEFE3',
           icon: '✨',
-          title: 'Time to re-scan',
+          title: t('hero_stale_title'),
           titleColor: '#2D1810',
-          subtitle: `It's been ${state.daysSince} days. See how you're doing.`,
+          subtitle: t('hero_stale_sub', { days: state.daysSince }),
           subtitleColor: 'rgba(45,24,16,0.65)',
           showProgressBar: false,
           progress: 0,
@@ -59,7 +61,7 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         return {
           bg: '#FFEFE3',
           icon: '🎯',
-          title: "Today's focus",
+          title: t('hero_fresh_title'),
           titleColor: '#2D1810',
           subtitle: state.topConcern,
           subtitleColor: 'rgba(45,24,16,0.65)',
@@ -70,9 +72,9 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         return {
           bg: 'white',
           icon: '🔍',
-          title: 'Scan again',
+          title: t('hero_default_title'),
           titleColor: '#2D1810',
-          subtitle: 'Track your progress',
+          subtitle: t('hero_default_sub'),
           subtitleColor: 'rgba(45,24,16,0.65)',
           showProgressBar: false,
           progress: 0,

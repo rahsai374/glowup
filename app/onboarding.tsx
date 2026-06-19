@@ -29,7 +29,7 @@ export default function OnboardingScreen() {
       setIdx(idx + 1);
     } else {
       logEvent(EVENTS.ONBOARDING_COMPLETED);
-      router.push('/auth');
+      router.replace('/auth');
     }
   }
 
@@ -40,7 +40,7 @@ export default function OnboardingScreen() {
       <TouchableOpacity
         onPress={() => {
           logEvent(EVENTS.ONBOARDING_SKIPPED, { skipped_at_slide: idx });
-          router.push('/auth');
+          router.replace('/auth');
         }}
         style={{ position: 'absolute', top: 56, right: 24, zIndex: 20 }}
       >

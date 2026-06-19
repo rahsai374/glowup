@@ -239,5 +239,18 @@
   "scans_history_score_change": "Score Change",
   "scans_history_since_day_one": "Since Day 1",
   "scans_history_empty_title": "Your journey starts here",
-  "scans_history_empty_body": "Take your first scan and watch your skin transform over time."
+  "scans_history_empty_body": "Take your first scan and watch your skin transform over time.",
+  "error_boundary_title": "Something went wrong",
+  "try_again": "Try Again",
+  "scan_failed_title": "Scan failed",
+  "scan_failed_message": "Something went wrong. Please try again.",
+  "no_face_title": "No face detected",
+  "no_face_message": "Please make sure your face is clearly visible in the photo.",
+  "photo_unsupported_title": "Photo not supported",
+  "photo_unsupported_message": "Couldn't process this photo. Please try again.",
+  "camera_access_required": "Camera Access Required",
+  "camera_access_message": "GlowUp needs camera access to scan your skin. Please enable it in Settings.",
+  "open_settings": "Open Settings",
+  "save_failed": "Could not save. Please check your connection and try again.",
+  "loading_products": "Loading products..."
 }
