@@ -259,6 +259,7 @@ export default function ScanScreen() {
           crashlytics().recordError(
             err instanceof Error ? err : new Error(String(err)),
           );
+          Alert.alert(t('scan_sync_warning_title'), t('scan_sync_warning_message'));
         });
       }
       logEvent(EVENTS.SCAN_COMPLETED, {

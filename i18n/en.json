@@ -252,5 +252,7 @@
   "camera_access_message": "GlowUp needs camera access to scan your skin. Please enable it in Settings.",
   "open_settings": "Open Settings",
   "save_failed": "Could not save. Please check your connection and try again.",
-  "loading_products": "Loading products..."
+  "loading_products": "Loading products...",
+  "scan_sync_warning_title": "Scan saved locally",
+  "scan_sync_warning_message": "Your scan is saved on this device but couldn't sync online."
 }

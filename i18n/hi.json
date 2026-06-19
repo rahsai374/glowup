@@ -252,5 +252,7 @@
   "camera_access_message": "GlowUp को skin scan करने के लिए camera access चाहिए। Settings में enable करें।",
   "open_settings": "Settings खोलें",
   "save_failed": "Save नहीं हो पाया। Connection check करें और दोबारा कोशिश करें।",
-  "loading_products": "Products load हो रहे हैं..."
+  "loading_products": "Products load हो रहे हैं...",
+  "scan_sync_warning_title": "Scan इस device पर save है",
+  "scan_sync_warning_message": "आपका scan इस device पर save है लेकिन online sync नहीं हो पाया।"
 }
