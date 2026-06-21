@@ -102,7 +102,7 @@ export default function ScanHistoryCard({
         )}
 
         <View style={{ flex: 1, minWidth: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <View style={{ gap: 2 }}>
+          <View style={{ flex: 1, gap: 2, marginRight: 8 }}>
             <Text
               style={{
                 fontSize: 12,
@@ -141,7 +141,7 @@ export default function ScanHistoryCard({
                 style={{
                   fontSize: 10,
                   fontFamily: 'PlusJakartaSans_700Bold',
-                  color: delta > 0 ? '#16A34A' : '#D97706',
+                  color: delta > 0 ? '#15803D' : '#B45309',
                 }}
               >
                 {delta > 0 ? `+${delta}` : `${delta}`}
