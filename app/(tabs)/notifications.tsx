@@ -9,6 +9,7 @@ import { useNotificationStore, NotificationItem } from '@/stores/useNotification
 
 function timeAgo(isoDate: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
   const diff = Date.now() - new Date(isoDate).getTime();
+  if (Number.isNaN(diff)) return t('time_just_now');
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return t('time_just_now');
   if (mins < 60) return t('time_mins_ago', { count: mins });
@@ -18,7 +19,8 @@ function timeAgo(isoDate: string, t: (key: string, opts?: Record<string, unknown
   return t('time_days_ago', { count: days });
 }
 
-function NotificationCard({ item, index, t }: { item: NotificationItem; index: number; t: (key: string, opts?: Record<string, unknown>) => string }) {
+function NotificationCard({ item, index }: { item: NotificationItem; index: number }) {
+  const { t } = useTranslation();
   return (
     <Animated.View entering={FadeInDown.delay(index * 60).springify()}>
       <View
@@ -103,7 +105,7 @@ export default function NotificationsScreen() {
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => <NotificationCard item={item} index={index} t={t} />}
+          renderItem={({ item, index }) => <NotificationCard item={item} index={index} />}
           contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
           ListEmptyComponent={
             <View style={{ alignItems: 'center', paddingTop: 80 }}>
