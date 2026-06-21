@@ -173,34 +173,28 @@ function StepCard({ step, index, expanded, onPress, isCompleted, onToggleComplet
         }}
       >
         {/* Header row */}
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          {/* Checkbox — separate Pressable, independent from expand/collapse */}
-          <Pressable
-            onPress={onToggleComplete}
-            hitSlop={8}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          {/* Step number — non-interactive label */}
+          <View
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              backgroundColor: isCompleted ? '#16a34a' : expanded ? '#E07856' : '#FFF5EE',
+              width: 28,
+              height: 28,
+              borderRadius: 14,
+              backgroundColor: expanded ? '#E07856' : '#FFF5EE',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            {isCompleted ? (
-              <Text style={{ fontSize: 15, color: 'white' }}>✓</Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontFamily: 'PlusJakartaSans_700Bold',
-                  color: expanded ? 'white' : '#E07856',
-                }}
-              >
-                {index + 1}
-              </Text>
-            )}
-          </Pressable>
+            <Text
+              style={{
+                fontSize: 13,
+                fontFamily: 'PlusJakartaSans_700Bold',
+                color: expanded ? 'white' : '#E07856',
+              }}
+            >
+              {index + 1}
+            </Text>
+          </View>
           <View style={{ flex: 1 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Text
@@ -234,9 +228,29 @@ function StepCard({ step, index, expanded, onPress, isCompleted, onToggleComplet
               </Text>
             )}
           </View>
-          <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.4)' }}>
-            {expanded ? '↑' : '↓'}
-          </Text>
+          {/* Done pill — separate Pressable, independent from expand/collapse */}
+          <Pressable
+            onPress={onToggleComplete}
+            hitSlop={6}
+            style={{
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 14,
+              backgroundColor: isCompleted ? '#dcfce7' : 'transparent',
+              borderWidth: isCompleted ? 0 : 1.5,
+              borderColor: 'rgba(224,120,86,0.3)',
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: 'PlusJakartaSans_700Bold',
+                color: isCompleted ? '#16a34a' : '#E07856',
+              }}
+            >
+              {isCompleted ? `✓ ${t('routine_step_done')}` : t('routine_mark_done')}
+            </Text>
+          </Pressable>
         </View>
 
         {/* Expanded content */}

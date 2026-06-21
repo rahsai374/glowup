@@ -265,6 +265,8 @@
   "routine_completed_pm": "Night routine done! ✨",
   "routine_today_focus": "Today's Focus",
   "routine_today_focus_done": "Done!",
+  "routine_mark_done": "Mark done",
+  "routine_step_done": "Done",
   "routine_remedy_today": "{{remedy}} today",
   "notification_am_title": "Good morning! ☀️",
   "notification_am_body": "Today's focus: {{step}} — {{tip}}",

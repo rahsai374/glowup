@@ -265,6 +265,8 @@
   "routine_completed_pm": "Night routine हो गई! ✨",
   "routine_today_focus": "आज का Focus",
   "routine_today_focus_done": "हो गया!",
+  "routine_mark_done": "Done करें",
+  "routine_step_done": "Done",
   "routine_remedy_today": "आज {{remedy}}",
   "notification_am_title": "Good morning! ☀️",
   "notification_am_body": "आज का focus: {{step}} — {{tip}}",
