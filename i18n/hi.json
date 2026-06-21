@@ -254,5 +254,20 @@
   "save_failed": "Save नहीं हो पाया। Connection check करें और दोबारा कोशिश करें।",
   "loading_products": "Products load हो रहे हैं...",
   "scan_sync_warning_title": "Scan इस device पर save है",
-  "scan_sync_warning_message": "आपका scan इस device पर save है लेकिन online sync नहीं हो पाया।"
+  "scan_sync_warning_message": "आपका scan इस device पर save है लेकिन online sync नहीं हो पाया।",
+
+  "routine_progress_am": "Morning",
+  "routine_progress_pm": "Night",
+  "routine_progress_streak": "🔥 Day {{count}}",
+  "routine_progress_consistency": "{{pct}}% इस week",
+  "routine_almost_there": "बस थोड़ा बाकी!",
+  "routine_completed_am": "Morning routine हो गई! ✨",
+  "routine_completed_pm": "Night routine हो गई! ✨",
+  "routine_today_focus": "आज का Focus",
+  "routine_today_focus_done": "हो गया!",
+  "routine_remedy_today": "आज {{remedy}}",
+  "notification_am_title": "Good morning! ☀️",
+  "notification_am_body": "आज का focus: {{step}} — {{tip}}",
+  "notification_pm_title": "Night routine time 🌙",
+  "notification_pm_body": "🎯 {{step}} — 5 min, बस!"
 }

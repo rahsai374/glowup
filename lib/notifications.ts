@@ -109,6 +109,88 @@ function isValidRoute(route: string): route is StringHref {
   return (VALID_ROUTES as readonly string[]).includes(route);
 }
 
+// ─── Routine reminder scheduling ──────────────────────────────────────────
+const ROUTINE_AM_ID = 'routine-reminder-am';
+const ROUTINE_PM_ID = 'routine-reminder-pm';
+
+/** Cancel any previously scheduled routine reminders. */
+export async function cancelRoutineReminders(): Promise<void> {
+  await Notifications.cancelScheduledNotificationAsync(ROUTINE_AM_ID).catch(() => {});
+  await Notifications.cancelScheduledNotificationAsync(ROUTINE_PM_ID).catch(() => {});
+}
+
+/**
+ * Schedule daily local notifications with today's focus content.
+ * AM at 7:00, PM at 21:00 local time. Idempotent — cancels previous before scheduling.
+ */
+export async function scheduleRoutineReminders(
+  focusStepTitle: string,
+  tipText: { en: string; hi: string },
+  language: 'en' | 'hi' = 'en',
+): Promise<void> {
+  const { status } = await Notifications.getPermissionsAsync();
+  if (status !== 'granted') return;
+
+  await cancelRoutineReminders();
+
+  const tipStr = tipText[language];
+
+  // AM reminder at 7:00
+  await Notifications.scheduleNotificationAsync({
+    identifier: ROUTINE_AM_ID,
+    content: {
+      title: language === 'hi' ? 'Good morning! ☀️' : 'Good morning! ☀️',
+      body: language === 'hi'
+        ? `आज का focus: ${focusStepTitle} — ${tipStr}`
+        : `Today's focus: ${focusStepTitle} — ${tipStr}`,
+      data: { route: '/(tabs)/routine', type: 'routine_reminder' },
+      sound: 'default',
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      hour: 7,
+      minute: 0,
+    },
+  });
+
+  // PM reminder at 21:00
+  await Notifications.scheduleNotificationAsync({
+    identifier: ROUTINE_PM_ID,
+    content: {
+      title: language === 'hi' ? 'Night routine time 🌙' : 'Night routine time 🌙',
+      body: language === 'hi'
+        ? `🎯 ${focusStepTitle} — 5 min, बस!`
+        : `🎯 ${focusStepTitle} — 5 min, that's it!`,
+      data: { route: '/(tabs)/routine', type: 'routine_reminder' },
+      sound: 'default',
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DAILY,
+      hour: 21,
+      minute: 0,
+    },
+  });
+}
+
+/**
+ * Request notification permission after first routine completion (not on app install).
+ * Returns true if permission was granted.
+ */
+export async function requestNotificationPermissionForRoutine(): Promise<boolean> {
+  if (!Device.isDevice) return false;
+
+  const { status: existing } = await Notifications.getPermissionsAsync();
+  if (existing === 'granted') return true;
+  if (existing === 'denied') return false; // Already denied, don't re-prompt
+
+  await logEvent(EVENTS.NOTIFICATION_PERMISSION_REQUESTED, { context: 'routine_first_completion' });
+  const { status } = await Notifications.requestPermissionsAsync();
+  const granted = status === 'granted';
+  await logEvent(EVENTS.NOTIFICATION_PERMISSION_RESULT, { granted, context: 'routine_first_completion' });
+  useNotificationStore.getState().setPermissionStatus(granted ? 'granted' : 'denied');
+  return granted;
+}
+
 export function handleNotificationTap(
   response: Notifications.NotificationResponse,
   router: Router,

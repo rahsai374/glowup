@@ -254,5 +254,20 @@
   "save_failed": "Could not save. Please check your connection and try again.",
   "loading_products": "Loading products...",
   "scan_sync_warning_title": "Scan saved locally",
-  "scan_sync_warning_message": "Your scan is saved on this device but couldn't sync online."
+  "scan_sync_warning_message": "Your scan is saved on this device but couldn't sync online.",
+
+  "routine_progress_am": "Morning",
+  "routine_progress_pm": "Night",
+  "routine_progress_streak": "🔥 Day {{count}}",
+  "routine_progress_consistency": "{{pct}}% this week",
+  "routine_almost_there": "Almost there!",
+  "routine_completed_am": "Morning routine done! ✨",
+  "routine_completed_pm": "Night routine done! ✨",
+  "routine_today_focus": "Today's Focus",
+  "routine_today_focus_done": "Done!",
+  "routine_remedy_today": "{{remedy}} today",
+  "notification_am_title": "Good morning! ☀️",
+  "notification_am_body": "Today's focus: {{step}} — {{tip}}",
+  "notification_pm_title": "Night routine time 🌙",
+  "notification_pm_body": "🎯 {{step}} — 5 min, that's it!"
 }

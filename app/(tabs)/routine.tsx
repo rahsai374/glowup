@@ -1,12 +1,14 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeIn, FadeOut, ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import * as Haptics from 'expo-haptics';
 import { useScanStore } from '@/stores/useScanStore';
 import { useUserStore } from '@/stores/useUserStore';
 import { useProductStore } from '@/stores/useProductStore';
+import { useRoutineStore, todayProgress, weeklyConsistency, computeRoutineStreak } from '@/stores/useRoutineStore';
 import { getPersonalizedScore, MAX_SCORE } from '@/lib/scoringEngine';
 import type { PersonalizedScore } from '@/lib/scoringEngine';
 import { SUITABILITY_CONFIG, CATEGORY_EMOJI } from '@/lib/productTypes';
@@ -14,8 +16,11 @@ import type { Product } from '@/lib/productTypes';
 import type { ScanResult } from '@/lib/gemini';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import BackButton from '@/components/BackButton';
+import ProgressHeader from '@/components/routine/ProgressHeader';
 import { getRoutine } from '@/lib/routineEngine';
 import { RoutineStep } from '@/lib/routineData';
+import { getTodaysFocus } from '@/lib/dailyFocusEngine';
+import { requestNotificationPermissionForRoutine, scheduleRoutineReminders } from '@/lib/notifications';
 import { logEvent, EVENTS } from '@/lib/analytics';
 
 const TABS = ['morning', 'night', 'weekly'] as const;
@@ -118,6 +123,10 @@ interface StepCardProps {
   index: number;
   expanded: boolean;
   onPress: () => void;
+  isCompleted: boolean;
+  onToggleComplete: () => void;
+  isFocusStep: boolean;
+  todayRemedyLabel?: string;
   catalogProduct?: Product | null;
   scanResult?: ScanResult | null;
   hindi?: boolean;
@@ -125,7 +134,8 @@ interface StepCardProps {
   onProductTap?: (productId: string) => void;
 }
 
-function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
+function StepCard({ step, index, expanded, onPress, isCompleted, onToggleComplete, isFocusStep, todayRemedyLabel, catalogProduct, scanResult, hindi, onSeeMore, onProductTap }: StepCardProps) {
+  const { t } = useTranslation();
   const [remedyIndex, setRemedyIndex] = useState(() => {
     const now = new Date();
     const dayOfYear = Math.floor((now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
@@ -164,36 +174,66 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
       >
         {/* Header row */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
-          <View
+          {/* Checkbox — separate Pressable, independent from expand/collapse */}
+          <Pressable
+            onPress={onToggleComplete}
+            hitSlop={8}
             style={{
               width: 32,
               height: 32,
               borderRadius: 16,
-              backgroundColor: expanded ? '#E07856' : '#FFF5EE',
+              backgroundColor: isCompleted ? '#16a34a' : expanded ? '#E07856' : '#FFF5EE',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: 'PlusJakartaSans_700Bold',
-                color: expanded ? 'white' : '#E07856',
-              }}
-            >
-              {index + 1}
-            </Text>
+            {isCompleted ? (
+              <Text style={{ fontSize: 15, color: 'white' }}>✓</Text>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 13,
+                  fontFamily: 'PlusJakartaSans_700Bold',
+                  color: expanded ? 'white' : '#E07856',
+                }}
+              >
+                {index + 1}
+              </Text>
+            )}
+          </Pressable>
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontFamily: 'PlusJakartaSans_600SemiBold',
+                  color: isCompleted ? 'rgba(45,24,16,0.4)' : '#2D1810',
+                  textDecorationLine: isCompleted ? 'line-through' : 'none',
+                  flex: 1,
+                }}
+                numberOfLines={1}
+              >
+                {step.title}
+              </Text>
+              {isFocusStep && (
+                <Text style={{ fontSize: 14 }}>🎯</Text>
+              )}
+            </View>
+            {/* Surfaced remedy subtitle — collapsed only */}
+            {!expanded && todayRemedyLabel && (
+              <Text
+                style={{
+                  fontSize: 12,
+                  fontFamily: 'PlusJakartaSans_400Regular',
+                  color: isCompleted ? 'rgba(45,24,16,0.3)' : 'rgba(45,24,16,0.45)',
+                  marginTop: 2,
+                }}
+                numberOfLines={1}
+              >
+                {t('routine_remedy_today', { remedy: todayRemedyLabel })}
+              </Text>
+            )}
           </View>
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 15,
-              fontFamily: 'PlusJakartaSans_600SemiBold',
-              color: '#2D1810',
-            }}
-          >
-            {step.title}
-          </Text>
           <Text style={{ fontSize: 16, color: 'rgba(45,24,16,0.4)' }}>
             {expanded ? '↑' : '↓'}
           </Text>
@@ -420,9 +460,63 @@ function StepCard({ step, index, expanded, onPress, catalogProduct, scanResult, 
 
 // ─── Main screen ──────────────────────────────────────────────────────────────
 
+// ─── Date helper ──────────────────────────────────────────────────────────────
+
+function localDateString(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+// ─── Celebration overlay ─────────────────────────────────────────────────────
+
+function CelebrationOverlay({ message, onDone }: { message: string; onDone: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onDone, 2500);
+    return () => clearTimeout(timer);
+  }, [onDone]);
+
+  return (
+    <Animated.View
+      entering={FadeIn.duration(300)}
+      exiting={FadeOut.duration(300)}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(255,245,238,0.92)',
+      }}
+    >
+      <Animated.Text entering={ZoomIn.delay(100).springify()} style={{ fontSize: 64, marginBottom: 16 }}>
+        🎉
+      </Animated.Text>
+      <Animated.Text
+        entering={FadeIn.delay(300).duration(400)}
+        style={{
+          fontSize: 22,
+          fontFamily: 'Fraunces_700Bold',
+          color: '#16a34a',
+          textAlign: 'center',
+          paddingHorizontal: 32,
+        }}
+      >
+        {message}
+      </Animated.Text>
+    </Animated.View>
+  );
+}
+
+// ─── Main screen ──────────────────────────────────────────────────────────────
+
 export default function RoutineScreen() {
   const [tab, setTab] = useState<Tab>('morning');
   const [expanded, setExpanded] = useState<number | null>(0);
+  const [celebration, setCelebration] = useState<string | null>(null);
+  const notificationScheduled = useRef(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t, i18n } = useTranslation();
@@ -430,6 +524,8 @@ export default function RoutineScreen() {
   const currentScan = useScanStore(s => s.currentScan);
   const gender = useUserStore((s) => s.user?.gender);
   const products = useProductStore((s) => s.products);
+  const completions = useRoutineStore((s) => s.completions);
+  const toggleStep = useRoutineStore((s) => s.toggleStep);
 
   const productMap = useMemo(() => {
     const map = new Map<string, Product>();
@@ -461,6 +557,119 @@ export default function RoutineScreen() {
   }, [currentScan, gender]);
 
   const tabSteps = routine ? routine[tab] : [];
+
+  // ── Today's completions + progress ──
+  const todayStr = useMemo(() => localDateString(), []);
+  const amStepIds = useMemo(() => (routine ? routine.morning.map((s) => s.id) : []), [routine]);
+  const pmStepIds = useMemo(() => (routine ? routine.night.map((s) => s.id) : []), [routine]);
+  const progress = useMemo(
+    () => todayProgress(completions, todayStr, amStepIds, pmStepIds),
+    [completions, todayStr, amStepIds, pmStepIds],
+  );
+  const consistency = useMemo(
+    () => weeklyConsistency(completions, amStepIds, pmStepIds),
+    [completions, amStepIds, pmStepIds],
+  );
+  const streak = useMemo(
+    () => computeRoutineStreak(completions, todayStr),
+    [completions, todayStr],
+  );
+
+  // ── Today's focus ──
+  const allDailySteps = useMemo(
+    () => (routine ? [...routine.morning, ...routine.night] : []),
+    [routine],
+  );
+  const dailyFocus = useMemo(
+    () => (allDailySteps.length > 0 ? getTodaysFocus(allDailySteps) : null),
+    [allDailySteps],
+  );
+  const focusStep = useMemo(
+    () => (dailyFocus ? allDailySteps.find((s) => s.id === dailyFocus.focusStepId) : null),
+    [dailyFocus, allDailySteps],
+  );
+
+  // ── Completed set for current tab ──
+  const todayDay = completions[todayStr];
+  const completedIdsForTab = useMemo(() => {
+    if (!todayDay) return new Set<string>();
+    if (tab === 'morning') return new Set(todayDay.am);
+    if (tab === 'night') return new Set(todayDay.pm);
+    return new Set<string>(); // weekly — no completion tracking yet
+  }, [todayDay, tab]);
+
+  // ── Checkbox handler ──
+  const handleToggle = useCallback(
+    (stepId: string, stepTitle: string) => {
+      const period: 'am' | 'pm' = tab === 'night' ? 'pm' : 'am';
+      if (tab === 'weekly') return; // weekly steps don't have completion
+
+      const wasCompleted = completedIdsForTab.has(stepId);
+      toggleStep(todayStr, period, stepId);
+
+      Haptics.impactAsync(
+        wasCompleted
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium,
+      );
+
+      // Log event
+      logEvent(wasCompleted ? EVENTS.ROUTINE_STEP_UNCOMPLETED : EVENTS.ROUTINE_STEP_COMPLETED, {
+        step_id: stepId,
+        step_title: stepTitle,
+        period,
+        is_focus_step: dailyFocus?.focusStepId === stepId,
+      });
+
+      // Check for completion celebration (after toggle)
+      if (!wasCompleted) {
+        // Use fresh progress after this toggle
+        const nextAm = period === 'am' ? progress.am.done + 1 : progress.am.done;
+        const nextPm = period === 'pm' ? progress.pm.done + 1 : progress.pm.done;
+
+        if (period === 'am' && nextAm === progress.am.total && progress.am.total > 0) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setCelebration(t('routine_completed_am'));
+          logEvent(EVENTS.ROUTINE_ALL_COMPLETED, { period: 'am' });
+        } else if (period === 'pm' && nextPm === progress.pm.total && progress.pm.total > 0) {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setCelebration(t('routine_completed_pm'));
+          logEvent(EVENTS.ROUTINE_ALL_COMPLETED, { period: 'pm' });
+        }
+
+        // Request notification permission after first-ever completion
+        if (progress.am.done + progress.pm.done === 0) {
+          requestNotificationPermissionForRoutine().then((granted) => {
+            if (granted && focusStep && dailyFocus) {
+              scheduleRoutineReminders(
+                focusStep.title,
+                dailyFocus.tip.text,
+                hindi ? 'hi' : 'en',
+              );
+            }
+          });
+        }
+      }
+    },
+    [tab, todayStr, completedIdsForTab, toggleStep, progress, dailyFocus, focusStep, hindi, t],
+  );
+
+  // ── Schedule notifications on mount (once per session) ──
+  useEffect(() => {
+    if (notificationScheduled.current || !focusStep || !dailyFocus) return;
+    notificationScheduled.current = true;
+    scheduleRoutineReminders(focusStep.title, dailyFocus.tip.text, hindi ? 'hi' : 'en').catch(() => {});
+  }, [focusStep, dailyFocus, hindi]);
+
+  // ── Log daily focus view ──
+  useEffect(() => {
+    if (dailyFocus) {
+      logEvent(EVENTS.DAILY_FOCUS_VIEWED, {
+        focus_step_id: dailyFocus.focusStepId,
+        tip_id: dailyFocus.tip.id,
+      });
+    }
+  }, [dailyFocus]);
 
   useEffect(() => {
     logEvent(EVENTS.ROUTINE_VIEWED, { has_scan: !!currentScan });
@@ -511,11 +720,90 @@ export default function RoutineScreen() {
               fontSize: 13,
               fontFamily: 'PlusJakartaSans_400Regular',
               color: 'rgba(45,24,16,0.5)',
-              marginBottom: 24,
+              marginBottom: 16,
             }}
           >
             {t('regimen_body')}
           </Text>
+
+          {/* Progress header */}
+          <ProgressHeader
+            amDone={progress.am.done}
+            amTotal={progress.am.total}
+            pmDone={progress.pm.done}
+            pmTotal={progress.pm.total}
+            streakDays={streak}
+            consistencyPct={consistency}
+          />
+
+          {/* Today's Focus card */}
+          {dailyFocus && focusStep && (
+            <Animated.View entering={FadeInDown.delay(50).springify()}>
+              <View
+                style={{
+                  backgroundColor: '#FFFAF5',
+                  borderRadius: 20,
+                  padding: 16,
+                  marginBottom: 16,
+                  borderWidth: 1.5,
+                  borderColor: 'rgba(224,120,86,0.25)',
+                }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <Text style={{ fontSize: 16 }}>🎯</Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: 'PlusJakartaSans_700Bold',
+                      color: '#E07856',
+                    }}
+                  >
+                    {t('routine_today_focus')}
+                  </Text>
+                  {completedIdsForTab.has(dailyFocus.focusStepId) && (
+                    <View
+                      style={{
+                        backgroundColor: '#dcfce7',
+                        paddingHorizontal: 8,
+                        paddingVertical: 2,
+                        borderRadius: 8,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 11,
+                          fontFamily: 'PlusJakartaSans_700Bold',
+                          color: '#16a34a',
+                        }}
+                      >
+                        {t('routine_today_focus_done')}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: 'PlusJakartaSans_600SemiBold',
+                    color: '#2D1810',
+                    marginBottom: 4,
+                  }}
+                >
+                  {focusStep.title}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 13,
+                    fontFamily: 'PlusJakartaSans_400Regular',
+                    color: 'rgba(45,24,16,0.6)',
+                    lineHeight: 20,
+                  }}
+                >
+                  💡 {hindi ? dailyFocus.tip.text.hi : dailyFocus.tip.text.en}
+                </Text>
+              </View>
+            </Animated.View>
+          )}
 
           {/* Tab bar */}
           <View
@@ -570,32 +858,53 @@ export default function RoutineScreen() {
           </View>
 
           {/* Steps */}
-          {tabSteps.map((step, i) => (
-            <StepCard
-              key={step.id}
-              step={step}
-              index={i}
-              expanded={expanded === i}
-              onPress={() => {
-                const opening = expanded !== i;
-                setExpanded(opening ? i : null);
-                if (opening) {
-                  logEvent(EVENTS.ROUTINE_STEP_EXPANDED, {
-                    step_id: step.id,
-                    step_title: step.title,
-                    tab,
-                    position: i + 1,
-                  });
-                }
-              }}
-              catalogProduct={step.productId ? productMap.get(step.productId) ?? null : null}
-              scanResult={currentScan}
-              hindi={hindi}
-              onSeeMore={handleSeeMore}
-              onProductTap={handleProductTap}
-            />
-          ))}
+          {tabSteps.map((step, i) => {
+            // Today's remedy label for collapsed subtitle
+            const dayOfYear = Math.floor(
+              (new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24),
+            );
+            const remedyIdx = (dayOfYear + i) % step.remedies.length;
+            const remedyLabel = step.remedies[remedyIdx]?.label;
+
+            return (
+              <StepCard
+                key={step.id}
+                step={step}
+                index={i}
+                expanded={expanded === i}
+                onPress={() => {
+                  const opening = expanded !== i;
+                  setExpanded(opening ? i : null);
+                  if (opening) {
+                    logEvent(EVENTS.ROUTINE_STEP_EXPANDED, {
+                      step_id: step.id,
+                      step_title: step.title,
+                      tab,
+                      position: i + 1,
+                    });
+                  }
+                }}
+                isCompleted={completedIdsForTab.has(step.id)}
+                onToggleComplete={() => handleToggle(step.id, step.title)}
+                isFocusStep={dailyFocus?.focusStepId === step.id}
+                todayRemedyLabel={remedyLabel}
+                catalogProduct={step.productId ? productMap.get(step.productId) ?? null : null}
+                scanResult={currentScan}
+                hindi={hindi}
+                onSeeMore={handleSeeMore}
+                onProductTap={handleProductTap}
+              />
+            );
+          })}
         </ScrollView>
+      )}
+
+      {/* Celebration overlay */}
+      {celebration && (
+        <CelebrationOverlay
+          message={celebration}
+          onDone={() => setCelebration(null)}
+        />
       )}
     </View>
   );

@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useUserStore } from '@/stores/useUserStore';
 
 export type DateKey = string; // YYYY-MM-DD local
 
@@ -86,12 +87,44 @@ export function weeklyConsistency(
   return Math.round((totalDone / totalExpected) * 100);
 }
 
+/** Pure — exported for testing. Counts consecutive days ending at `todayStr` that have ≥1 completion. */
+export function computeRoutineStreak(completions: Completions, todayStr: DateKey): number {
+  let streak = 0;
+  const d = new Date(todayStr + 'T00:00:00');
+  for (let i = 0; i < 365; i++) {
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const day = completions[key];
+    if (day && (day.am.length > 0 || day.pm.length > 0)) {
+      streak++;
+    } else if (i > 0) {
+      // Allow today (i===0) to be incomplete — streak counts up to yesterday + today if started
+      break;
+    } else {
+      break;
+    }
+    d.setDate(d.getDate() - 1);
+  }
+  return streak;
+}
+
 export const useRoutineStore = create<RoutineStore>()(
   persist(
     (set, get) => ({
       completions: {},
-      toggleStep: (date, period, stepId) =>
-        set({ completions: computeToggleStep(get().completions, date, period, stepId) }),
+      toggleStep: (date, period, stepId) => {
+        const prev = get().completions;
+        const next = computeToggleStep(prev, date, period, stepId);
+        set({ completions: next });
+
+        // Tick streak on first completion of the day (not on unchecks)
+        const prevDay = prev[date];
+        const prevTotal = prevDay ? prevDay.am.length + prevDay.pm.length : 0;
+        const nextDay = next[date];
+        const nextTotal = nextDay ? nextDay.am.length + nextDay.pm.length : 0;
+        if (prevTotal === 0 && nextTotal > 0) {
+          useUserStore.getState().tickStreak();
+        }
+      },
       markTipDone: (date, tipId) =>
         set({ completions: computeMarkTipDone(get().completions, date, tipId) }),
     }),
