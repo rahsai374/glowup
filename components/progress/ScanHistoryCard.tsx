@@ -101,50 +101,53 @@ export default function ScanHistoryCard({
           </View>
         )}
 
-        <View style={{ flex: 1, minWidth: 0, gap: 3 }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <View style={{ flex: 1, minWidth: 0, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <View style={{ flex: 1, gap: 2, marginRight: 8 }}>
+            <Text
+              style={{
+                fontSize: 12,
+                fontFamily: 'PlusJakartaSans_600SemiBold',
+                color: 'rgba(45,24,16,0.70)',
+              }}
+            >
+              {formatDateShort(scan.createdAt)}
+            </Text>
+            {concern ? (
+              <Text
+                style={{
+                  fontFamily: 'PlusJakartaSans_500Medium',
+                  fontSize: 11,
+                  color: 'rgba(45,24,16,0.45)',
+                }}
+                numberOfLines={1}
+              >
+                {concern}
+              </Text>
+            ) : null}
+          </View>
+          <View style={{ alignItems: 'flex-end' }}>
             <Text
               style={{
                 fontFamily: 'Fraunces_700Bold',
                 fontSize: 22,
                 color: PRIMARY,
+                lineHeight: 26,
               }}
             >
               {scan.overall_score}
             </Text>
             {delta !== null && delta !== 0 && (
-              <View
+              <Text
                 style={{
-                  backgroundColor: delta > 0 ? '#DCFCE7' : '#FEF3C7',
-                  paddingVertical: 2,
-                  paddingHorizontal: 7,
-                  borderRadius: 6,
+                  fontSize: 10,
+                  fontFamily: 'PlusJakartaSans_700Bold',
+                  color: delta > 0 ? '#15803D' : '#B45309',
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 11,
-                    fontFamily: 'PlusJakartaSans_700Bold',
-                    color: delta > 0 ? '#16A34A' : '#D97706',
-                  }}
-                >
-                  {delta > 0 ? `+${delta}` : `${delta}`}
-                </Text>
-              </View>
+                {delta > 0 ? `+${delta}` : `${delta}`}
+              </Text>
             )}
           </View>
-
-          <Text
-            style={{
-              fontFamily: 'PlusJakartaSans_500Medium',
-              fontSize: 12,
-              color: 'rgba(45,24,16,0.50)',
-            }}
-            numberOfLines={1}
-          >
-            {formatDateShort(scan.createdAt)}
-            {concern ? `  ·  ${concern}` : ''}
-          </Text>
         </View>
 
         {onPress && (
