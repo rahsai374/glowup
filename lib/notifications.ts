@@ -102,7 +102,7 @@ const VALID_ROUTES: readonly StringHref[] = [
   '/scan',
   '/(tabs)/results',
   '/(tabs)/routine',
-  // '/notifications', -- excluded until .expo/types/router.d.ts regenerates after expo start
+  '/(tabs)/notifications',
 ] as const;
 
 function isValidRoute(route: string): route is StringHref {

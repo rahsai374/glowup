@@ -2,22 +2,23 @@ import React, { useEffect } from 'react';
 import { View, Text, FlatList } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useTranslation } from 'react-i18next';
 import AmbientBlobs from '@/components/AmbientBlobs';
 import BackButton from '@/components/BackButton';
 import { useNotificationStore, NotificationItem } from '@/stores/useNotificationStore';
 
-function timeAgo(isoDate: string): string {
+function timeAgo(isoDate: string, t: (key: string, opts?: Record<string, unknown>) => string): string {
   const diff = Date.now() - new Date(isoDate).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'Just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t('time_just_now');
+  if (mins < 60) return t('time_mins_ago', { count: mins });
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24) return t('time_hours_ago', { count: hrs });
   const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
+  return t('time_days_ago', { count: days });
 }
 
-function NotificationCard({ item, index }: { item: NotificationItem; index: number }) {
+function NotificationCard({ item, index, t }: { item: NotificationItem; index: number; t: (key: string, opts?: Record<string, unknown>) => string }) {
   return (
     <Animated.View entering={FadeInDown.delay(index * 60).springify()}>
       <View
@@ -63,7 +64,7 @@ function NotificationCard({ item, index }: { item: NotificationItem; index: numb
             color: 'rgba(45,24,16,0.35)',
           }}
         >
-          {timeAgo(item.receivedAt)}
+          {timeAgo(item.receivedAt, t)}
         </Text>
       </View>
     </Animated.View>
@@ -71,6 +72,7 @@ function NotificationCard({ item, index }: { item: NotificationItem; index: numb
 }
 
 export default function NotificationsScreen() {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const notifications = useNotificationStore((s) => s.notifications);
   const markAllRead = useNotificationStore((s) => s.markAllRead);
@@ -94,14 +96,14 @@ export default function NotificationsScreen() {
         >
           <BackButton />
           <Text style={{ fontSize: 24, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>
-            Notifications
+            {t('notifications_title')}
           </Text>
         </View>
 
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          renderItem={({ item, index }) => <NotificationCard item={item} index={index} />}
+          renderItem={({ item, index }) => <NotificationCard item={item} index={index} t={t} />}
           contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 32 }}
           ListEmptyComponent={
             <View style={{ alignItems: 'center', paddingTop: 80 }}>
@@ -114,7 +116,7 @@ export default function NotificationsScreen() {
                   marginBottom: 8,
                 }}
               >
-                No notifications yet
+                {t('notifications_empty')}
               </Text>
               <Text
                 style={{
@@ -126,7 +128,7 @@ export default function NotificationsScreen() {
                   paddingHorizontal: 32,
                 }}
               >
-                We'll let you know about tips, reminders, and skin updates here.
+                {t('notifications_empty_body')}
               </Text>
             </View>
           }
