@@ -17,7 +17,7 @@ export interface MicroTip {
 
 export type HeroState =
   | { kind: 'first-scan' }
-  | { kind: 'routine-in-progress'; period: 'am' | 'pm'; done: number; total: number }
+  | { kind: 'routine-in-progress'; period: 'am' | 'pm'; done: number; total: number; focusTip?: string }
   | { kind: 'stale-scan'; daysSince: number }
   | { kind: 'fresh-scan'; topConcern: string }
   | { kind: 'default-rescan' };

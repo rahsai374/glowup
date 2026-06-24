@@ -13,6 +13,7 @@ import { getGreeting } from '@/lib/home/getGreeting';
 import { selectHeroState } from '@/lib/home/selectHeroState';
 import { selectDailyTip } from '@/lib/home/selectDailyTip';
 import { getRoutine } from '@/lib/routineEngine';
+import { getTodaysFocus } from '@/lib/dailyFocusEngine';
 
 import tips from '@/data/tips.json';
 import { MicroTip, SkinConcern } from '@/lib/home/types';
@@ -49,19 +50,13 @@ const CONCERN_MAP: Record<string, SkinConcern> = {
 export default function HomeScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const user = useUserStore((s) => s.user);
   const streak = useUserStore((s) => s.streak);
-  const tickStreak = useUserStore((s) => s.tickStreak);
-
   const scanHistory = useScanStore((s) => s.scanHistory);
   const completions = useRoutineStore((s) => s.completions);
   const markTipDone = useRoutineStore((s) => s.markTipDone);
-
-  useEffect(() => {
-    tickStreak();
-  }, []);
 
   // useFocusEffect fires every time the tab comes into view — not just on first mount
   useFocusEffect(
@@ -103,12 +98,24 @@ export default function HomeScreen() {
 
   const hasAnyCompletions = Object.keys(completions).length > 0;
 
+  // Today's Focus tip for hero card
+  const focusTipForHero = useMemo(() => {
+    const allDaily = [...userRoutine.morning, ...userRoutine.night];
+    if (allDaily.length === 0) return undefined;
+    const focus = getTodaysFocus(allDaily);
+    if (!focus) return undefined;
+    const step = allDaily.find((s) => s.id === focus.focusStepId);
+    const tipText = i18n.language === 'hi' ? focus.tip.text.hi : focus.tip.text.en;
+    return step ? `${step.title} — ${tipText}` : undefined;
+  }, [userRoutine, i18n.language]);
+
   const heroState = selectHeroState({
     scanCount,
     daysSinceLastScan: daysSince,
     lastScanTopConcern: lastConcern,
     nowHour,
     routineToday,
+    focusTip: focusTipForHero,
   });
 
   const userConcern: SkinConcern | null = lastConcern

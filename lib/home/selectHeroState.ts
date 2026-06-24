@@ -9,6 +9,7 @@ export interface SelectHeroStateArgs {
     am: { done: number; total: number };
     pm: { done: number; total: number };
   };
+  focusTip?: string;
 }
 
 /**
@@ -16,7 +17,7 @@ export interface SelectHeroStateArgs {
  * Precedence: first-scan → routine-in-progress → stale-scan → fresh-scan → default-rescan
  */
 export function selectHeroState(args: SelectHeroStateArgs): HeroState {
-  const { scanCount, daysSinceLastScan, lastScanTopConcern, nowHour, routineToday } = args;
+  const { scanCount, daysSinceLastScan, lastScanTopConcern, nowHour, routineToday, focusTip } = args;
 
   // 1. No scans at all
   if (scanCount === 0) return { kind: 'first-scan' };
@@ -28,6 +29,7 @@ export function selectHeroState(args: SelectHeroStateArgs): HeroState {
       period: 'am',
       done: routineToday.am.done,
       total: routineToday.am.total,
+      focusTip,
     };
   }
 
@@ -38,6 +40,7 @@ export function selectHeroState(args: SelectHeroStateArgs): HeroState {
       period: 'pm',
       done: routineToday.pm.done,
       total: routineToday.pm.total,
+      focusTip,
     };
   }
 

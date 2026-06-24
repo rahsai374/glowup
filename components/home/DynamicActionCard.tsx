@@ -43,6 +43,7 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
           titleColor: '#2D1810',
           subtitle: t('hero_routine_sub', { done: state.done, total: state.total }),
           subtitleColor: 'rgba(45,24,16,0.65)',
+          focusTip: state.focusTip,
           showProgressBar: true,
           progress: state.total > 0 ? state.done / state.total : 0,
         };
@@ -110,6 +111,19 @@ export default function DynamicActionCard({ state, onPrimaryPress }: DynamicActi
         <Text style={{ fontSize: 13, fontFamily: 'PlusJakartaSans_500Medium', color: config.subtitleColor }}>
           {config.subtitle}
         </Text>
+        {config.focusTip && (
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: 'PlusJakartaSans_400Regular',
+              color: 'rgba(45,24,16,0.5)',
+              marginTop: 2,
+            }}
+            numberOfLines={1}
+          >
+            🎯 {config.focusTip}
+          </Text>
+        )}
         {config.showProgressBar && (
           <View style={{ marginTop: 14, height: 6, backgroundColor: 'rgba(45,24,16,0.1)', borderRadius: 3 }}>
             <View style={{

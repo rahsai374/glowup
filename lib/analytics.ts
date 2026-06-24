@@ -56,11 +56,19 @@ export const EVENTS = {
   SCAN_HISTORY_CARD_TAPPED: 'scan_history_card_tapped',
   SCAN_HISTORY_FULL_ANALYSIS: 'scan_history_full_analysis',
 
+  // Routine habit tracking
+  ROUTINE_STEP_COMPLETED: 'routine_step_completed',
+  ROUTINE_STEP_UNCOMPLETED: 'routine_step_uncompleted',
+  ROUTINE_ALL_COMPLETED: 'routine_all_completed',
+  DAILY_FOCUS_VIEWED: 'daily_focus_viewed',
+
   // Push notifications
   PUSH_OPTIN_PROMPT: 'push_optin_prompt',
   PUSH_OPTIN_RESPONSE: 'push_optin_response',
   NOTIFICATION_RECEIVED: 'notification_received',
   NOTIFICATION_TAPPED: 'notification_tapped',
+  NOTIFICATION_PERMISSION_REQUESTED: 'notification_permission_requested',
+  NOTIFICATION_PERMISSION_RESULT: 'notification_permission_result',
 } as const;
 
 type FBMapping = {
