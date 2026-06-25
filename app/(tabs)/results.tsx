@@ -15,18 +15,6 @@ import { useScanImage } from '@/hooks/useScanImage';
 import { updateProfileField, generateAndSaveRoutine } from '@/lib/firestore';
 import { concernLabel, truncateWin } from '@/lib/scoringLabels';
 
-const METRIC_LABELS: Record<string, string> = {
-  hydration: 'Hydration',
-  blemish_prone: 'Blemish-Prone',
-  redness: 'Redness',
-  oiliness: 'Oiliness',
-  dark_spots: 'Dark Spots',
-  radiance: 'Radiance',
-  texture: 'Texture',
-  firmness: 'Firmness',
-  wrinkles: 'Wrinkles',
-  dark_circles: 'Dark Circles',
-};
 
 export default function ResultsScreen() {
   const router = useRouter();
@@ -203,10 +191,10 @@ export default function ResultsScreen() {
           <Animated.View entering={FadeInDown.delay(360).springify()}>
             <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 20, marginBottom: 20, borderWidth: 1, borderColor: 'rgba(224,120,86,0.08)' }}>
               <Text style={{ fontSize: 16, fontFamily: 'Fraunces_700Bold', color: '#2D1810', marginBottom: 16 }}>
-                Skin Scores
+                Beauty Scores
               </Text>
               {metrics.map(([key, score], i) => (
-                <MetricBar key={key} label={METRIC_LABELS[key] ?? key} score={score} delay={i * 80} />
+                <MetricBar key={key} label={t(key) || key} score={score} delay={i * 80} />
               ))}
             </View>
           </Animated.View>

@@ -9,7 +9,7 @@ import { logEvent, EVENTS } from '@/lib/analytics';
 const { width } = Dimensions.get('window');
 
 const slides = [
-  { key: 'onboarding_1', icon: '🔬', title: 'onboarding_1_title', body: 'onboarding_1_body', chips: ['Hydration 71', 'Radiance 78', 'Wrinkles 90'] },
+  { key: 'onboarding_1', icon: '🔬', title: 'onboarding_1_title', body: 'onboarding_1_body', chips: ['Moisture 71', 'Radiance 78', 'Fine Lines 90'] },
   { key: 'onboarding_2', icon: '🌿', title: 'onboarding_2_title', body: 'onboarding_2_body', chips: [] },
   { key: 'onboarding_3', icon: '📈', title: 'onboarding_3_title', body: 'onboarding_3_body', chips: [] },
 ];

@@ -38,7 +38,7 @@ export default function ShareScreen() {
 
   async function shareWhatsApp() {
     await Share.share({
-      message: `I just got my skin score on GlowUp! 🌟 My overall score is ${scan!.overall_score}/100. Skin type: ${scan!.skin_type}. Download GlowUp for your personalized skin analysis!`,
+      message: `I just got my beauty score on GlowUp! 🌟 My overall score is ${scan!.overall_score}/100. Skin type: ${scan!.skin_type}. Download GlowUp for your personalized beauty routine!`,
     });
     logEvent(EVENTS.SHARE_COMPLETED);
   }
@@ -86,16 +86,16 @@ export default function ShareScreen() {
           <View style={{ flexDirection: 'row', gap: 12, marginTop: 20 }}>
             <View style={{ backgroundColor: 'white', borderRadius: 12, padding: 12, flex: 1, alignItems: 'center' }}>
               <Text style={{ fontSize: 13, fontFamily: 'Fraunces_700Bold', color: '#2D1810', textTransform: 'capitalize' }}>{scan.skin_type}</Text>
-              <Text style={{ fontSize: 10, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular' }}>Skin Type</Text>
+              <Text style={{ fontSize: 10, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular' }}>{t('skin_type')}</Text>
             </View>
             <View style={{ backgroundColor: 'white', borderRadius: 12, padding: 12, flex: 1, alignItems: 'center' }}>
               <Text style={{ fontSize: 13, fontFamily: 'Fraunces_700Bold', color: '#2D1810' }}>{scan.skin_age}</Text>
-              <Text style={{ fontSize: 10, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular' }}>Skin Age</Text>
+              <Text style={{ fontSize: 10, color: 'rgba(45,24,16,0.5)', fontFamily: 'PlusJakartaSans_400Regular' }}>{t('skin_age')}</Text>
             </View>
           </View>
 
           <Text style={{ fontSize: 11, color: 'rgba(45,24,16,0.4)', fontFamily: 'PlusJakartaSans_400Regular', marginTop: 16, textAlign: 'center' }}>
-            glowup.app • AI estimate, not medical advice
+            glowup.app • AI beauty estimate, for cosmetic purposes only
           </Text>
         </Animated.View>
       </View>
