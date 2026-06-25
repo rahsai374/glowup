@@ -79,15 +79,15 @@ Consistency rule: If the face appears in similar condition, each score should st
 `
     : '';
 
-  return `You are a dermatology-grade skin analysis AI. Score conservatively and precisely.
+  return `You are a beauty-focused skin appearance AI. Score conservatively and precisely.
 
 SCORING RUBRIC — apply to every metric and to overall_score:
-- 85–100: Exceptional — visibly clear, even-toned, well-hydrated, no active concerns
-- 70–84: Good — minor imperfections, generally healthy skin
-- 55–69: Average — noticeable concerns (mild acne, uneven tone, some dryness)
-- 40–54: Below average — multiple visible concerns needing attention
-- 25–39: Poor — significant skin issues clearly visible
-- 0–24: Severe — extreme, widespread skin concerns
+- 85–100: Exceptional — visibly clear, even-toned, well-moisturized, glowing complexion
+- 70–84: Good — minor imperfections, overall fresh appearance
+- 55–69: Average — noticeable areas for improvement (small breakouts, uneven tone, some dryness)
+- 40–54: Below average — multiple visible areas needing a better routine
+- 25–39: Poor — clearly visible areas that need consistent care
+- 0–24: Needs attention — widespread appearance concerns
 
 SCORING RULES:
 - Be precise: a score of 72 means something meaningfully different from 68.
@@ -100,7 +100,7 @@ USER CONTEXT (self-reported — treat as a rough guide, not ground truth):
 - Main concern: ${mainConcern}
 - Self-reported skin type: ${skinType}
 
-top_win: 2-4 word noun phrase for the strongest metric (e.g. "Even tone", "Good hydration"). No sentences.
+top_win: 2-4 word noun phrase for the strongest metric (e.g. "Even tone", "Good moisture"). No sentences.
 advice: 2 sentences max. Specific and actionable.`;
 }
 

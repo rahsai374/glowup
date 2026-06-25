@@ -152,7 +152,7 @@ export default function ScanBottomSheet({ scan, onClose }: ScanBottomSheetProps)
                 {formatDateFull(scan.createdAt)}
               </Text>
               <Text style={{ fontSize: 12, fontFamily: 'PlusJakartaSans_500Medium', color: 'rgba(45,24,16,0.55)' }}>
-                Skin analysis result
+                Beauty analysis result
               </Text>
             </View>
             <Text style={{ fontSize: 38, fontFamily: 'PlusJakartaSans_700Bold', color: PRIMARY }}>

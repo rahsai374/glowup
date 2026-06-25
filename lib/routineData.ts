@@ -309,7 +309,7 @@ export const STEP_POOL: RoutineStep[] = [
   },
   {
     id: 'night-acne-mask',
-    title: 'Anti-Acne Night Treatment',
+    title: 'Clearing Night Care',
     timeOfDay: 'night',
     priority: 2,
     skinTypes: ['all'],

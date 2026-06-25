@@ -40,7 +40,7 @@ const OVAL_CENTER_Y = height * 0.4;
 const FACTS = [
   'Your skin has 3 layers and renews itself every 28 days.',
   'Melanin production can be regulated with consistent SPF use.',
-  'Hydration levels affect how light reflects off your skin.',
+  'Moisture levels affect how light reflects off your skin.',
   'Collagen production drops 1% per year after age 25.',
 ];
 
